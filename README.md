@@ -24,3 +24,7 @@ The Makefile has to include a "make test" ability - that calls the executable an
 Any openly available libraries can be used.
 You have to analyze your algorithm concerning time and memory usage (gprof and Valgrind) - without this analysis no points will be given!
 At the end the group will have to give a presentation (pptx) describing all the used strategies to solve the given problem.
+
+
+Is this the real life, or is it just fantasy. 
+No its a test you silly :P
