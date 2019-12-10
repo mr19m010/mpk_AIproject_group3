@@ -1,5 +1,6 @@
 # mpk_AIproject_group3
 Rubiks Mastermind Cube Project
+Students Project
 
 # how to run:
 ```
@@ -10,12 +11,15 @@ ctrl + shift + t
 ./client
 ```
 
+
 # how does it work?
 
 1. Enter a number from range [2-53]
 2. Be surprised
 
-Project Description:
+
+
+# Project Description:
 
 The project is a combination of the Rubik's cube puzzle and the Mastermind puzzle.
 1) At the beginning a "server" will create a solvable Rubik's cube by applying x random (parameter given to the server program e.g.: 100) turns (see here) on all possible cube-sides on a cube that will have 6 different colors (red, green, blue, white, yellow, orange (not necessarily a standard "cube")) and create a client.
