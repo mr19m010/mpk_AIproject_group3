@@ -10,6 +10,11 @@ ctrl + shift + t
 ./client
 ```
 
+# how does it work?
+
+1. Enter a number from range [2-53]
+2. Be surprised
+
 Project Description:
 
 The project is a combination of the Rubik's cube puzzle and the Mastermind puzzle.
