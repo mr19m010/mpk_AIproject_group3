@@ -1,39 +1,43 @@
 # mpk_AIproject_group3
-Rubiks Mastermind Cube Project
+AI Project Rubiks Cube with Mastermind Integration
 Students Project
+
 
 #Installation:
 
-``
-./server
-ctrl + shift + t
-./client
-``
+```
+1. Clone Folder
+2. Open Folder in Terminal
+
+3. $./server
+4. $ctrl + shift + t
+5. $./client
+```
 
 
 #Layout
 
-        *********
-        * 0 1 2 *
-   0 -->* 0 1 2 *
-        * 0 1 2 *
-*****************************************
-*       *       *       *       *       *
-*   1   *   2   *   3   *   4   *   5   *
-*       *       *       *       *       *
-*****************************************
-        *       *
-        *   6   *
-        *       *
-        *********
+        |-------|
+        | 0 1 2 |
+   0 -->| 0 1 2 |
+        | 0 1 2 |
+|-------+-------+-----------------------|
+|       |       |       |       |       |
+|   1   |   2   |   3   |   4   |   5   |
+|       |       |       |       |       |
+|-------+-------+-----------------------|
+        |       |
+        |   6   |
+        |       |
+        |-------|
 
 Array[6][3][3] --> 1. Cube side; 2. Row; 3. Column;
+
 
 # How does it work?
 
 1. Enter a number from range [2-53]
 2. Be surprised
-
 
 
 # Project Description:
