@@ -2,9 +2,7 @@
 Rubiks Mastermind Cube Project
 Students Project
 
-# how to run:
-```
-sh compile.sh
+Project Description:
 
 ./server
 ctrl + shift + t
