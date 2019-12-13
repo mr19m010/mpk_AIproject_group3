@@ -11,7 +11,7 @@ The project is a combination of the Rubik's cube puzzle and the Mastermind puzzl
 5) The "server" will additionally answer the "client" if the Rubik's cube is solved or not solved - by returning 0 (not solved) or 1 (solved) and then exiting.
 
 The "client" has to solve the Rubik's cube in an efficient way.
-Trivial solutions won't be allowed (e.g. first guess the colors (pure MasterMind) and then solve the cube (pure DFS, A* or RBFS-Algorithm)). The solving can and has to already start before all the colors-positions are proven. 
+Trivial solutions won't be allowed (e.g. first guess the colors (pure MasterMind) and then solve the cube (pure DFS, A* or RBFS-Algorithm)). The solving can and has to already start before all the colors-positions are proven.
 You'll have to find arguments/strategies on "when" to start solving (turning) the cubes-sides.
 Due to the structure of this problem you'll have to use heuristic functions to implement the strategies and change of strategies (From a pure Masterproblem to a Rubik's cube problem)
 
@@ -26,5 +26,6 @@ You have to analyze your algorithm concerning time and memory usage (gprof and V
 At the end the group will have to give a presentation (pptx) describing all the used strategies to solve the given problem.
 
 
-Is this the real life, or is it just fantasy. 
+Is this the real life, or is it just fantasy.
 No its a test you silly :P
+Test Meister
