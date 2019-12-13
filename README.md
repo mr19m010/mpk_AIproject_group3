@@ -3,7 +3,7 @@ AI Project Rubiks Cube with Mastermind Integration
 Students Project
 
 
-#Installation:
+## Installation:
 
 ```
 1. Clone Folder
@@ -15,20 +15,20 @@ Students Project
 ```
 
 
-#Layout
+## Layout
 
 ![Screenshot](miscellaneous/layoutCube.png)
 
 Array[6][3][3] --> 1. Cube side; 2. Row; 3. Column;
 
 
-# How does it work?
+## How does it work?
 
 1. Enter a number from range [2-53]
 2. Be surprised
 
 
-# Project Description:
+### Project Description:
 
 The project is a combination of the Rubik's cube puzzle and the Mastermind puzzle.
 1) At the beginning a "server" will create a solvable Rubik's cube by applying x random
