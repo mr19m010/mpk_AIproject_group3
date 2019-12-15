@@ -4,12 +4,12 @@
 using namespace std;
 
 int main()
-{   	
-	Cube myCube;	
+{
+	Cube myCube;
 
 	myCube.ResetQuestion();
 	myCube.ConnectToServer(); // Hier wird die Verbindung zum Server hergestellt
-    myCube.SendQuestion();
+  	myCube.SendQuestion();
 	myCube.ReceiveAnswer();
 	myCube.CloseConnection();
 
