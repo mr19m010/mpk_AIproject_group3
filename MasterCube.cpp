@@ -4,10 +4,6 @@
 
 using namespace std;
 
-void Cube::l()
-{
-
-}
 
 void Cube::ConnectToServer()
 {
@@ -157,8 +153,6 @@ void Cube::CloseConnection()
 {
 	close(sock);
 }
-
-
 // Server
 
 void Cube::StartServer()

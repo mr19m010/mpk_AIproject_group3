@@ -19,7 +19,6 @@ class Cube
 
 public:
 
-void l();
 
 // Client
 	void ConnectToServer();
