@@ -49,39 +49,58 @@ int Cube::LoopArray(int * array)
     }
 }
 
+bool Cube::DetectChange(int number)
+{
+    bool changed=false;
+
+    if (number!=auxNumber){
+        auxNumber=number;
+        changed=true;
+    }
+    else changed=false;
+
+    return changed;
+}
+
 void Cube::PrintArray()
 {
-    int counter=0;
-    int x=5;
-    int y=2;
-    int z=2;
-
-    for(int x=5; x>=0; x--)
-	{
-        
-		for(int y=2; y>=0; y--)
-		{   
-             
-			while(z>=0)
-			{
-                if (counter<3) {
-                    cout << "x ";
-                }
-                else if (counter==3) cout << "|";
-                else{
-				    cout << receivedArray[x][y][z] << " ";
-                    z--;
-                }
-                counter++;
-			}
-			cout << endl;
-            counter=0;
-            z=2;
-		}
-        
-		cout << "-----" << endl;
-	}
+    int z=0;
+    int y=0;
+    int x=0;
+    for (int rows = 0; rows <= 8; rows++)
+    {
+        for (int cols = 0; cols <=11; cols++)
+        {
+            if (((rows<3 || rows>5) && (cols<3 || cols>5)))
+            {
+                z=0;
+                cout << "# ";
+            }
+            else if (rows>=3 && rows<=5)
+            {
+                x=((cols+3)/3);
+                if (Cube::DetectChange(x)==true) z=0;
+                cout << receivedArray[x][y][z] << " ";
+                //cout << z << " ";
+                z++;
+                
+            }
+            else if (cols>=3 && cols<=5)
+            {   
+                x=((rows)/3)*5/2;
+                cout << receivedArray[x][y][z] << " ";
+                //cout << z << " ";
+                z++;
+            }
+            
+        }
+        cout << endl;
+        y++;
+        if (y>2) y=0;
+    }
+    
 }
+
 
 
 void Cube::ChangeArray()
@@ -94,14 +113,13 @@ void Cube::ChangeArray()
 			{
 				receivedArray[x][y][z]*=2;
 			}
-			cout << endl;
 		}
-		cout << "-----" << endl;
 	}
 }
 
 void Cube::ResetQuestion()
 {
+    int cntNumber=9;
 	//cout << number << endl;
 	for(int x=5; x>=0; x--)
 	{
@@ -110,12 +128,13 @@ void Cube::ResetQuestion()
 			for(int z=2; z>=0; z--)
 			{
 				//(question+(x*6)+(y*3)+z)=0;
-				question[x][y][z]=2;
-				cout << question[x][y][z] << " ";
+				question[x][y][z]=cntNumber--;
+                if (cntNumber<1) cntNumber=9;
+				//cout << question[x][y][z] << " ";
 			}
-			cout << endl;
+			//cout << endl;
 		}
-		cout << "-----" << endl;
+		//cout << "-----" << endl;
 	}
 }
 
@@ -149,6 +168,7 @@ void Cube::ReceiveAnswer()
         totalBytesRcvd += bytesRcvd;   /* Keep tally of total bytes */
         cout << "Total bytes received = " << totalBytesRcvd << endl;
         echoBuffer[bytesRcvd] = '\0';  /* Terminate the string! */
+        //Cube::PrintArray();
         Cube::PrintArray();
 	}
 }
@@ -228,7 +248,7 @@ void Cube::HandleTCPClient()
     cout << "Size of int = " << sizeof(int) << " -> 6*3*3 sizeof(int) = " 
     << 6*3*3*sizeof(int) << endl;
 
-    Cube::ChangeArray();
+    //Cube::ChangeArray();
 
     /* Send received string and receive again until end of transmission */
     while (recvMsgSize > 0)      /* zero indicates end of transmission */

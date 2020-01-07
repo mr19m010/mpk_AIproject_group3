@@ -38,6 +38,8 @@ void l();
 
 void PrintArray();
 
+bool DetectChange(int number);
+
 // Server
 	void StartServer();
 
@@ -107,6 +109,11 @@ private:
 	int sock;
  	char echoBuffer[6*3*3*sizeof(int)];
   int bytesRcvd, totalBytesRcvd;
+  int auxNumber=0;
+
+
+  
+  
 
 	// Server
 	int servSock;                    /* Socket descriptor for server */
