@@ -2,11 +2,12 @@
 #include "MasterCube.h"
 #include <iostream>
 
-#define RCVBUFSIZE 32   /* Size of receive buffer */
-#define MAXPENDING 5
-
 using namespace std;
 
+void Cube::l()
+{
+
+}
 
 void Cube::ConnectToServer()
 {
@@ -14,7 +15,7 @@ void Cube::ConnectToServer()
 
 	cout << "Connecting to server"  << endl;
 
-	
+
     /* Create a reliable, stream socket using TCP */
     if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
         printf("1");
@@ -48,10 +49,60 @@ int Cube::LoopArray(int * array)
     }
 }
 
+void Cube::PrintArray()
+{
+    int counter=0;
+    int x=5;
+    int y=2;
+    int z=2;
+
+    for(int x=5; x>=0; x--)
+	{
+        
+		for(int y=2; y>=0; y--)
+		{   
+             
+			while(z>=0)
+			{
+                if (counter<3) {
+                    cout << "x ";
+                }
+                else if (counter==3) cout << "|";
+                else{
+				    cout << receivedArray[x][y][z] << " ";
+                    z--;
+                }
+                counter++;
+			}
+			cout << endl;
+            counter=0;
+            z=2;
+		}
+        
+		cout << "-----" << endl;
+	}
+}
+
+
+void Cube::ChangeArray()
+{
+    for(int x=5; x>=0; x--)
+	{
+		for(int y=2; y>=0; y--)
+		{
+			for(int z=2; z>=0; z--)
+			{
+				receivedArray[x][y][z]*=2;
+			}
+			cout << endl;
+		}
+		cout << "-----" << endl;
+	}
+}
 
 void Cube::ResetQuestion()
 {
-	//cout << quest << endl;
+	//cout << number << endl;
 	for(int x=5; x>=0; x--)
 	{
 		for(int y=2; y>=0; y--)
@@ -59,7 +110,7 @@ void Cube::ResetQuestion()
 			for(int z=2; z>=0; z--)
 			{
 				//(question+(x*6)+(y*3)+z)=0;
-				question[x][y][z]=0;
+				question[x][y][z]=2;
 				cout << question[x][y][z] << " ";
 			}
 			cout << endl;
@@ -83,18 +134,22 @@ void Cube::SendQuestion()
 
 void Cube::ReceiveAnswer()
 {
-	/* Receive the same string back from the server */
+    /* Receive the same string back from the server */
     totalBytesRcvd = 0;
     cout << "Received: " << endl;                /* Setup to print the echoed string */
     while (totalBytesRcvd < (6*3*3*sizeof(int)))
     {
+        cout << "OK?" << endl;
         /* Receive up to the buffer size (minus 1 to leave space for
            a null terminator) bytes from the sender */
-        if ((bytesRcvd = recv(sock, echoBuffer, RCVBUFSIZE - 1, 0)) <= 0)
+        if ((bytesRcvd = recv(sock, receivedArray, (6*3*3*sizeof(int)), 0)) <= 0)
 			cout << "4" << endl;
+
+        cout << "Bytes received = " << bytesRcvd << endl;
         totalBytesRcvd += bytesRcvd;   /* Keep tally of total bytes */
+        cout << "Total bytes received = " << totalBytesRcvd << endl;
         echoBuffer[bytesRcvd] = '\0';  /* Terminate the string! */
-        printf("%s", echoBuffer);      /* Print the echo buffer */	
+        Cube::PrintArray();
 	}
 }
 
@@ -132,7 +187,7 @@ void Cube::StartServer()
         clntLen = sizeof(echoClntAddr);
 
         /* Wait for a client to connect */
-        if ((clntSock = accept(servSock, (struct sockaddr *) &echoClntAddr, 
+        if ((clntSock = accept(servSock, (struct sockaddr *) &echoClntAddr,
                                &clntLen)) < 0)
             cout << "4" << endl;
 
@@ -140,7 +195,11 @@ void Cube::StartServer()
 
         printf("Handling client %s\n", inet_ntoa(echoClntAddr.sin_addr));
 
-        HandleTCPClient();
+
+        Cube::HandleTCPClient();
+        //Cube::GenerateFeedback();
+        //Cube::SendFeedback();
+
 
         /*
         #############################################################################
@@ -153,33 +212,40 @@ void Cube::StartServer()
         print();
         scramble();
         print();
-    }
+     }
 }
 
 void Cube::HandleTCPClient()
 {
     //char echoBuffer[RCVBUFSIZE];        /* Buffer for echo string */
     int recvMsgSize;                    /* Size of received message */
-	int array[6][3][3];
-
+	
     /* Receive message from client */
-    if ((recvMsgSize = recv(clntSock, &array, 6*3*3*sizeof(int), 0)) < 0)
+    if ((recvMsgSize = recv(clntSock, receivedArray, 6*3*3*sizeof(int), 0)) < 0)
         cout << "1" << endl;
+
+    cout << "Receive Size = " << recvMsgSize << endl;
+    cout << "Size of int = " << sizeof(int) << " -> 6*3*3 sizeof(int) = " 
+    << 6*3*3*sizeof(int) << endl;
+
+    Cube::ChangeArray();
 
     /* Send received string and receive again until end of transmission */
     while (recvMsgSize > 0)      /* zero indicates end of transmission */
     {
+        cout << "Received message size = " << recvMsgSize << endl; 
         /* Echo message back to client */
-        if (send(clntSock, &array, recvMsgSize, 0) != recvMsgSize)
+        if (send(clntSock, &receivedArray, recvMsgSize, 0) != recvMsgSize)
             cout << "1" << endl;
 
         /* See if there is more data to receive */
-        if ((recvMsgSize = recv(clntSock, &array, 6*3*3*sizeof(int), 0)) < 0)
+        if ((recvMsgSize = recv(clntSock, receivedArray, 6*3*3*sizeof(int), 0)) < 0)
             cout << "1" << endl;
     }
 
     close(clntSock);    /* Close client socket */
-}		
+
+}
 
 
 /*
@@ -2510,3 +2576,4 @@ void Cube::scramble()
     }
 }
 
+ 

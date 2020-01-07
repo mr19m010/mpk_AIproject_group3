@@ -19,6 +19,8 @@ class Cube
 
 public:
 
+void l();
+
 // Client
 	void ConnectToServer();
 
@@ -33,6 +35,8 @@ public:
 	void ReceiveAnswer();
 
 	void CloseConnection();
+
+void PrintArray();
 
 // Server
 	void StartServer();
@@ -96,21 +100,25 @@ public:
 	void correctBottomEdges();
 	void twoEdgeRotate(int face, bool isNextTo);
 
+void ChangeArray();
 
 private:
 	int question[6][3][3];
 	int sock;
-	char echoBuffer[RCVBUFSIZE];    
-	int bytesRcvd, totalBytesRcvd;  
-	
+ 	char echoBuffer[6*3*3*sizeof(int)];
+  int bytesRcvd, totalBytesRcvd;
+
 	// Server
 	int servSock;                    /* Socket descriptor for server */
-    int clntSock;                    /* Socket descriptor for client */
-    struct sockaddr_in echoServAddr; /* Local address */
-    struct sockaddr_in echoClntAddr; /* Client address */
-    unsigned short echoServPort=10000;     /* Server port */
-    unsigned int clntLen;            /* Length of client address data structure */
+  int clntSock;                    /* Socket descriptor for client */
+  struct sockaddr_in echoServAddr; /* Local address */
+  struct sockaddr_in echoClntAddr; /* Client address */
+  unsigned short echoServPort=10000;     /* Server port */
+  unsigned int clntLen;            /* Length of client address data structure */
+  int receivedArray[6][3][3];
+  int number;
 
+	
 	//CubeSolver-Stuff
 
 	string moves = "";	// saves a list of performed moves
@@ -134,4 +142,5 @@ private:
     { { 5, 5, 5 }, { 5, 5, 5 }, { 5, 5, 5 } }  //white side
 	}; 
 
+ 
 };
