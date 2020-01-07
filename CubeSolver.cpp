@@ -26,8 +26,8 @@ void fi();
 void b();
 void bi();
 
-void copyCube();
-void print();
+void copyCube(); // copys cube into old
+void print();      // prints cube
 
 void solveTopCross();
 void findNextTopEdge(int & s, int & p);
@@ -43,7 +43,7 @@ int findBottomMatch(int color);
 void placeMiddleEdge(int color, int edgeSide);
 void middleAlgorithm(int color, int direction);
 
-string last(); //gets the last move performed
+string last();      //gets the last move performed
 void removeLast(); //removes the last move performed
 void clearMoves(); //clears all moves
 
@@ -63,37 +63,6 @@ void twoCornerRotate(int face, bool goForward);
 void correctBottomEdges();
 void twoEdgeRotate(int face, bool isNextTo);
 
-/*
- int cube[6][3][3] = {
- { {2, 2, 5}, {0, 0, 0}, {4, 4, 2} }, //yellow side
- { {5, 1, 5}, {2, 1, 1}, {2, 2, 4} }, //orange side
- { {1, 5, 0}, {5, 2, 2}, {5, 5, 1} }, //blue side
- { {1, 4, 3}, {5, 3, 4}, {4, 4, 3} }, //red side
- { {2, 3, 1}, {3, 4, 0}, {0, 3, 3} }, //green side
- { {3, 3, 0}, {1, 5, 1}, {0, 0, 4} } }; //white side
- */
-
-int old[6][3][3] =
-{
-    { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } }, //yellow side
-    { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } }, //orange side
-    { { 2, 2, 2 }, { 2, 2, 2 }, { 2, 2, 2 } }, //blue side
-    { { 3, 3, 3 }, { 3, 3, 3 }, { 3, 3, 3 } }, //red side
-    { { 4, 4, 4 }, { 4, 4, 4 }, { 4, 4, 4 } }, //green side
-};
-
-int cube[6][3][3] =
-{
-    { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } }, //yellow side
-    { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } }, //orange side
-    { { 2, 2, 2 }, { 2, 2, 2 }, { 2, 2, 2 } }, //blue side
-    { { 3, 3, 3 }, { 3, 3, 3 }, { 3, 3, 3 } }, //red side
-    { { 4, 4, 4 }, { 4, 4, 4 }, { 4, 4, 4 } }, //green side
-    { { 5, 5, 5 }, { 5, 5, 5 }, { 5, 5, 5 } }
-}; //white side
-
-
-string moves = "";
 
 int main()
 {
