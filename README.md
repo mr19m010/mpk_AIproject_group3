@@ -19,8 +19,10 @@ Students Project
 
 ![layoutCube](miscellaneous/layoutCube.png)
 
-Array[6][3][3] --> 1. Cube side; 2. Row; 3. Column;
-
+Array[6][3][3] -->
+  1. Cube side range[0-5];
+  2. Row range[0-2];
+  3. Column range[0-2];
 
 ## How does it work?
 
