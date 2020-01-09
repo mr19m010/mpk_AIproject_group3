@@ -29,6 +29,11 @@ Array[6][3][3] -->
 1. Enter a number from range [2-53]
 2. Be surprised
 
+### Bedeutung der Antworten:
+0 - falsch
+1 - Korrete Würfelseite (Farbe)
+2 - Korrete Würfelseite & korrekte Position
+
 
 ### Project Description:
 
