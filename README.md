@@ -30,6 +30,7 @@ Array[6][3][3] -->
 2. Be surprised
 
 ### Bedeutung der Antworten:
+
 0 - falsch
 1 - Korrete Würfelseite (Farbe)
 2 - Korrete Würfelseite & korrekte Position
