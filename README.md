@@ -33,7 +33,9 @@ Array[6][3][3] -->
 
 
 0: Falsche Farbe(Würfelseite)
+
 1: Korrekte Farbe
+
 2: Korrekte Farbe & Position
 
 ### Project Description:
