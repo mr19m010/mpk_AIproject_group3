@@ -31,10 +31,10 @@ Array[6][3][3] -->
 
 ### Bedeutung der Antworten:
 
-0 - falsch
-1 - Korrete Würfelseite (Farbe)
-2 - Korrete Würfelseite & korrekte Position
 
+0: Falsche Farbe(Würfelseite)
+1: Korrekte Farbe
+2: Korrekte Farbe & Position
 
 ### Project Description:
 
