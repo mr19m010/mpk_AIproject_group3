@@ -1,5 +1,6 @@
 
 #include "MasterCube.h"
+#include "terminalcmd.h"
 #include <iostream>
 
 using namespace std;
@@ -79,22 +80,22 @@ void Cube::PrintArray()
                 cout << receivedArray[x][y][z] << " ";
                 //cout << z << " ";
                 z++;
-                
+
             }
             else if (cols>=3 && cols<=5)
-            {   
+            {
                 x=((rows)/3)*5/2;
                 cout << receivedArray[x][y][z] << " ";
                 //cout << z << " ";
                 z++;
             }
-            
+
         }
         cout << endl;
         y++;
         if (y>2) y=0;
     }
-    
+
 }
 
 
@@ -226,6 +227,7 @@ void Cube::StartServer()
         print();
         scramble();
         print();
+				int getQuestionNumber(int a);
      }
 }
 
@@ -233,13 +235,13 @@ void Cube::HandleTCPClient()
 {
     //char echoBuffer[RCVBUFSIZE];        /* Buffer for echo string */
     int recvMsgSize;                    /* Size of received message */
-	
+
     /* Receive message from client */
     if ((recvMsgSize = recv(clntSock, receivedArray, 6*3*3*sizeof(int), 0)) < 0)
         cout << "1" << endl;
 
     cout << "Receive Size = " << recvMsgSize << endl;
-    cout << "Size of int = " << sizeof(int) << " -> 6*3*3 sizeof(int) = " 
+    cout << "Size of int = " << sizeof(int) << " -> 6*3*3 sizeof(int) = "
     << 6*3*3*sizeof(int) << endl;
 
     //Cube::ChangeArray();
@@ -247,7 +249,7 @@ void Cube::HandleTCPClient()
     /* Send received string and receive again until end of transmission */
     while (recvMsgSize > 0)      /* zero indicates end of transmission */
     {
-        cout << "Received message size = " << recvMsgSize << endl; 
+        cout << "Received message size = " << recvMsgSize << endl;
         /* Echo message back to client */
         if (send(clntSock, &receivedArray, recvMsgSize, 0) != recvMsgSize)
             cout << "1" << endl;
@@ -2590,4 +2592,5 @@ void Cube::scramble()
     }
 }
 
- 
+
+7

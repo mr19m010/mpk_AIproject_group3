@@ -4,8 +4,8 @@
 #include <stdlib.h>     /* for atoi() and exit() */
 #include <string.h>     /* for memset() */
 #include <unistd.h>     /* for close() */
-#include <cmath>		/* for CubeSolver */
-#include <time.h>		/* for randomizer in scramble();*/
+#include <cmath>				/* for CubeSolver */
+#include <time.h>				/* for randomizer in scramble();*/
 #include <iostream>
 
 #define RCVBUFSIZE 32   /* Size of receive buffer */
@@ -111,8 +111,8 @@ private:
   int auxNumber=0;
 
 
-  
-  
+
+
 
 	// Server
 	int servSock;                    /* Socket descriptor for server */
@@ -124,11 +124,11 @@ private:
   int receivedArray[6][3][3];
   int number;
 
-	
+
 	//CubeSolver-Stuff
 
 	string moves = "";	// saves a list of performed moves
-	
+
 	int old[6][3][3] =
 	{
     { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } }, //yellow side
@@ -146,7 +146,7 @@ private:
     { { 3, 3, 3 }, { 3, 3, 3 }, { 3, 3, 3 } }, //red side
     { { 4, 4, 4 }, { 4, 4, 4 }, { 4, 4, 4 } }, //green side
     { { 5, 5, 5 }, { 5, 5, 5 }, { 5, 5, 5 } }  //white side
-	}; 
+	};
 
- 
+
 };
