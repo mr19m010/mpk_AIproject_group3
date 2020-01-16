@@ -8,6 +8,9 @@
 #include <stdio.h>
 using namespace std;
 
+//for logic see https://www.rubiks-cube-solver.com
+//whereas xi (i = inverse) is x'
+
 void r();
 void ri();
 
@@ -571,6 +574,7 @@ void solveTopCross()
         int numTurns = 0; //keeps track of how many times we turn the cube to put pieces on the bottom layer so we can undo the turns
         if (side == 1)
         {
+            // 0 is color yellow -> see mastercube.cpp
             while (cube[5][1][0] == 0)
             {
                 d();
@@ -2369,4 +2373,3 @@ void scramble()
         }
     }
 }
-
