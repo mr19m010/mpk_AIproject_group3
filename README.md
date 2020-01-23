@@ -32,8 +32,6 @@ See [this webside](https://www.rubiks-cube-solver.com) for detailed information 
 1. Enter a number from range [2-53]
 2. Be surprised
 
-
-
 ### Purpose:
 
 Purpose of this code is to combine a rubiks cube solver with mastermind.
@@ -54,5 +52,12 @@ cube-sides on a cube that will have 6 different colors (red, green, blue, white,
  Nothing (2) is returned (in an unsorted array) if a color is neither given at the correct position nor on the correct side.
  The positions of the 0,1,2 in the array won't give any hint about the positions of the colors nor the sides.
 5. The "server" will additionally answer the "client" if the Rubik's cube is solved or not solved - by returning 0 (not solved) or 1 (solved) and then exiting.
+
+### Logic of CubeSolver:
+
+1. solveTopCross (edges)
+2. solveTopCorners
+3. solveMiddleLayer
+4. solveBottomLayer
 
 # Still in progress!

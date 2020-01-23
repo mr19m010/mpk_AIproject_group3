@@ -22,17 +22,11 @@ public:
 
 // Client
 	void ConnectToServer();
-
 	int LoopArray(int * array);
-
 	void ResetQuestion();
-
 	void GenerateTransmissionString(int *quest);
-
 	void SendQuestion();
-
 	void ReceiveAnswer();
-
 	void CloseConnection();
 
 void PrintArray();
@@ -41,7 +35,6 @@ bool DetectChange(int number);
 
 // Server
 	void StartServer();
-
 	void HandleTCPClient();
 
 
@@ -110,10 +103,6 @@ private:
   int bytesRcvd, totalBytesRcvd;
   int auxNumber=0;
 
-
-
-
-
 	// Server
 	int servSock;                    /* Socket descriptor for server */
   int clntSock;                    /* Socket descriptor for client */
@@ -124,9 +113,7 @@ private:
   int receivedArray[6][3][3];
   int number;
 
-
 	//CubeSolver-Stuff
-
 	string moves = "";	// saves a list of performed moves
 
 	int old[6][3][3] =
@@ -147,6 +134,4 @@ private:
     { { 4, 4, 4 }, { 4, 4, 4 }, { 4, 4, 4 } }, //green side
     { { 5, 5, 5 }, { 5, 5, 5 }, { 5, 5, 5 } }  //white side
 	};
-
-
 };

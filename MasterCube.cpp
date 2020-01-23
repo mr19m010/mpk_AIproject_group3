@@ -1,5 +1,5 @@
 
-#include "MasterCube.h"
+#include "cubeClass.h"
 #include "terminalcmd.h"
 #include <iostream>
 
@@ -226,6 +226,8 @@ void Cube::StartServer()
 
         print();
         scramble();
+				cout << endl;
+				cout << endl;
         print();
 				int getQuestionNumber(int a);
      }

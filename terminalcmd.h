@@ -9,9 +9,11 @@ int getQuestionNumber(int a)
   if(n <= 2 || n >=53)
   {
     cout << "Error! Invalid number, try again!" << endl;
-    getQuestionNumber(int a);
+    //getQuestionNumber(int a);
   }
   else
     cout << "Thank you! Question asked: " << n << endl;
   return n;
 }
+
+--> While oder for schleife realisieren!!!
