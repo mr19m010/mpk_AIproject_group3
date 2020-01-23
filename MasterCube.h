@@ -21,6 +21,7 @@ public:
 
 
 // Client
+
 	void ConnectToServer();
 
 	int LoopArray(int * array);
@@ -34,6 +35,8 @@ public:
 	void ReceiveAnswer();
 
 	void CloseConnection();
+	
+	int getN();
 
 void PrintArray();
 
@@ -104,6 +107,7 @@ bool DetectChange(int number);
 void ChangeArray();
 
 private:
+	int n;
 	int question[6][3][3];
 	int sock;
  	char echoBuffer[6*3*3*sizeof(int)];
