@@ -5,7 +5,7 @@
 using namespace std;
 
 
-int Cube:getN()
+int Cube::getN()
 {
 	cout <<	"Please enter the n-length: " << endl;
 	cin >> n;
