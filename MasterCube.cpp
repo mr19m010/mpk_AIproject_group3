@@ -5,6 +5,12 @@
 using namespace std;
 
 
+int Cube:getN()
+{
+	cout <<	"Please enter the n-length: " << endl;
+	cin >> n;
+}
+
 void Cube::ConnectToServer()
 {
 	struct sockaddr_in echoServAddr; /* Echo server address */
