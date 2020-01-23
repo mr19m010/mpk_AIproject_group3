@@ -1,6 +1,5 @@
 
 #include "cubeClass.h"
-#include "terminalcmd.h"
 #include <iostream>
 
 using namespace std;
