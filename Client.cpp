@@ -12,9 +12,12 @@ int main()
 
 	
 	cCube.getN();
-
-	cCube.FillQuestion(); // für debug hier
+	cCube.FillQuestion();
+	for(int i=0;i<10;i++){
+		cCube.TopCrossQuestion();
+	}
 	
+
 	cCube.ResetQuestion();
 	cCube.ConnectToServer(); // Hier wird die Verbindung zum Server hergestellt
   	cCube.SendQuestion();

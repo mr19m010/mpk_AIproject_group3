@@ -3,7 +3,7 @@
 #include <iostream>
 
 using namespace std;
-
+vector <int> FAKEfeedbackVector = { 0, 0, 0, 0, 0, 0, 0,0};
 
 int Cube::getN()
 {
@@ -11,21 +11,61 @@ int Cube::getN()
 	cin >> n;
 }
 
+void Cube::ReadFeedback(){
+    //cout << "IM IN ReadFeedback"<< endl;
+    for(int i = 0;i<n;i++){
+        if(FAKEfeedbackVector[i]==1 || FAKEfeedbackVector[i]==2){
+            feedcnt++;
+        }
+    }
+    cout << "Feedcnt= "<< feedcnt<< endl;
+}
+
 void Cube::FillQuestion(){
+    //cout << "IM IN FillQuestion"<< endl;
     for(int i=0;i<n;i++){        
             Pos.push_back(Prio[i]);     // Fill Question with Prio List
-            Col.push_back(0);           // Write Color = 0 ("yellow")      
+            Col.push_back(5);           // Write Color = 5 ("nicht yellow")      
             //cout << "Pos: " <<Pos[i] << " Col: " <<Col[i]<<endl;    
             //cout << "Prio: " << Prio[i] << endl;
     }
+    //SendQuestion();
+    ReadFeedback();
+    feedcntOld=feedcnt;
+    feedcnt=0;
 } 
 
 void Cube::AdjustQuestion(){
+    //cout << "IM IN AdjustQuestion"<< endl;
+    ReadFeedback();
 
+if(feedcntOld<feedcnt){ // we hit something good
+    cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=0;
+    Col[Qcnt]=0; // Write Color = "Yellow"
+    cout << "Feedback groesser, Qcnt: " << Qcnt << "Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
+    Qcnt++;
+}else if(feedcntOld>feedcnt){
+    // Stuff is white - save that info?
+    Col[Qcnt]=0; // Write Color = "Yellow"
+    cout << "Feedback kleiner, Qcnt: " << Qcnt << endl;
+    Qcnt++;
+    } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
+        Col[Qcnt]=0; // Write Color = "Yellow"
+        cout << "Feedback gleich, Qcnt: " << Qcnt << endl;
+        Qcnt++;
+    }
+    feedcntOld=feedcnt;
+    feedcnt=0;
 }
 
 void Cube::TopCrossQuestion(){
-   // FillQuestion();
+    //cout << "IM IN TopCrossQuestion"<< endl;
+    //FillQuestion();
+    AdjustQuestion();
+    if(Qcnt >1){
+        cout << "Feedbackvector auf 111111"<< endl;
+        FAKEfeedbackVector = { 1, 1, 2, 1, 1, 1, 1,1};
+    }
     //SendQuestion();
     /*while(feedback!=0){
         AdjustQuesttion;
@@ -65,6 +105,19 @@ for (int i = 0; i < 6; i++){
     }
 }
 };
+
+int Cube::X(int Pos){ // Hier wird die Positionsinformation auf x y z aufgeteilt
+        int x = (Pos/100)%10;
+        return x;
+}
+int Cube::Y(int Pos){
+        int y = (Pos/10)%10;
+        return y;
+}
+int Cube::Z(int Pos){
+        int z = Pos%10;
+        return z;
+}
 
 void Cube::ConnectToServer()
 {
@@ -195,32 +248,32 @@ void Cube::ResetQuestion()
 
 void Cube::GenerateTransmissionString()
 {
-    positionVectorClient.resize(n);
-    positionVectorClient[0]=11;
-    positionVectorClient[1]=110;
-    positionVectorClient[2]=222;
-    positionVectorClient[3]=300;
-    positionVectorClient[4]=401;
-    positionVectorClient[5]=511;
-    positionVectorClient[6]=20;
-    positionVectorClient[7]=21;
-    positionVectorClient[8]=11;
-    positionVectorClient[9]=11;
+    Pos.resize(n);
+    Pos[0]=11;
+    Pos[1]=110;
+    Pos[2]=222;
+    Pos[3]=300;
+    Pos[4]=401;
+    Pos[5]=511;
+    Pos[6]=20;
+    Pos[7]=21;
+    Pos[8]=11;
+    Pos[9]=11;
     
-    colorVectorClient.resize(n);
-    colorVectorClient[0]=0;
-    colorVectorClient[1]=1;
-    colorVectorClient[2]=2;
-    colorVectorClient[3]=3;
-    colorVectorClient[4]=4;
-    colorVectorClient[5]=5;
-    colorVectorClient[6]=4;
-    colorVectorClient[7]=3;
-    colorVectorClient[8]=2;
-    colorVectorClient[9]=1;
+    Col.resize(n);
+    Col[0]=0;
+    Col[1]=1;
+    Col[2]=2;
+    Col[3]=3;
+    Col[4]=4;
+    Col[5]=5;
+    Col[6]=4;
+    Col[7]=3;
+    Col[8]=2;
+    Col[9]=1;
 
-    cout << "Vector size = " << positionVectorClient.size()*sizeof(int) << endl;
-    cout << "Vector capazity = " << positionVectorClient.capacity()*sizeof(int) << endl;
+    cout << "Vector size = " << Pos.size()*sizeof(int) << endl;
+    cout << "Vector capazity = " << Pos.capacity()*sizeof(int) << endl;
 }
 
 void Cube::SendQuestion()
@@ -230,15 +283,15 @@ void Cube::SendQuestion()
     // damit der Server weiß wieviele Elemente noch folgen
     int elementCounter=1;
     int elements =10;
-    testClient=positionVectorClient.size();
+    testClient=Pos.size();
 
     if (send(sock, &testClient, sizeof(int), 0) < 0)
         cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
 
-    if (send(sock, &positionVectorClient[0], positionVectorClient.size()*sizeof(int), 0) < 0)
+    if (send(sock, &Pos[0], Pos.size()*sizeof(int), 0) < 0)
         cout << "error - Vector konnte nicht uebertragen werden." << endl;
 
-    if (send(sock, &colorVectorClient[0], colorVectorClient.size()*sizeof(int), 0) < 0)
+    if (send(sock, &Col[0], Col.size()*sizeof(int), 0) < 0)
         cout << "error - Vector konnte nicht uebertragen werden." << endl;
 
 
@@ -437,10 +490,10 @@ void Cube::GiveFeedback()
                 answerArray[j-1]=merkerA;
 
                 switched=true;
-                cout << "switched ";
+                //cout << "switched ";
             }
         }
-        cout << " | ";
+        //cout << " | ";
     }while(switched==true);
     cout << endl;
 
