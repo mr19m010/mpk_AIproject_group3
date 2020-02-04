@@ -14,6 +14,61 @@
 #define RCVBUFSIZE 32   /* Size of receive buffer */
 #define MAXPENDING 5
 
+#define c000 1 // Seite 0
+#define c001 2
+#define c002 3
+#define c010 4
+#define c011 5
+#define c012 6
+#define c020 7
+#define c021 8
+#define c022 9
+#define c100 10 // Seite 1
+#define c101 11
+#define c102 12
+#define c110 13
+#define c111 14
+#define c112 15
+#define c120 16
+#define c121 17
+#define c122 18
+#define c200 19 // Seite 2
+#define c201 20
+#define c202 21
+#define c210 22
+#define c211 23
+#define c212 24
+#define c220 25
+#define c221 26
+#define c222 27
+#define c300 28 // Seite 3
+#define c301 29
+#define c302 30
+#define c310 31
+#define c311 32
+#define c312 33
+#define c320 34
+#define c321 35
+#define c322 36
+#define c400 37 // Seite 4
+#define c401 38
+#define c402 39
+#define c410 40
+#define c411 41
+#define c412 42
+#define c420 43
+#define c421 44
+#define c422 45
+#define c500 46 // Seite 5
+#define c501 47
+#define c502 48
+#define c510 49
+#define c511 50
+#define c512 51
+#define c520 52
+#define c521 53
+#define c522 54
+
 using namespace std;
 
 
