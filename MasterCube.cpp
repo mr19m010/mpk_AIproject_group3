@@ -137,7 +137,7 @@ void Cube::PrintArray()
             {
                 x=((cols+3)/3);
                 if (Cube::DetectChange(x)==true) z=0;
-                cout << receivedArray[x][y][z] << " ";
+                cout << clientArray[x][y][z] << " ";
                 //cout << z << " ";
                 z++;
                 
@@ -145,7 +145,7 @@ void Cube::PrintArray()
             else if (cols>=3 && cols<=5)
             {   
                 x=((rows)/3)*5/2;
-                cout << receivedArray[x][y][z] << " ";
+                cout << clientArray[x][y][z] << " ";
                 //cout << z << " ";
                 z++;
             }
@@ -157,8 +157,6 @@ void Cube::PrintArray()
     }
     
 }
-
-
 
 void Cube::ChangeArray()
 {
@@ -195,39 +193,293 @@ void Cube::ResetQuestion()
 	}
 }
 
-void Cube::GenerateTransmissionString(int *quest)
+void Cube::GenerateTransmissionString()
 {
-	Cube::ResetQuestion();
-}
+    positionVectorClient.resize(n);
+    positionVectorClient[0]=11;
+    positionVectorClient[1]=110;
+    positionVectorClient[2]=222;
+    positionVectorClient[3]=300;
+    positionVectorClient[4]=401;
+    positionVectorClient[5]=511;
+    positionVectorClient[6]=20;
+    positionVectorClient[7]=21;
+    positionVectorClient[8]=11;
+    positionVectorClient[9]=11;
+    
+    colorVectorClient.resize(n);
+    colorVectorClient[0]=0;
+    colorVectorClient[1]=1;
+    colorVectorClient[2]=2;
+    colorVectorClient[3]=3;
+    colorVectorClient[4]=4;
+    colorVectorClient[5]=5;
+    colorVectorClient[6]=4;
+    colorVectorClient[7]=3;
+    colorVectorClient[8]=2;
+    colorVectorClient[9]=1;
 
+    cout << "Vector size = " << positionVectorClient.size()*sizeof(int) << endl;
+    cout << "Vector capazity = " << positionVectorClient.capacity()*sizeof(int) << endl;
+}
 
 void Cube::SendQuestion()
 {
-	if (send(sock, &question, 6*3*3*sizeof(int), 0) < 0)
-		cout << "3" << endl;
+    // Die Vectorelemente werden einzeln übertragen
+    // Zuerst wird die Anzahl der Elemente übertragen,
+    // damit der Server weiß wieviele Elemente noch folgen
+    int elementCounter=1;
+    int elements =10;
+    testClient=positionVectorClient.size();
 
+    if (send(sock, &testClient, sizeof(int), 0) < 0)
+        cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
+
+    if (send(sock, &positionVectorClient[0], positionVectorClient.size()*sizeof(int), 0) < 0)
+        cout << "error - Vector konnte nicht uebertragen werden." << endl;
+
+    if (send(sock, &colorVectorClient[0], colorVectorClient.size()*sizeof(int), 0) < 0)
+        cout << "error - Vector konnte nicht uebertragen werden." << endl;
+
+
+}
+
+void Cube::GiveFeedback()
+{
+    // 1 -> empfangenen würfel mit dem generiertem Würfel vergleichen
+    // 1a -> Positionen in denen eine "9" gespeichert sind, werden ignoriert
+    // 1b -> beim Vergleich wird geprüft ob sich die Farbe an der richtigen Stelle befindet -> 2, die Farbe an der richtigen Seite ist -> 1
+    //          oder die Farbe keine der beiden Abfragen erfüllt-> 0
+    // 2 -> die Anworten der Abfrage werden in einem Array abgelegt und an den Client gesendet
+
+    int countQuestions=0;
+    vector<int> answerArray;
+    vector<int> randArray;
+    answerArray.resize(n);
+    randArray.resize(n);  
+
+    int idX[3]={0,0,0};
+    int idY[3]={0,0,0};
+    int idZ[3]={0,0,0};
+    
+    // Es werden nicht mehr alle Elemente durchsucht sondern nur die gefragten Positionen
+    // Hierzu werden alle Elemente des Vektors durchsucht    
+    for (int i=0; i<positionVectorServer.size(); i++)
+    {
+        answerArray[i]=0;
+        cout << "-----------------------------"<< endl;
+        
+        // Hier wird die Positionsinformation auf x y z aufgeteilt
+        int x = positionVectorServer[i]/100;
+        int y = (positionVectorServer[i]-(x*100))/10;
+        int z = positionVectorServer[i]-(x*100)-(y*10);
+
+        //cout << x << "|" << y  << "|" << z << endl;
+        //cout << "element -> " << colorVectorServer[i] << endl;
+        //cout << "---------" << endl;
+
+
+        // Jetzt muss die Farbe an der gefragten Stelle mit der Farbe aus der Frage verglichen werden
+
+        if (colorVectorServer[i] == cube[x][y][z])
+        {
+            //cout << "OK -> Die Farben stimmen überein." << endl 
+            //<< "Jetzt muss nur noch die Position auf ihre Richtigkeit überprüft werden." << endl;
+
+            // Prüfen ob Ecke
+            if ((y!=1) & (z!=1)) 
+            {
+                // suche ID in ecken array
+                // Hier werden die zugehörigen Nachbarseiten der Ecke gesucht
+                cout << "ECKE -> " << colorVectorServer[i] << " -> " << positionVectorServer[i] << endl;
+                for (int a=7;a>=0;a--){
+                    for (int b=2;b>=0;b--){
+                        if ( (ecken[a][b][0]==x) & (ecken[a][b][1]==y) & (ecken[a][b][2]==z)) 
+                        {
+                            //cout << "Ecken ID -> " << a << "/" << b << endl;
+                            
+                            // Hier werden die Koordinaten von den 3 Eckseiten abgerufen
+                            idX[0]=ecken[a][0][0];
+                            idX[1]=ecken[a][1][0];
+                            idX[2]=ecken[a][2][0];
+                            
+                            idY[0]=ecken[a][0][1];
+                            idY[1]=ecken[a][1][1];
+                            idY[2]=ecken[a][2][1];
+                            
+                            idZ[0]=ecken[a][0][2];
+                            idZ[1]=ecken[a][1][2];
+                            idZ[2]=ecken[a][2][2];
+                            
+                            cout << "Nachbar elemente -> "  << idX[0] << idY[0] << idZ[0] << " ; "
+                                                            << idX[1] << idY[1] << idZ[1] <<  " ; "
+                                                            << idX[2] << idY[2] << idZ[2]  << endl;
+                            
+                            // An dieser Stelle werden alle Farben der Ecke auf ihre Richtigkeit überprüft
+                            bool eckeRichtig=true;
+                            for (int j=2; j>=0; j--)
+                            {
+                                if ((cube[idX[j]][idY[j]][idZ[j]] == cube[idX[j]][1][1])) {}
+                                else
+                                    eckeRichtig=false;
+                            }
+                            if (eckeRichtig==true){
+                                cout << "ECKE RICHTIG"<< endl;
+                                answerArray[i]=1;
+                                randArray[i]=rand();
+                            } 
+                            else {
+                                cout << "ECKE FALSCH"<< endl;
+                            }
+                        }
+                    }
+                }
+                //cout << "                                                      Das ist eine Ecke -> ";
+            }
+            // Prüfe ob Kante
+            if (((y==1) | (z==1)) & !(y==1 & z==1))
+            {
+                cout << "KANTE -> " << colorVectorServer[i] << " -> " << positionVectorServer[i] << endl;
+                // suche ID in kanten array
+                for (int a=11;a>=0;a--){
+                    for (int b=1;b>=0;b--){
+                        if ( (kanten[a][b][0]==x) & (kanten[a][b][1]==y) & (kanten[a][b][2]==z) ) 
+                        {
+                            idX[0]=kanten[a][0][0];
+                            idX[1]=kanten[a][1][0];
+                            
+                            idY[0]=kanten[a][0][1];
+                            idY[1]=kanten[a][1][1];
+                            
+                            idZ[0]=kanten[a][0][2];
+                            idZ[1]=kanten[a][1][2];
+                            
+                            cout << "Nachbar elemente -> "  << idX[0] << idY[0] << idZ[0] << " ; "
+                                                            << idX[1] << idY[1] << idZ[1]  << endl;
+                            
+                            
+                            // Prüfen ob sich die Kantenelemente auf der richtigen Seite befinden
+                            bool kanteRichtig=true;
+                            for (int j=1; j>=0; j--)
+                            {
+                                if ((cube[idX[j]][idY[j]][idZ[j]] == cube[idX[j]][1][1])) {}
+                                else 
+                                    kanteRichtig=false;
+                            }
+                            if (kanteRichtig==true){
+                                cout << "KANTE RICHTIG"<< endl;
+                                answerArray[i]=1;
+                                randArray[i]=rand();
+                            } 
+                            else {
+                                cout << "KANTE FALSCH"<< endl;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Prüfen ob Mitte
+            if (y==1 & z==1)
+            {
+                cout << "MITTE RICHTIG" << endl;
+                answerArray[i]=1;
+                randArray[i]=rand();
+            }
+        }
+        else{
+            cout << "Die gefragte Farbe ist falsch." << endl;
+            answerArray[i]=2;
+            randArray[i]=rand();
+        }
+    }
+
+    /*
+    FEEDBACK GENERIERT PRÜFEN OB RICHTIG
+    das feedback muss an dieser stelle noch randomisiert werden
+    */
+    cout << "vector size = " << answerArray.size() << endl;
+    cout << "Feedback[" << n <<  "] = " << endl;
+
+    bool switched=false;
+
+    /*
+    for (int j=(n-1); j>=0; j--)
+    {
+        cout << randArray[j] << "|";
+    }
+    cout << endl;
+    for (int j=(n-1); j>=0; j--)
+    {
+        cout << answerArray[j] << "|";
+    }
+    cout << endl;
+    */
+
+    do{
+        switched=false;
+        for (int j=(n-1); j>0; j--)
+        {
+            int merkerR=0;
+            int merkerA=0;
+
+            // Der größe nach ordnen
+            if (randArray[j]<randArray[j-1]){
+                cout << "OK ";
+            }
+            else{
+                merkerR=randArray[j];
+                randArray[j]=randArray[j-1];
+                randArray[j-1]=merkerR;
+
+                merkerA=answerArray[j];
+                answerArray[j]=answerArray[j-1];
+                answerArray[j-1]=merkerA;
+
+                switched=true;
+                cout << "switched ";
+            }
+        }
+        cout << " | ";
+    }while(switched==true);
+    cout << endl;
+
+    /*
+    for (int j=(n-1); j>=0; j--)
+    {
+        cout << randArray[j] << "|";
+    }
+    cout << endl;
+    for (int j=(n-1); j>=0; j--)
+    {
+        cout << answerArray[j] << "|";
+    }
+    cout << endl;
+    */
+
+    
+    if (send(sock, &answerArray, answerArray.size()*sizeof(int), 0) < 0)
+        cout << "ERROR - Feedback konnte nicht gesendet werden." << endl;
+
+    
 }
 
 void Cube::ReceiveAnswer()
 {
-    /* Receive the same string back from the server */
-    totalBytesRcvd = 0;
-    cout << "Received: " << endl;                /* Setup to print the echoed string */
-    while (totalBytesRcvd < (6*3*3*sizeof(int)))
-    {
-        cout << "OK?" << endl;
-        /* Receive up to the buffer size (minus 1 to leave space for
-           a null terminator) bytes from the sender */
-        if ((bytesRcvd = recv(sock, receivedArray, (6*3*3*sizeof(int)), 0)) <= 0)
-			cout << "4" << endl;
-
-        cout << "Bytes received = " << bytesRcvd << endl;
-        totalBytesRcvd += bytesRcvd;   /* Keep tally of total bytes */
-        cout << "Total bytes received = " << totalBytesRcvd << endl;
-        echoBuffer[bytesRcvd] = '\0';  /* Terminate the string! */
-        //Cube::PrintArray();
-        Cube::PrintArray();
-	}
+    int recvMsgSize;
+    feedbackVector.resize(n);
+    // Empfangen der Frage
+    if ((recvMsgSize = recv(clntSock, &feedbackVector[0], feedbackVector.size()*sizeof(int), 0)) < 0)
+        cout << "ERROR - Feedback konnte nicht empfangen werden." << endl;
+    else{
+        for(int i=0; i<feedbackVector.size(); i++){
+            cout << feedbackVector[i] << " " ;
+        }
+    }
+    cout << "Question size = " << n << endl;
+    cout << "Size = " << recvMsgSize << endl;
+    cout << "Vector size = " <<  feedbackVector.size()*sizeof(int) << endl;
+    
 }
 
 void Cube::CloseConnection()
@@ -240,7 +492,7 @@ void Cube::StartServer()
 {
 	/* Create socket for incoming connections */
     if ((servSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-        cout << "1" << endl;
+        cout << "error - 1" << endl;
 
     /* Construct local address structure */
     memset(&echoServAddr, 0, sizeof(echoServAddr));   /* Zero out structure */
@@ -250,73 +502,53 @@ void Cube::StartServer()
 
     /* Bind to the local address */
     if (bind(servSock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-        cout << "2" << endl;
+        cout << "error - 2" << endl;
 
     /* Mark the socket so it will listen for incoming connections */
     if (listen(servSock, MAXPENDING) < 0)
-        cout << "3" << endl;
+        cout << "error - 3" << endl;
 
-    for (;;) /* Run forever */
-    {
-        /* Set the size of the in-out parameter */
-        clntLen = sizeof(echoClntAddr);
+    /* Set the size of the in-out parameter */
+    clntLen = sizeof(echoClntAddr);
 
-        /* Wait for a client to connect */
-        if ((clntSock = accept(servSock, (struct sockaddr *) &echoClntAddr,
-                               &clntLen)) < 0)
-            cout << "4" << endl;
+    /* Wait for a client to connect */
+    if ((clntSock = accept(servSock, (struct sockaddr *) &echoClntAddr,
+                            &clntLen)) < 0)
+        cout << "error - 4" << endl;
 
-        /* clntSock is connected to a client! */
-
-        printf("Handling client %s\n", inet_ntoa(echoClntAddr.sin_addr));
-
-
-        Cube::HandleTCPClient();
-        //Cube::GenerateFeedback();
-        //Cube::SendFeedback();
-
-
-        /*
-        #############################################################################
-        #############################################################################
-        ################# Our main here ##############################################
-        #############################################################################
-        #############################################################################
-        */
-
-        print();
-        scramble();
-        print();
-     }
+    /* clntSock is connected to a client! */
+    printf("Handling client %s\n", inet_ntoa(echoClntAddr.sin_addr));
+    
 }
 
 void Cube::HandleTCPClient()
 {
-    //char echoBuffer[RCVBUFSIZE];        /* Buffer for echo string */
     int recvMsgSize;                    /* Size of received message */
+    int messageSize=0;
+    int messageCounter=0;
 	
-    /* Receive message from client */
-    if ((recvMsgSize = recv(clntSock, receivedArray, 6*3*3*sizeof(int), 0)) < 0)
-        cout << "1" << endl;
+    
+    // Empfangen der Länge des Pakets
+    if ((recvMsgSize = recv(clntSock, &testServer, sizeof(int), 0)) < 0)
+        cout << "error - 1" << endl;
 
-    cout << "Receive Size = " << recvMsgSize << endl;
-    cout << "Size of int = " << sizeof(int) << " -> 6*3*3 sizeof(int) = " 
-    << 6*3*3*sizeof(int) << endl;
+    messageSize=testServer;
+    
 
-    //Cube::ChangeArray();
+    positionVectorServer.resize(messageSize);
+    colorVectorServer.resize(messageSize);
+    cout << "Paketlänge  = " << testServer << endl;
 
-    /* Send received string and receive again until end of transmission */
-    while (recvMsgSize > 0)      /* zero indicates end of transmission */
-    {
-        cout << "Received message size = " << recvMsgSize << endl; 
-        /* Echo message back to client */
-        if (send(clntSock, &receivedArray, recvMsgSize, 0) != recvMsgSize)
-            cout << "1" << endl;
+    // Empfangen der Frage
+    if ((recvMsgSize = recv(clntSock, &positionVectorServer[0], positionVectorServer.size()*sizeof(int), 0)) < 0)
+        cout << "error - 1" << endl;
 
-        /* See if there is more data to receive */
-        if ((recvMsgSize = recv(clntSock, receivedArray, 6*3*3*sizeof(int), 0)) < 0)
-            cout << "1" << endl;
-    }
+    if ((recvMsgSize = recv(clntSock, &colorVectorServer[0], colorVectorServer.size()*sizeof(int), 0)) < 0)
+        cout << "error - 1" << endl;
+    
+    cout << "Vektorgröße pos -> " << positionVectorServer.size() << endl; 
+    cout << "Vektorgröße color -> " << colorVectorServer.size() << endl; 
+    
 
     close(clntSock);    /* Close client socket */
 
@@ -330,44 +562,7 @@ void Cube::HandleTCPClient()
 #############################################################################
 #############################################################################
 */
-/*
-// Cube Solver
-//#include "stdafx.h"
-#include <iostream>
-#include <stdlib.h>
-#include <string>
-#include <cmath>
-#include <time.h>
-#include <stdio.h>
-using namespace std;
 
-
-
-int main()
-{
-    scramble();
-    cout << "scramble: " << moves << endl;
-    clearMoves();
-    print();
-    solveTopCross();
-    cout << "cross: " << moves << endl;
-    clearMoves();
-    print();
-    solveTopCorners();
-    cout << "corners: " << moves << endl;
-    clearMoves();
-    print();
-    solveMiddleLayer();
-    cout << "middle layer: " << moves << endl;
-    clearMoves();
-    print();
-    solveBottomLayer();
-    cout << "Bottom: " << moves << endl;
-    clearMoves();
-    print();
-    return 0;
-}
-*/
 
 void Cube::r()
 {

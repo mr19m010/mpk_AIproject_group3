@@ -9,9 +9,10 @@
 #include <iostream>
 #include <vector>
 
+
+
 #define RCVBUFSIZE 32   /* Size of receive buffer */
 #define MAXPENDING 5
-
 
 using namespace std;
 
@@ -37,7 +38,7 @@ public:
 
 	void ResetQuestion();
 
-	void GenerateTransmissionString(int *quest);
+	void GenerateTransmissionString();
 
 	void SendQuestion();
 
@@ -53,10 +54,13 @@ void PrintArray();
 
 bool DetectChange(int number);
 
+
 // Server
 	void StartServer();
 
 	void HandleTCPClient();
+
+	void GiveFeedback();
 
 
 // CubeSolver-Stuff
@@ -128,8 +132,24 @@ private:
   vector <int> Col;
 
 
-	// Server
-	int servSock;                    /* Socket descriptor for server */
+  // Client
+  int clientArray[6][3][3];
+  vector<int> positionVectorClient; 
+  vector<int> colorVectorClient; 
+  vector<int> feedbackVector;
+  int testClient=34;
+  int n=10; // wird vom user gesetzt
+  
+  
+
+  // Server
+  int serverArray[6][3][3];
+  vector<int> positionVectorServer; 
+  vector<int> colorVectorServer; 
+  int testServer=3;
+  
+
+  int servSock;                    /* Socket descriptor for server */
   int clntSock;                    /* Socket descriptor for client */
   struct sockaddr_in echoServAddr; /* Local address */
   struct sockaddr_in echoClntAddr; /* Client address */
@@ -137,6 +157,31 @@ private:
   unsigned int clntLen;            /* Length of client address data structure */
   int receivedArray[6][3][3];
   int number;
+
+  	int ecken[8][3][3] = {
+						{{0,0,0},{1,0,0},{4,0,2}},
+						{{0,0,2},{3,0,2},{4,0,0}},
+						{{0,2,0},{1,0,2},{2,0,0}},
+						{{0,2,2},{2,0,2},{3,0,0}},
+						{{5,0,0},{1,2,2},{2,2,0}},
+						{{5,0,2},{2,2,2},{3,2,0}},
+						{{5,2,0},{1,2,0},{4,2,2}},
+						{{5,2,2},{3,2,2},{4,2,0}}
+						};
+
+	int kanten[12][2][3] = {{{0,0,1},{4,0,1}},
+							{{0,1,0},{1,0,1}},
+							{{0,1,2},{3,0,1}},
+							{{0,2,1},{2,0,1}},
+							{{5,0,1},{2,2,1}},
+							{{5,1,0},{1,2,1}},
+							{{5,1,2},{3,2,1}},
+							{{5,2,1},{4,2,1}},
+							{{1,1,0},{4,2,1}},
+							{{1,1,2},{2,1,0}},
+							{{2,1,2},{3,1,0}},
+							{{3,1,2},{4,1,0}}
+							};
 
 	
 	//CubeSolver-Stuff
@@ -162,23 +207,15 @@ private:
     { { 5, 5, 5 }, { 5, 5, 5 }, { 5, 5, 5 } }  //white side
 	}; 
 
-	//Questions-Prioritys
- // bug = prio 500 is shit
-	int Prio[100] = {	1, 10, 12, 21, //  4 topcross edges 
-					000, 000, 000, 000, 00,
-					000, 000, 000, 000, 00,
-					000, 000, 000, 000, 00,
-					000, 000, 000, 000, 00,
-					000, 000, 000, 000,	00,
-					000, 000, 000, 000, 00,
-					000, 000, 000, 000, 00,
-					000, 000, 000, 000, 00,
-					000, 000, 000, 000
-					 
-			}; 
-	int TopCrossPrioCounter = 5;
-	int TopCornerPrioCounter = 4;
-	int MiddlePrioCounter = 20;
-	int BottomPrioCounter = 19;
+	int solved_cube[6][3][3] =
+	{
+    { { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 } }, //yellow side
+    { { 1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 } }, //orange side
+    { { 2, 2, 2 }, { 2, 2, 2 }, { 2, 2, 2 } }, //blue side
+    { { 3, 3, 3 }, { 3, 3, 3 }, { 3, 3, 3 } }, //red side
+    { { 4, 4, 4 }, { 4, 4, 4 }, { 4, 4, 4 } }, //green side
+    { { 5, 5, 5 }, { 5, 5, 5 }, { 5, 5, 5 } }  //white side
+	}; 
+
  
 };
