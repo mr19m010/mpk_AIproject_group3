@@ -11,6 +11,61 @@ int Cube::getN()
 	cin >> n;
 }
 
+void Cube::FillQuestion(){
+    for(int i=0;i<n;i++){        
+            Pos.push_back(Prio[i]);     // Fill Question with Prio List
+            Col.push_back(0);           // Write Color = 0 ("yellow")      
+            //cout << "Pos: " <<Pos[i] << " Col: " <<Col[i]<<endl;    
+            //cout << "Prio: " << Prio[i] << endl;
+    }
+} 
+
+void Cube::AdjustQuestion(){
+
+}
+
+void Cube::TopCrossQuestion(){
+   // FillQuestion();
+    //SendQuestion();
+    /*while(feedback!=0){
+        AdjustQuesttion;
+        SendQuestion;
+    }
+
+    //emptyQuesttion is ready, start looking for topcrosspieces
+
+
+    */
+
+}
+
+void Cube::TopCornerQuestion(){
+    // fill question with stuff from prio that is not yet solved
+    // use int TopCrossPrioCounter = 5;
+    //int TopCornerPrioCounter = 4;
+    //int MiddlePrioCounter = 20;
+    //int BottomPrioCounter = 25;
+    // or write 0 into solved Pos in Prio list
+};
+void Cube::MiddleQuestion(){
+
+};
+void Cube::BottomQuestion(){
+
+};
+void Cube::clearCube(){ // writes 9 into every unknown face of the cube
+for (int i = 0; i < 6; i++){
+    for (int j = 0; j < 3; j++){
+        for (int k = 0; k < 3; k++){
+            if(j!= 1 || k!=1)
+                {
+                    cube[i][j][k]=9;
+                }
+        }
+    }
+}
+};
+
 void Cube::ConnectToServer()
 {
 	struct sockaddr_in echoServAddr; /* Echo server address */
@@ -2522,6 +2577,7 @@ void Cube::print()
         }
         cout <<"|"<< endl;
     }
+    cout << endl;
 }
 
 string Cube::last()

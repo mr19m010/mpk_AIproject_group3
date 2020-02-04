@@ -7,9 +7,11 @@
 #include <cmath>		/* for CubeSolver */
 #include <time.h>		/* for randomizer in scramble();*/
 #include <iostream>
+#include <vector>
 
 #define RCVBUFSIZE 32   /* Size of receive buffer */
 #define MAXPENDING 5
+
 
 using namespace std;
 
@@ -21,6 +23,13 @@ public:
 
 
 // Client
+
+	void FillQuestion();
+	void AdjustQuestion();
+	void TopCrossQuestion();
+	void TopCornerQuestion();
+	void MiddleQuestion();
+	void BottomQuestion();
 
 	void ConnectToServer();
 
@@ -37,6 +46,8 @@ public:
 	void CloseConnection();
 	
 	int getN();
+
+	void clearCube();
 
 void PrintArray();
 
@@ -113,10 +124,9 @@ private:
  	char echoBuffer[6*3*3*sizeof(int)];
   int bytesRcvd, totalBytesRcvd;
   int auxNumber=0;
+  vector <int> Pos;
+  vector <int> Col;
 
-
-  
-  
 
 	// Server
 	int servSock;                    /* Socket descriptor for server */
@@ -152,5 +162,23 @@ private:
     { { 5, 5, 5 }, { 5, 5, 5 }, { 5, 5, 5 } }  //white side
 	}; 
 
+	//Questions-Prioritys
+ // bug = prio 500 is shit
+	int Prio[100] = {	1, 10, 12, 21, //  4 topcross edges 
+					000, 000, 000, 000, 00,
+					000, 000, 000, 000, 00,
+					000, 000, 000, 000, 00,
+					000, 000, 000, 000, 00,
+					000, 000, 000, 000,	00,
+					000, 000, 000, 000, 00,
+					000, 000, 000, 000, 00,
+					000, 000, 000, 000, 00,
+					000, 000, 000, 000
+					 
+			}; 
+	int TopCrossPrioCounter = 5;
+	int TopCornerPrioCounter = 4;
+	int MiddlePrioCounter = 20;
+	int BottomPrioCounter = 19;
  
 };

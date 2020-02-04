@@ -5,14 +5,21 @@ using namespace std;
 
 int main()
 {
-	Cube myCube;
+	Cube cCube; // Client-Cube
+	cCube.clearCube();
+
+	cCube.print();
+
 	
-	myCube.getN();
-	myCube.ResetQuestion();
-	myCube.ConnectToServer(); // Hier wird die Verbindung zum Server hergestellt
-  	myCube.SendQuestion();
-	myCube.ReceiveAnswer();
-	myCube.CloseConnection();
+	cCube.getN();
+
+	cCube.FillQuestion(); // für debug hier
+	
+	cCube.ResetQuestion();
+	cCube.ConnectToServer(); // Hier wird die Verbindung zum Server hergestellt
+  	cCube.SendQuestion();
+	cCube.ReceiveAnswer();
+	cCube.CloseConnection();
 	
 
     exit(0);
