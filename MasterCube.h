@@ -55,6 +55,7 @@ public:
 	void clearCube();
 
 void PrintArray();
+void PrintVector(vector <int> &v);
 
 bool DetectChange(int number);
 
@@ -238,7 +239,9 @@ private:
 					000, 000, 000, 000, 000,
 					000, 000, 000
 					 
-			}; 
+			};
+	int PrioCnt=0; // saves our Position in the Priolist for filling the Question
+
 	int TopCrossPrioCounter = 5;
 	int TopCornerPrioCounter = 4;
 	int MiddlePrioCounter = 20;

@@ -31,12 +31,26 @@ void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == not
 
 void Cube::FillQuestion(){
     //cout << "IM IN FillQuestion"<< endl;
-    for(int i=0;i<n;i++){        
-            Pos.push_back(Prio[i]);     // Fill Question with Prio List
-            Col.push_back(5);           // Write Color = 5 ("nicht yellow")      
+    int TmpPrioCnt=0;
+    int k=0;
+    for(int i=PrioCnt;i<n+PrioCnt;i++){        
+             
+
+            if((i+PrioCnt)>=54){ // this is for filling the Question, when there is no more stuff in the Priolist -> we fill from start again
+                Pos.push_back(Prio[k++]);     // Fill Question with Prio List from start
+                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")    
+            }else {
+                Pos.push_back(Prio[i+PrioCnt]);     // Fill Question with Prio List
+                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")    
+                TmpPrioCnt++; 
+            }
+
+
+             
             //cout << "Pos: " <<Pos[i] << " Col: " <<Col[i]<<endl;    
             //cout << "Prio: " << Prio[i] << endl;
         }
+    PrioCnt+=TmpPrioCnt;
     // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)    
     //SendQuestion(); 
     ReadFeedback();
@@ -44,6 +58,9 @@ void Cube::FillQuestion(){
     Col[Qcnt]=0; // Write Color = "Yellow"
     FAKEfeedbackVector = { 1, 2, 2, 2, 2, 2, 2,2};
     //SendQuestion();
+
+    PrintVector(Pos);
+    PrintVector(Col);
 
     } 
 
@@ -68,9 +85,13 @@ void Cube::AdjustQuestion(){
             Col[Qcnt]=0; // Write Color = "Yellow"            
         }
         feedcntOld=feedcnt;
-        // if Qcnt > n -> fill question with other pos and continue asking
+        if(Qcnt>n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
+            FillQuestion();
+            Qcnt=0;
+        }
     }else {
         //do we need to do anything, if we didnt get a new feedbackvector? Send Question again?
+        //SendQuestion();
     }
 }
 
@@ -78,13 +99,16 @@ void Cube::AdjustQuestion(){
 void Cube::TopCrossQuestion(){
     //cout << "IM IN TopCrossQuestion"<< endl;
     FillQuestion();
-    for(int i=0;i<10 && HitCnt<4;i++){
+    while(HitCnt<4){
+        AdjustQuestion();
+    }
+    /*for(int i=0;i<10 && HitCnt<4;i++){ // this is trash
         AdjustQuestion();
         if(Qcnt >1){
             cout << "Feedbackvector auf 111111"<< endl;
             FAKEfeedbackVector = { 1, 0, 2, 2, 2, 2, 2,2};
         }
-    }
+    }*/
     // Throw shit into solver to get the moves necessery
     // do moves on our cube too
     HitCnt=0; // Reset HitCnt for next Question-Set
@@ -141,6 +165,13 @@ int Cube::Y(int Pos){
 int Cube::Z(int Pos){
     int z = Pos%10;
     return z;
+}
+void Cube::PrintVector(vector <int> &v){
+    cout << "Printing Vector: ";
+    for(int i=0; i<v.size(); ++i){
+        cout << v[i] << " ";   
+    }   
+    cout << endl;
 }
 
 void Cube::ConnectToServer()
