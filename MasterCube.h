@@ -136,6 +136,7 @@ private:
   int feedcnt=0;
   int feedcntOld=0;
   int Qcnt=0; // Question Position Counter
+  int HitCnt=0;
 
 
   // Client

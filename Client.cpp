@@ -12,10 +12,8 @@ int main()
 
 	
 	cCube.getN();
-	cCube.FillQuestion();
-	for(int i=0;i<10;i++){
-		cCube.TopCrossQuestion();
-	}
+	cCube.TopCrossQuestion();
+	
 	
 
 	cCube.ResetQuestion();
