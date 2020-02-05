@@ -14,60 +14,6 @@
 #define RCVBUFSIZE 32   /* Size of receive buffer */
 #define MAXPENDING 5
 
-#define c000 1 // Seite 0
-#define c001 2
-#define c002 3
-#define c010 4
-#define c011 5
-#define c012 6
-#define c020 7
-#define c021 8
-#define c022 9
-#define c100 10 // Seite 1
-#define c101 11
-#define c102 12
-#define c110 13
-#define c111 14
-#define c112 15
-#define c120 16
-#define c121 17
-#define c122 18
-#define c200 19 // Seite 2
-#define c201 20
-#define c202 21
-#define c210 22
-#define c211 23
-#define c212 24
-#define c220 25
-#define c221 26
-#define c222 27
-#define c300 28 // Seite 3
-#define c301 29
-#define c302 30
-#define c310 31
-#define c311 32
-#define c312 33
-#define c320 34
-#define c321 35
-#define c322 36
-#define c400 37 // Seite 4
-#define c401 38
-#define c402 39
-#define c410 40
-#define c411 41
-#define c412 42
-#define c420 43
-#define c421 44
-#define c422 45
-#define c500 46 // Seite 5
-#define c501 47
-#define c502 48
-#define c510 49
-#define c511 50
-#define c512 51
-#define c520 52
-#define c521 53
-#define c522 54
 
 using namespace std;
 
@@ -77,9 +23,12 @@ class Cube
 
 public:
 
+	int X(int);
+	int Y(int);
+	int Z(int);
 
 // Client
-
+	void ReadFeedback();
 	void FillQuestion();
 	void AdjustQuestion();
 	void TopCrossQuestion();
@@ -183,17 +132,18 @@ private:
  	char echoBuffer[6*3*3*sizeof(int)];
   int bytesRcvd, totalBytesRcvd;
   int auxNumber=0;
-  vector <int> Pos;
-  vector <int> Col;
+  
+  int feedcnt=0;
+  int feedcntOld=0;
+  int Qcnt=0; // Question Position Counter
 
 
   // Client
   int clientArray[6][3][3];
-  vector<int> positionVectorClient; 
-  vector<int> colorVectorClient; 
+  vector<int> Pos; 
+  vector<int> Col; 
   vector<int> feedbackVector;
   int testClient=34;
-  int n=10; // wird vom user gesetzt
   
   
 
@@ -271,6 +221,27 @@ private:
     { { 4, 4, 4 }, { 4, 4, 4 }, { 4, 4, 4 } }, //green side
     { { 5, 5, 5 }, { 5, 5, 5 }, { 5, 5, 5 } }  //white side
 	}; 
+
+	//Questions-Prioritys
+ 	int Prio[55] = {	
+ 					  1,  10,  12,  21, //  4 topcross edges 
+					101, 110, 112, 121,
+					201, 210, 212, 221,
+					301, 310, 312, 321,
+					401, 410, 412, 421,
+					501, 510, 512, 521,	// 6x4 Crossedges = 26 Flächen
+					000, 000, 000, 000, 000,
+					000, 000, 000, 000, 000,
+					000, 000, 000, 000, 000,
+					000, 000, 000, 000,	000,
+					000, 000, 000, 000, 000,
+					000, 000, 000
+					 
+			}; 
+	int TopCrossPrioCounter = 5;
+	int TopCornerPrioCounter = 4;
+	int MiddlePrioCounter = 20;
+	int BottomPrioCounter = 19;
 
  
 };
