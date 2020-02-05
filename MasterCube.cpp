@@ -74,7 +74,7 @@ void Cube::AdjustQuestion(){
             Col[Qcnt]=0; // Write Color = "Yellow"
             HitCnt++;
         }else if(feedcntOld>feedcnt){
-            // Stuff is white - save that info?
+            cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
             cout << "Feedback kleiner, Qcnt: " << Qcnt << endl;
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"
@@ -117,7 +117,7 @@ void Cube::TopCrossQuestion(){
 
     //SendQuestion();
     /*while(feedback!=0){
-        AdjustQuesttion;
+        AdjustQuestion;
         SendQuestion;
     }
 
@@ -129,12 +129,14 @@ void Cube::TopCrossQuestion(){
 }
 
 void Cube::TopCornerQuestion(){
-    // fill question with stuff from prio that is not yet solved
-    // use int TopCrossPrioCounter = 5;
-    //int TopCornerPrioCounter = 4;
-    //int MiddlePrioCounter = 20;
-    //int BottomPrioCounter = 25;
-    // or write 0 into solved Pos in Prio list
+    PrioCnt=24; // So our FillQuestion knows to start in the Priolist at the Corners
+    FillQuestion();
+    //while...?
+    AdjustQuestion();
+
+
+
+
 };
 void Cube::MiddleQuestion(){
 
@@ -153,6 +155,16 @@ void Cube::clearCube(){ // writes 9 into every unknown face of the cube
             }
         }
     }
+
+    // THIS IS FOR TESTING ONLY
+    /*cube[0][1][0]=0;
+    cube[0][1][2]=0;
+    cube[5][0][1]=0;
+    cube[5][2][1]=0;*/
+    cube[2][1][0]=0;
+    cube[2][1][2]=0;
+    cube[2][0][1]=0;
+    cube[2][2][1]=0;
 };
 
 int Cube::X(int Pos){ // Hier wird die Positionsinformation auf x y z aufgeteilt

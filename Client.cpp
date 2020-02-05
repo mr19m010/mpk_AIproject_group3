@@ -6,7 +6,23 @@ using namespace std;
 int main()
 {
 	Cube cCube; // Client-Cube
-	cCube.clearCube();
+
+	cCube.print();
+
+	cCube.clearCube(); // delete teststuff from this function!
+
+	cCube.print();
+
+	
+
+	cCube.print();
+
+	cout << "Emptymoves: " << cCube.moves << endl;
+
+	cCube.solveTopCross();
+
+
+	cout << "hopefully full moves" << cCube.moves << endl;
 
 	cCube.print();
 

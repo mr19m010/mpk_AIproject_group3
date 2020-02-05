@@ -22,6 +22,8 @@ class Cube
 {
 
 public:
+	string moves = "";	// saves a list of performed moves
+	
 
 	int X(int);
 	int Y(int);
@@ -194,7 +196,7 @@ private:
 	
 	//CubeSolver-Stuff
 
-	string moves = "";	// saves a list of performed moves
+	//string moves = "";	// saves a list of performed moves
 	
 	int old[6][3][3] =
 	{
@@ -247,10 +249,6 @@ private:
 			};
 	int PrioCnt=0; // saves our Position in the Priolist for filling the Question
 
-	int TopCrossPrioCounter = 5;
-	int TopCornerPrioCounter = 4;
-	int MiddlePrioCounter = 20;
-	int BottomPrioCounter = 19;
 
  
 };
