@@ -3,7 +3,6 @@
 #include <iostream>
 
 using namespace std;
-vector <int> FAKEfeedbackVector(40,0);
 
 int Cube::getN()
 {
@@ -98,10 +97,12 @@ void Cube::AdjustQuestion(){
 
 void Cube::TopCrossQuestion(){
     //cout << "IM IN TopCrossQuestion"<< endl;
+    FAKEfeedbackVector.resize(40,0);
+    FAKEfeedbackVector.assign(40,0);
     FillQuestion();
-    while(HitCnt<4){
+    //while(HitCnt<4){
         AdjustQuestion();
-    }
+    //}
     /*for(int i=0;i<10 && HitCnt<4;i++){ // this is trash
         AdjustQuestion();
         if(Qcnt >1){

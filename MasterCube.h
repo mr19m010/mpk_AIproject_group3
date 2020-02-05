@@ -138,6 +138,7 @@ private:
   int feedcntOld=0;
   int Qcnt=0; // Question Position Counter
   int HitCnt=0;
+  vector <int> FAKEfeedbackVector;
 
 
   // Client
@@ -231,13 +232,17 @@ private:
 					201, 210, 212, 221,
 					301, 310, 312, 321,
 					401, 410, 412, 421,
-					501, 510, 512, 521,	// 6x4 Crossedges = 26 Flächen
-					000, 000, 000, 000, 000,
-					000, 000, 000, 000, 000,
-					000, 000, 000, 000, 000,
-					000, 000, 000, 000,	000,
-					000, 000, 000, 000, 000,
-					000, 000, 000
+					501, 510, 512, 521,	// 6sides x 4 edges = 24 Areas
+					
+					  0,   2,  20, 022, //  6sides x 4 corners = 24 Areas
+					100, 102, 120, 122,
+					200, 202, 220, 222,
+					300, 302, 320, 322,
+					400, 402, 420, 422,
+					500, 502, 520, 522,
+
+					 11, 111, 211, 311,	// useless middlepieces
+					411, 511
 					 
 			};
 	int PrioCnt=0; // saves our Position in the Priolist for filling the Question
