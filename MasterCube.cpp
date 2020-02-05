@@ -11,6 +11,170 @@ int Cube::getN()
 	cin >> n;
 }
 
+
+void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == nothing OK
+    //cout << "IM IN ReadFeedback"<< endl;
+    feedcnt=0;
+    for(int i = 0;i<n;i++){
+        if(FAKEfeedbackVector[i]==0 || FAKEfeedbackVector[i]==1){
+            feedcnt++;
+        }else if(FAKEfeedbackVector[i]==2){
+            // nothing happens with 2
+        }else {
+            cout << "ERROR:ReadFeedback():unknown feedbackVector content: "<< FAKEfeedbackVector[i] << " (9 means no new feedbackVector awailaible)"<<endl;
+            feedcnt=-1;
+            break;
+        }
+    }
+    FAKEfeedbackVector.assign(n,9); // writes n times 9 into vector to make sure we dont read the same feedbackvector twice
+    cout << "Feedcnt= "<< feedcnt<< endl;
+}
+
+void Cube::FillQuestion(){
+    //cout << "IM IN FillQuestion"<< endl;
+    int TmpPrioCnt=0;
+    int k=0;
+    for(int i=PrioCnt;i<n+PrioCnt;i++){
+
+
+            if((i+PrioCnt)>=54){ // this is for filling the Question, when there is no more stuff in the Priolist -> we fill from start again
+                Pos.push_back(Prio[k++]);     // Fill Question with Prio List from start
+                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")
+            }else {
+                Pos.push_back(Prio[i+PrioCnt]);     // Fill Question with Prio List
+                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")
+                TmpPrioCnt++;
+            }
+
+
+
+            //cout << "Pos: " <<Pos[i] << " Col: " <<Col[i]<<endl;
+            //cout << "Prio: " << Prio[i] << endl;
+        }
+    PrioCnt+=TmpPrioCnt;
+    // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)
+    //SendQuestion();
+    ReadFeedback();
+    feedcntOld=feedcnt;
+    Col[Qcnt]=0; // Write Color = "Yellow"
+    FAKEfeedbackVector = { 1, 2, 2, 2, 2, 2, 2,2};
+    //SendQuestion();
+
+    PrintVector(Pos);
+    PrintVector(Col);
+
+    }
+
+void Cube::AdjustQuestion(){
+    //cout << "IM IN AdjustQuestion"<< endl;
+    ReadFeedback();
+    if(feedcnt!=-1){
+        if(feedcntOld<feedcnt){ // we hit something good
+            cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=0;
+            cout << "Feedback groesser, Qcnt: " << Qcnt << "Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
+            Qcnt++;
+            Col[Qcnt]=0; // Write Color = "Yellow"
+            HitCnt++;
+        }else if(feedcntOld>feedcnt){
+            // Stuff is white - save that info?
+            cout << "Feedback kleiner, Qcnt: " << Qcnt << endl;
+            Qcnt++;
+            Col[Qcnt]=0; // Write Color = "Yellow"
+        } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
+            cout << "Feedback gleich, Qcnt: " << Qcnt << endl;
+            Qcnt++;
+            Col[Qcnt]=0; // Write Color = "Yellow"
+        }
+        feedcntOld=feedcnt;
+        if(Qcnt>n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
+            FillQuestion();
+            Qcnt=0;
+        }
+    }else {
+        //do we need to do anything, if we didnt get a new feedbackvector? Send Question again?
+        //SendQuestion();
+    }
+}
+
+
+void Cube::TopCrossQuestion(){
+    //cout << "IM IN TopCrossQuestion"<< endl;
+    FillQuestion();
+    while(HitCnt<4){
+        AdjustQuestion();
+    }
+    /*for(int i=0;i<10 && HitCnt<4;i++){ // this is trash
+        AdjustQuestion();
+        if(Qcnt >1){
+            cout << "Feedbackvector auf 111111"<< endl;
+            FAKEfeedbackVector = { 1, 0, 2, 2, 2, 2, 2,2};
+        }
+    }*/
+    // Throw shit into solver to get the moves necessery
+    // do moves on our cube too
+    HitCnt=0; // Reset HitCnt for next Question-Set
+
+
+    //SendQuestion();
+    /*while(feedback!=0){
+        AdjustQuesttion;
+        SendQuestion;
+    }
+
+    //emptyQuesttion is ready, start looking for topcrosspieces
+
+
+    */
+
+}
+
+void Cube::TopCornerQuestion(){
+    // fill question with stuff from prio that is not yet solved
+    // use int TopCrossPrioCounter = 5;
+    //int TopCornerPrioCounter = 4;
+    //int MiddlePrioCounter = 20;
+    //int BottomPrioCounter = 25;
+    // or write 0 into solved Pos in Prio list
+};
+void Cube::MiddleQuestion(){
+
+};
+void Cube::BottomQuestion(){
+
+};
+void Cube::clearCube(){ // writes 9 into every unknown face of the cube
+    for (int i = 0; i < 6; i++){
+        for (int j = 0; j < 3; j++){
+            for (int k = 0; k < 3; k++){
+                if(j!= 1 || k!=1)
+                {
+                    cube[i][j][k]=9;
+                }
+            }
+        }
+    }
+};
+
+int Cube::X(int Pos){ // Hier wird die Positionsinformation auf x y z aufgeteilt
+    int x = (Pos/100)%10;
+    return x;
+}
+int Cube::Y(int Pos){
+    int y = (Pos/10)%10;
+    return y;
+}
+int Cube::Z(int Pos){
+    int z = Pos%10;
+    return z;
+}
+void Cube::PrintVector(vector <int> &v){
+    cout << "Printing Vector: ";
+    for(int i=0; i<v.size(); ++i){
+        cout << v[i] << " ";
+    }
+    cout << endl;
+}
+
 void Cube::ConnectToServer()
 {
 	struct sockaddr_in echoServAddr; /* Echo server address */
