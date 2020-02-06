@@ -11,13 +11,12 @@ int main()
 	/*
 	cCube.print();
 
-	cCube.clearCube(); // delete teststuff from this function!
+	//cCube.clearCube(); // delete teststuff from this function!
 
+    cCube.scramble();
 	cCube.print();
 
 	
-
-	cCube.print();
 
 	cout << "Emptymoves: " << cCube.moves << endl;
 

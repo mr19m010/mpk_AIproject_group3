@@ -1412,6 +1412,7 @@ void Cube::StartServer()
         }
         if (side == 5) //algorithm for when the sticker is on the bottom
         {
+            // WE NEED CODE HERE TO FIND OUT THE COLOR OF 121
             int color = cube[1][2][1];
             for (int a = 1; a < color; a++) //set-up so that the edge goes into the right spot
             {
@@ -1426,6 +1427,7 @@ void Cube::StartServer()
         }
         else //algorithm for when th esticker is not on the bottom
         {
+            // WE NEED CODE HERE TO FIND OUT THE COLOR OF 510
             int color = cube[5][1][0];
             if (color < 4) //set-up so that the sticker goes into the right spot
             {
