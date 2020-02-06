@@ -14,17 +14,17 @@ void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == not
     //cout << "IM IN ReadFeedback"<< endl;
     feedcnt=0;
     for(int i = 0;i<n;i++){
-        if(FAKEfeedbackVector[i]==0 || FAKEfeedbackVector[i]==1){
+        if(feedbackVector[i]==0 || feedbackVector[i]==1){
             feedcnt++;
-        }else if(FAKEfeedbackVector[i]==2){
+        }else if(feedbackVector[i]==2){
             // nothing happens with 2
         }else {
-            cout << "ERROR:ReadFeedback():unknown feedbackVector content: "<< FAKEfeedbackVector[i] << " (9 means no new feedbackVector awailaible)"<<endl;
+            cout << "ERROR:ReadFeedback():unknown feedbackVector content: "<< feedbackVector[i] << " (9 means no new feedbackVector awailaible)"<<endl;
             feedcnt=-1;
             break;
         }
     }
-    FAKEfeedbackVector.assign(n,9); // writes n times 9 into vector to make sure we dont read the same feedbackvector twice
+    //FAKEfeedbackVector.assign(n,9); // writes n times 9 into vector to make sure we dont read the same feedbackvector twice
     cout << "Feedcnt= "<< feedcnt<< endl;
 }
 
@@ -51,15 +51,15 @@ void Cube::FillQuestion(){
         }
     PrioCnt+=TmpPrioCnt;
     // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)    
-    //SendQuestion(); 
+    SendQuestion(); 
     ReadFeedback();
     feedcntOld=feedcnt;
     Col[Qcnt]=0; // Write Color = "Yellow"
-    FAKEfeedbackVector = { 1, 2, 2, 2, 2, 2, 2,2};
-    //SendQuestion();
+    //FAKEfeedbackVector = { 1, 2, 2, 2, 2, 2, 2,2};
+    SendQuestion();
 
-    PrintVector(Pos);
-    PrintVector(Col);
+    //PrintVector(Pos);
+    //PrintVector(Col);
 
     } 
 
@@ -90,18 +90,19 @@ void Cube::AdjustQuestion(){
         }
     }else {
         //do we need to do anything, if we didnt get a new feedbackvector? Send Question again?
-        //SendQuestion();
+        SendQuestion();
     }
 }
 
 
 void Cube::TopCrossQuestion(){
     //cout << "IM IN TopCrossQuestion"<< endl;
-    FAKEfeedbackVector.resize(40,0);
-    FAKEfeedbackVector.assign(40,0);
+    //FAKEfeedbackVector.resize(40,0);
+    //FAKEfeedbackVector.assign(40,0);
     FillQuestion();
     //while(HitCnt<4){
         AdjustQuestion();
+        SendQuestion();
     //}
     /*for(int i=0;i<10 && HitCnt<4;i++){ // this is trash
         AdjustQuestion();
@@ -366,6 +367,7 @@ void Cube::SendQuestion()
     int elementCounter=1;
     int elements =10;
     testClient=Pos.size();
+    cout << " Pos.size: " << Pos.size()<<endl;
 
     if (send(sock, &testClient, sizeof(int), 0) < 0)
         cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
@@ -376,7 +378,7 @@ void Cube::SendQuestion()
     if (send(sock, &Col[0], Col.size()*sizeof(int), 0) < 0)
         cout << "error - Vector konnte nicht uebertragen werden." << endl;
 
-
+    ReceiveAnswer(); // "receivefeedback, client side"
 }
 
 void Cube::SendMoveCommand(bool sendVector)

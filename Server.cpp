@@ -15,9 +15,9 @@ int main()
 	cout<< "done handle tcp client" << endl;
 	//myCube.GiveFeedback();
 	
-	myCube.print();
+	//myCube.print();
     myCube.scramble();
-    myCube.print();
+    //myCube.print();
 	myCube.GiveFeedback();
 	cout<< "done give GiveFeedback" << endl;
 	myCube.CloseSocket();

@@ -143,7 +143,7 @@ private:
   int feedcntOld=0;
   int Qcnt=0; // Question Position Counter
   int HitCnt=0;
-  vector <int> FAKEfeedbackVector;
+  //vector <int> FAKEfeedbackVector;
 
 
   // Client

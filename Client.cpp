@@ -33,21 +33,22 @@ int main()
 	*/
 
 	cCube.getN();
-	cCube.GenerateTransmissionString();
+	cCube.TopCrossQuestion();
+	//cCube.GenerateTransmissionString();
 	
 	//cout << "Client Cube wurde erstellt" << endl;
-	cCube.ResetQuestion();
+	//cCube.ResetQuestion();
 	//cout << "Test Vektor erstellt" << endl;
 	cCube.ConnectToServer(); // Hier wird die Verbindung zum Server hergestellt
   	//cout << "Verbindung mit Server hergestellt" << endl;
 	
-	cCube.SendQuestion();
+	//cCube.SendQuestion();
 	
-	cCube.SendMoveCommand(true);
+	//cCube.SendMoveCommand(true);
 	//cout << "Positions und Farbvektor gesendet" << endl;
 
 
-	cCube.ReceiveAnswer();
+	
 	//cout << "Feedback empfangen" << endl;
 	cCube.CloseConnection();
     exit(0);
