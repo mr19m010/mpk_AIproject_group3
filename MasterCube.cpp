@@ -26,6 +26,8 @@ void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == not
     }
     //FAKEfeedbackVector.assign(n,9); // writes n times 9 into vector to make sure we dont read the same feedbackvector twice
     cout << "Feedcnt= "<< feedcnt<< endl;
+    cout << "feedbackVector: ";
+    PrintVector(feedbackVector);
 }
 
 void Cube::FillQuestion(){
@@ -100,10 +102,11 @@ void Cube::TopCrossQuestion(){
     //FAKEfeedbackVector.resize(40,0);
     //FAKEfeedbackVector.assign(40,0);
     FillQuestion();
-    //while(HitCnt<4){
+    while(HitCnt<4){
         AdjustQuestion();
         SendQuestion();
-    //}
+    }
+    cout << "Found 4 Yellow edges"<<endl;
     /*for(int i=0;i<10 && HitCnt<4;i++){ // this is trash
         AdjustQuestion();
         if(Qcnt >1){
@@ -185,7 +188,7 @@ void Cube::PrintVector(vector <int> &v){
     for(int i=0; i<v.size(); ++i){
         cout << v[i] << " ";   
     }   
-    cout << endl;
+    cout << "Done with printing vector" << endl;
 }
 
 void Cube::ConnectToServer()
@@ -361,13 +364,14 @@ void Cube::GenerateTransmissionString() // Diese Funktion dient zum Testen des F
 
 void Cube::SendQuestion()
 {
+    //cout << "IM IN SendQuestion"<< endl;
     // Die Vectorelemente werden einzeln übertragen
     // Zuerst wird die Anzahl der Elemente übertragen,
     // damit der Server weiß wieviele Elemente noch folgen
     int elementCounter=1;
     int elements =10;
     testClient=Pos.size();
-    cout << " Pos.size: " << Pos.size()<<endl;
+    //cout << " Pos.size: " << Pos.size()<<endl;
 
     if (send(sock, &testClient, sizeof(int), 0) < 0)
         cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
@@ -378,7 +382,9 @@ void Cube::SendQuestion()
     if (send(sock, &Col[0], Col.size()*sizeof(int), 0) < 0)
         cout << "error - Vector konnte nicht uebertragen werden." << endl;
 
+    SendMoveCommand(false);
     ReceiveAnswer(); // "receivefeedback, client side"
+    //cout << "Done with SendQuestion - Received Answer done too"<< endl;
 }
 
 void Cube::SendMoveCommand(bool sendVector)
@@ -403,10 +409,10 @@ void Cube::SendMoveCommand(bool sendVector)
     }
 
 
-    for(int i=0; i<moveCommandsChar.size();i++)
+    /*for(int i=0; i<moveCommandsChar.size();i++)
     {
         cout << moveCommandsChar[i] << endl;
-    }
+    }*/
     
     
     if (sendVector==true)
@@ -655,6 +661,7 @@ void Cube::GiveFeedback()
 
 void Cube::ReceiveAnswer()
 {
+    //cout << "IM IN ReceiveAnswer"<< endl;
     int recvMsgSize;
     feedbackVector.resize(n);
     //cout<<"-------------------------"<<endl;
@@ -676,7 +683,7 @@ void Cube::ReceiveAnswer()
     //cout << "Question size = " << n << endl;
     //cout << "Size = " << recvMsgSize << endl;
     //cout << "Vector size = " <<  feedbackVector.size()*sizeof(int) << endl;
-
+    //cout << "Done with ReceiveAnswer"<< endl;
 }
 
 void Cube::CloseConnection()

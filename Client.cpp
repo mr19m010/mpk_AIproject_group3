@@ -32,14 +32,17 @@ int main()
 	cCube.TopCrossQuestion();
 	*/
 
-	cCube.getN();
-	cCube.TopCrossQuestion();
 	//cCube.GenerateTransmissionString();
 	
 	//cout << "Client Cube wurde erstellt" << endl;
 	//cCube.ResetQuestion();
 	//cout << "Test Vektor erstellt" << endl;
 	cCube.ConnectToServer(); // Hier wird die Verbindung zum Server hergestellt
+
+
+	cCube.getN();
+	cCube.print();
+	cCube.TopCrossQuestion();
   	//cout << "Verbindung mit Server hergestellt" << endl;
 	
 	//cCube.SendQuestion();
