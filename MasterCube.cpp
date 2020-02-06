@@ -191,13 +191,15 @@ void Cube::ConnectToServer()
 {
 	struct sockaddr_in echoServAddr; /* Echo server address */
 
-	cout << "Connecting to server"  << endl;
+	//cout << "Connecting to server"  << endl;
 
 
     /* Create a reliable, stream socket using TCP */
     if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-        printf("1");
+        cout << "Error - Socket" << endl;
 
+
+    //cout << "Socket = " << sock << endl;
     /* Construct the server address structure */
     memset(&echoServAddr, 0, sizeof(echoServAddr));     /* Zero out structure */
     echoServAddr.sin_family      = AF_INET;             /* Internet address family */
@@ -206,7 +208,7 @@ void Cube::ConnectToServer()
 
     /* Establish the connection to the echo server */
     if (connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-        printf("2");
+        cout << "Error - Verbindung mit Server konnte nicht hergestellt werden." << endl;
 
 }
 
@@ -285,15 +287,15 @@ void Cube::ChangeArray()
     {
       for(int y=2; y>=0; y--)
       {
-         for(int z=2; z>=0; z--)
-         {
+            for(int z=2; z>=0; z--)
+            {
             receivedArray[x][y][z]*=2;
+            }   
         }
     }
 }
-}
 
-void Cube::ResetQuestion()
+void Cube::ResetQuestion() // Diese Funktion ist ALT und kann gelöscht werden
 {
     int cntNumber=9;
 	//cout << number << endl;
@@ -301,20 +303,20 @@ void Cube::ResetQuestion()
     {
       for(int y=2; y>=0; y--)
       {
-         for(int z=2; z>=0; z--)
-         {
+            for(int z=2; z>=0; z--)
+            {
 				//(question+(x*6)+(y*3)+z)=0;
             question[x][y][z]=cntNumber--;
             if (cntNumber<1) cntNumber=9;
 				//cout << question[x][y][z] << " ";
-        }
+            }
 			//cout << endl;
-    }
+        }
 		//cout << "-----" << endl;
-}
+    }
 }
 
-void Cube::GenerateTransmissionString()
+void Cube::GenerateTransmissionString() // Diese Funktion dient zum Testen des Feedbacks
 {
     Pos.resize(n);
     Pos[0]=11;
@@ -326,22 +328,34 @@ void Cube::GenerateTransmissionString()
     Pos[6]=20;
     Pos[7]=21;
     Pos[8]=11;
-    Pos[9]=11;
+    Pos[9]=0;
+    Pos[10]=12;
+    Pos[11]=21;
+    Pos[12]=112;
+    Pos[13]=521;
+    Pos[14]=510;
+    Pos[15]=520;
+    Pos[16]=400;
+    Pos[17]=401;
+    Pos[18]=402;
+    Pos[19]=410;
+    Pos[20]=412;
+    Pos[21]=420;
+    Pos[22]=421;
+    Pos[23]=422;
+    Pos[24]=300;
+    Pos[25]=301;
+    Pos[26]=302;
+    Pos[27]=310;
+    Pos[28]=312;
+    Pos[29]=320;
+    Pos[30]=321;
     
     Col.resize(n);
-    Col[0]=0;
-    Col[1]=1;
-    Col[2]=2;
-    Col[3]=3;
-    Col[4]=4;
-    Col[5]=5;
-    Col[6]=4;
-    Col[7]=3;
-    Col[8]=2;
-    Col[9]=1;
 
-    cout << "Vector size = " << Pos.size()*sizeof(int) << endl;
-    cout << "Vector capazity = " << Pos.capacity()*sizeof(int) << endl;
+
+    //cout << "Vector size = " << Pos.size()*sizeof(int) << endl;
+    //cout << "Vector capazity = " << Pos.capacity()*sizeof(int) << endl;
 }
 
 void Cube::SendQuestion()
@@ -365,56 +379,111 @@ void Cube::SendQuestion()
 
 }
 
+void Cube::SendMoveCommand(bool sendVector)
+{
+    int elements =0;
+    vector<char> moveCommandsChar;
+
+    moveCommandsString.resize(10);
+    moveCommandsString[0]="ri";
+    moveCommandsString[1]="lu";
+    moveCommandsString[2]="u";
+    moveCommandsString[3]="i";
+    moveCommandsString[4]="di";
+    moveCommandsString[5]="cr";
+    moveCommandsString[6]="t";
+    moveCommandsString[7]="ri";
+    
+
+    for(int i=0; i<moveCommandsString.size();i++)
+    {
+        copy(moveCommandsString[i].begin(), moveCommandsString[i].end(), back_inserter(moveCommandsChar));
+    }
+
+
+    for(int i=0; i<moveCommandsChar.size();i++)
+    {
+        cout << moveCommandsChar[i] << endl;
+    }
+    
+    
+    if (sendVector==true)
+    {
+        elements=moveCommandsChar.size();
+        cout << moveCommandsChar.size()*sizeof(char);
+
+        if (send(sock, &elements, sizeof(int), 0) < 0)
+            cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
+
+        if (send(sock, &moveCommandsChar[0], moveCommandsChar.size()*sizeof(char), 0) < 0)
+            cout << "error - Vector konnte nicht uebertragen werden." << endl;
+    }
+    else
+    {
+        elements=0;
+        
+        if (send(sock, &elements, sizeof(int), 0) < 0)
+            cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
+
+   
+    }
+    
+
+    
+}
+
 void Cube::GiveFeedback()
 {
-    // 1 -> empfangenen würfel mit dem generiertem Würfel vergleichen
-    // 1a -> Positionen in denen eine "9" gespeichert sind, werden ignoriert
-    // 1b -> beim Vergleich wird geprüft ob sich die Farbe an der richtigen Stelle befindet -> 2, die Farbe an der richtigen Seite ist -> 1
-    //          oder die Farbe keine der beiden Abfragen erfüllt-> 0
-    // 2 -> die Anworten der Abfrage werden in einem Array abgelegt und an den Client gesendet
-
+    /*
+    Schritt 1:  Positionen aus Vektor abrufen
+    Schritt 2:  Farbe der Position überprüfen
+    Schritt 3:  Prüfen ob die Position eine Ecke, Kante oder Mitte ist
+    Schritt 4:  Wenn Nachbarelemente vorhanden sind, wird auch deren Farbinformation überprüft
+    Schritt 5:  Nachdem die Positionen überprüft wurden, wird das Feedback randomisiert in einen Vektor
+                geschrieben welcher an den Client übertragen wird
+    */
     int countQuestions=0;
     vector<int> answerArray;
     vector<int> randArray;
-    answerArray.resize(n);
-    randArray.resize(n);  
+    answerArray.resize(messageSize);
+    randArray.resize(messageSize); 
+
+    srand (time(NULL)); 
 
     int idX[3]={0,0,0};
     int idY[3]={0,0,0};
     int idZ[3]={0,0,0};
     
-    // Es werden nicht mehr alle Elemente durchsucht sondern nur die gefragten Positionen
-    // Hierzu werden alle Elemente des Vektors durchsucht    
+    // Schritt 1   
     for (int i=0; i<positionVectorServer.size(); i++)
     {
         answerArray[i]=0;
-        cout << "-----------------------------"<< endl;
+        //cout << "-----------------------------"<< endl;
         
         // Hier wird die Positionsinformation auf x y z aufgeteilt
         int x = positionVectorServer[i]/100;
         int y = (positionVectorServer[i]-(x*100))/10;
         int z = positionVectorServer[i]-(x*100)-(y*10);
 
-        //cout << x << "|" << y  << "|" << z << endl;
-        //cout << "element -> " << colorVectorServer[i] << endl;
-        //cout << "---------" << endl;
-
-
-        // Jetzt muss die Farbe an der gefragten Stelle mit der Farbe aus der Frage verglichen werden
-
+        // Schritt 2
         if (colorVectorServer[i] == cube[x][y][z])
         {
             //cout << "OK -> Die Farben stimmen überein." << endl 
             //<< "Jetzt muss nur noch die Position auf ihre Richtigkeit überprüft werden." << endl;
 
+            // Schritt 3
             // Prüfen ob Ecke
             if ((y!=1) & (z!=1)) 
             {
                 // suche ID in ecken array
                 // Hier werden die zugehörigen Nachbarseiten der Ecke gesucht
-                cout << "ECKE -> " << colorVectorServer[i] << " -> " << positionVectorServer[i] << endl;
-                for (int a=7;a>=0;a--){
-                    for (int b=2;b>=0;b--){
+                //cout << "ECKE -> " << colorVectorServer[i] << " -> " << positionVectorServer[i] << endl;
+
+                // Schleife 2/3 -> Nachbarseiten der Ecke überprüfen
+                for (int a=7;a>=0;a--){         // a -> Es gibt 8 Ecken
+                    for (int b=2;b>=0;b--){     // b -> Eine Ecke besteht aus drei Elementen (Nachbarseiten)
+                        
+                        // Hier wird überprüft welche Ecke gefragt wurde
                         if ( (ecken[a][b][0]==x) & (ecken[a][b][1]==y) & (ecken[a][b][2]==z)) 
                         {
                             //cout << "Ecken ID -> " << a << "/" << b << endl;
@@ -432,188 +501,197 @@ void Cube::GiveFeedback()
                             idZ[1]=ecken[a][1][2];
                             idZ[2]=ecken[a][2][2];
                             
-                            cout << "Nachbar elemente -> "  << idX[0] << idY[0] << idZ[0] << " ; "
-                            << idX[1] << idY[1] << idZ[1] <<  " ; "
-                            << idX[2] << idY[2] << idZ[2]  << endl;
+                            //cout << "Nachbar elemente -> "  << idX[0] << idY[0] << idZ[0] << " ; "
+                            ///<< idX[1] << idY[1] << idZ[1] <<  " ; "
+                            //<< idX[2] << idY[2] << idZ[2]  << endl;
                             
                             // An dieser Stelle werden alle Farben der Ecke auf ihre Richtigkeit überprüft
+                            // Schritt 4
                             bool eckeRichtig=true;
                             for (int j=2; j>=0; j--)
                             {
-                                if ((cube[idX[j]][idY[j]][idZ[j]] == cube[idX[j]][1][1])) {}
-                                    else
-                                        eckeRichtig=false;
+                                if ((cube[idX[j]][idY[j]][idZ[j]] == cube[idX[j]][1][1]))
+                                {
+                                    ;
+                                }
+                                else
+                                {
+                                    eckeRichtig=false;
                                 }
                                 if (eckeRichtig==true){
-                                    cout << "ECKE RICHTIG"<< endl;
+                                    //cout << "ECKE RICHTIG"<< endl;
                                     answerArray[i]=1;
                                     randArray[i]=rand();
                                 } 
                                 else {
-                                    cout << "ECKE FALSCH"<< endl;
+                                    //cout << "ECKE FALSCH"<< endl;
+                                    randArray[i]=rand();
                                 }
                             }
                         }
                     }
-                //cout << "                                                      Das ist eine Ecke -> ";
                 }
+            }
             // Prüfe ob Kante
-                if (((y==1) | (z==1)) & !(y==1 & z==1))
-                {
-                    cout << "KANTE -> " << colorVectorServer[i] << " -> " << positionVectorServer[i] << endl;
+            if (((y==1) | (z==1)) & !(y==1 & z==1))
+            {
+                //cout << "KANTE -> " << colorVectorServer[i] << " -> " << positionVectorServer[i] << endl;
                 // suche ID in kanten array
-                    for (int a=11;a>=0;a--){
-                        for (int b=1;b>=0;b--){
-                            if ( (kanten[a][b][0]==x) & (kanten[a][b][1]==y) & (kanten[a][b][2]==z) ) 
-                            {
-                                idX[0]=kanten[a][0][0];
-                                idX[1]=kanten[a][1][0];
+                for (int a=11;a>=0;a--){
+                    for (int b=1;b>=0;b--){
+                        if ( (kanten[a][b][0]==x) & (kanten[a][b][1]==y) & (kanten[a][b][2]==z) ) 
+                        {
+                            idX[0]=kanten[a][0][0];
+                            idX[1]=kanten[a][1][0];
 
-                                idY[0]=kanten[a][0][1];
-                                idY[1]=kanten[a][1][1];
+                            idY[0]=kanten[a][0][1];
+                            idY[1]=kanten[a][1][1];
 
-                                idZ[0]=kanten[a][0][2];
-                                idZ[1]=kanten[a][1][2];
+                            idZ[0]=kanten[a][0][2];
+                            idZ[1]=kanten[a][1][2];
 
-                                cout << "Nachbar elemente -> "  << idX[0] << idY[0] << idZ[0] << " ; "
-                                << idX[1] << idY[1] << idZ[1]  << endl;
+                            //cout << "Nachbar elemente -> "  << idX[0] << idY[0] << idZ[0] << " ; "
+                            //<< idX[1] << idY[1] << idZ[1]  << endl;
 
 
                             // Prüfen ob sich die Kantenelemente auf der richtigen Seite befinden
-                                bool kanteRichtig=true;
-                                for (int j=1; j>=0; j--)
+                            // Schritt 4
+                            bool kanteRichtig=true;
+                            for (int j=1; j>=0; j--)
+                            {
+                                if ((cube[idX[j]][idY[j]][idZ[j]] == cube[idX[j]][1][1])) 
                                 {
-                                    if ((cube[idX[j]][idY[j]][idZ[j]] == cube[idX[j]][1][1])) {}
-                                        else 
-                                            kanteRichtig=false;
-                                    }
-                                    if (kanteRichtig==true){
-                                        cout << "KANTE RICHTIG"<< endl;
-                                        answerArray[i]=1;
-                                        randArray[i]=rand();
-                                    } 
-                                    else {
-                                        cout << "KANTE FALSCH"<< endl;
-                                    }
+                                    ;
+                                }
+                                else {
+                                    kanteRichtig=false;
+                                }
+                                if (kanteRichtig==true){
+                                    //cout << "KANTE RICHTIG"<< endl;
+                                    answerArray[i]=1;
+                                    randArray[i]=rand();
+                                } 
+                                else {
+                                    //cout << "KANTE FALSCH"<< endl;
+                                    randArray[i]=rand();
                                 }
                             }
                         }
                     }
-
-            // Prüfen ob Mitte
-                    if (y==1 & z==1)
-                    {
-                        cout << "MITTE RICHTIG" << endl;
-                        answerArray[i]=1;
-                        randArray[i]=rand();
-                    }
-                }
-                else{
-                    cout << "Die gefragte Farbe ist falsch." << endl;
-                    answerArray[i]=2;
-                    randArray[i]=rand();
                 }
             }
+            // Prüfen ob Mitte
+            if (y==1 & z==1)
+            {
+                //cout << "MITTE RICHTIG" << endl;
+                answerArray[i]=1;
+                randArray[i]=rand();
+            }
+            else{
+                ;
+            }
+        }
+        else {
+            //cout << "Die gefragte Farbe ist falsch." << endl;
+            answerArray[i]=2;
+            randArray[i]=rand();
+        }
+    }
 
     /*
+    // Schritt 5
     FEEDBACK GENERIERT PRÜFEN OB RICHTIG
     das feedback muss an dieser stelle noch randomisiert werden
     */
-            cout << "vector size = " << answerArray.size() << endl;
-            cout << "Feedback[" << n <<  "] = " << endl;
+    cout << "vector size = " << answerArray.size() << endl;
+    cout << "Feedback[" << messageSize <<  "] = " << endl;
 
-            bool switched=false;
+    bool switched=false;
 
-    /*
-    for (int j=(n-1); j>=0; j--)
-    {
-        cout << randArray[j] << "|";
-    }
-    cout << endl;
-    for (int j=(n-1); j>=0; j--)
-    {
-        cout << answerArray[j] << "|";
-    }
-    cout << endl;
-    */
-
-            do{
-                switched=false;
-                for (int j=(n-1); j>0; j--)
-                {
-                    int merkerR=0;
-                    int merkerA=0;
+    int testVar;
+    //cin >> testVar;
+    
+    do{
+        switched=false;
+        for (int j=(messageSize-1); j>0; j--)
+        {
+            int merkerR=0;
+            int merkerA=0;
 
             // Der größe nach ordnen
-                    if (randArray[j]<randArray[j-1]){
-                        cout << "OK ";
-                    }
-                    else{
-                        merkerR=randArray[j];
-                        randArray[j]=randArray[j-1];
-                        randArray[j-1]=merkerR;
-
-                        merkerA=answerArray[j];
-                        answerArray[j]=answerArray[j-1];
-                        answerArray[j-1]=merkerA;
-
-                        switched=true;
-                //cout << "switched ";
-                    }
-                }
-        //cout << " | ";
-            }while(switched==true);
-            cout << endl;
-
-    /*
-    for (int j=(n-1); j>=0; j--)
-    {
-        cout << randArray[j] << "|";
-    }
-    cout << endl;
-    for (int j=(n-1); j>=0; j--)
-    {
-        cout << answerArray[j] << "|";
-    }
-    cout << endl;
-    */
-
-
-            if (send(sock, &answerArray, answerArray.size()*sizeof(int), 0) < 0)
-                cout << "ERROR - Feedback konnte nicht gesendet werden." << endl;
-
-
-        }
-
-        void Cube::ReceiveAnswer()
-        {
-            int recvMsgSize;
-            feedbackVector.resize(n);
-    // Empfangen der Frage
-            if ((recvMsgSize = recv(clntSock, &feedbackVector[0], feedbackVector.size()*sizeof(int), 0)) < 0)
-                cout << "ERROR - Feedback konnte nicht empfangen werden." << endl;
-            else{
-                for(int i=0; i<feedbackVector.size(); i++){
-                    cout << feedbackVector[i] << " " ;
-                }
+            if (randArray[j]<=randArray[j-1]){
+                //cout << "OK -> " << randArray[j] << "/" << randArray[j-1]<<endl;
+                //cout << "OK -> " << answerArray[j] << "/" << answerArray[j-1]<<endl;
             }
-            cout << "Question size = " << n << endl;
-            cout << "Size = " << recvMsgSize << endl;
-            cout << "Vector size = " <<  feedbackVector.size()*sizeof(int) << endl;
+            else{
+                merkerR=randArray[j];
+                randArray[j]=randArray[j-1];
+                randArray[j-1]=merkerR;
 
+                merkerA=answerArray[j];
+                answerArray[j]=answerArray[j-1];
+                answerArray[j-1]=merkerA;
+
+                switched=true;
+                //cout << "switched -> " << randArray[j] << "/" << randArray[j-1]<<endl;
+                //cout << "switched -> " << answerArray[j] << "/" << answerArray[j-1]<<endl;
+            }
+            //cout << endl << "Counter = " << j << endl;
         }
+        //cout << " | " << endl;
+        //cin >> testVar;
+    }while(switched==true);
+    //cout << endl;
 
-        void Cube::CloseConnection()
-        {
-           close(sock);
-       }
+    //cout << "AnswerArray = " << answerArray.size() << endl;
+
+    if (send(clntSock, &answerArray[0], answerArray.size()*sizeof(int), 0) < 0)
+        cout << "ERROR - Feedback konnte nicht gesendet werden." << endl;
+
+
+}
+
+void Cube::ReceiveAnswer()
+{
+    int recvMsgSize;
+    feedbackVector.resize(n);
+    //cout<<"-------------------------"<<endl;
+
+    //if ((recvMsgSize = recv(sock, &testServer, sizeof(int), 0)) < 0)
+    //    cout << "error - 1" << endl;
+
+    // Empfangen der Frage
+    if ((recvMsgSize = recv(sock, &feedbackVector[0], feedbackVector.size()*sizeof(int), 0)) < 0)
+    {
+        cout << "ERROR - Feedback konnte nicht empfangen werden." << endl;
+    }
+    else{
+        for(int i=0; i<feedbackVector.size(); i++){
+            cout << feedbackVector[i] << " " ;
+        }
+        cout << endl;
+    }
+    //cout << "Question size = " << n << endl;
+    //cout << "Size = " << recvMsgSize << endl;
+    //cout << "Vector size = " <<  feedbackVector.size()*sizeof(int) << endl;
+
+}
+
+void Cube::CloseConnection()
+{
+    close(sock);
+}
 // Server
 
-       void Cube::StartServer()
-       {
+void Cube::StartServer()
+{
 	/* Create socket for incoming connections */
         if ((servSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
             cout << "error - 1" << endl;
+
+    int enable = 1;
+    if (setsockopt(servSock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+        cout << "setsockopt(SO_REUSEADDR) failed" << endl;
 
     /* Construct local address structure */
     memset(&echoServAddr, 0, sizeof(echoServAddr));   /* Zero out structure */
@@ -645,7 +723,7 @@ void Cube::GiveFeedback()
     void Cube::HandleTCPClient()
     {
     int recvMsgSize;                    /* Size of received message */
-        int messageSize=0;
+        
         int messageCounter=0;
 
 
@@ -667,12 +745,64 @@ void Cube::GiveFeedback()
         if ((recvMsgSize = recv(clntSock, &colorVectorServer[0], colorVectorServer.size()*sizeof(int), 0)) < 0)
             cout << "error - 1" << endl;
 
+        cout << "recvMsgSize" << recvMsgSize << endl;
+        cout << "clntSock" << clntSock << endl;
+        cout << "&colorVectorServer[0]" << &colorVectorServer[0] << endl;
+
         cout << "Vektorgröße pos -> " << positionVectorServer.size() << endl; 
         cout << "Vektorgröße color -> " << colorVectorServer.size() << endl; 
 
+        if ((recvMsgSize = recv(clntSock, &testServer, sizeof(int), 0)) < 0)
+            cout << "error - 1" << endl;
 
-    close(clntSock);    /* Close client socket */
+        if (testServer>0)
+        {
+            vector<char> moveCommandsChar;
+            moveCommandsChar.resize(testServer);
 
+            cout << moveCommandsChar.size()*sizeof(char);
+            if ((recvMsgSize = recv(clntSock, &moveCommandsChar[0], moveCommandsChar.size()*sizeof(char), 0)) < 0)
+                cout << "error - 1" << endl;
+
+            int i=0;
+            int j=0;
+            moveCommandsString.push_back("");
+            do
+            {
+                //cout << moveCommandsChar[i] << endl;
+                moveCommandsString[j] += moveCommandsChar[i];
+                //cout << "char added to string"<<endl;
+                
+                if (moveCommandsChar[i+1]=='i')
+                {
+                    ;
+                }
+                else{
+                    //cout << "String = " << moveCommandsString[j] << endl;
+                    j++;
+                    moveCommandsString.push_back("");
+                }
+                i++;
+            }while(i<(moveCommandsChar.size()-1));
+            moveCommandsString[j] += moveCommandsChar[i];
+
+             for(int i=0; i<moveCommandsString.size();i++)
+            {
+                cout << moveCommandsString[i] << endl;
+            }
+
+            
+        }
+
+
+    //close(clntSock);    /* Close client socket */
+
+    }
+
+    void Cube::CloseSocket()
+    {
+        close(clntSock);    /* Close client socket */
+        //close(servSock);
     }
 
 

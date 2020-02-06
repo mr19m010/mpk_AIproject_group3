@@ -8,7 +8,7 @@
 #include <time.h>		/* for randomizer in scramble();*/
 #include <iostream>
 #include <vector>
-
+//#include <bits/stdc++.h> 
 
 
 #define RCVBUFSIZE 32   /* Size of receive buffer */
@@ -51,6 +51,8 @@ public:
 	void ReceiveAnswer();
 
 	void CloseConnection();
+
+	void CloseSocket();
 	
 	int getN();
 
@@ -61,6 +63,7 @@ void PrintVector(vector <int> &v);
 
 bool DetectChange(int number);
 
+void SendMoveCommand(bool sendVector);
 
 // Server
 	void StartServer();
@@ -148,6 +151,10 @@ private:
   vector<int> Pos; 
   vector<int> Col; 
   vector<int> feedbackVector;
+  //vector<char> moveCommandsChar;
+  vector<string> moveCommandsString;
+  
+
   int testClient=34;
   
   
@@ -157,6 +164,7 @@ private:
   vector<int> positionVectorServer; 
   vector<int> colorVectorServer; 
   int testServer=3;
+  int messageSize=0;
   
 
   int servSock;                    /* Socket descriptor for server */
@@ -187,7 +195,7 @@ private:
 							{{5,1,0},{1,2,1}},
 							{{5,1,2},{3,2,1}},
 							{{5,2,1},{4,2,1}},
-							{{1,1,0},{4,2,1}},
+							{{1,1,0},{4,1,2}},
 							{{1,1,2},{2,1,0}},
 							{{2,1,2},{3,1,0}},
 							{{3,1,2},{4,1,0}}

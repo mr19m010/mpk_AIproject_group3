@@ -13,12 +13,14 @@ int main()
 	cout<< "done startserver" << endl;
 	myCube.HandleTCPClient();	// Client abfragen
 	cout<< "done handle tcp client" << endl;
-	myCube.GiveFeedback();
-	cout<< "done give GiveFeedback" << endl;
+	//myCube.GiveFeedback();
+	
 	myCube.print();
     myCube.scramble();
     myCube.print();
 	myCube.GiveFeedback();
-    
+	cout<< "done give GiveFeedback" << endl;
+	myCube.CloseSocket();
+	cout << "socket closed " << endl;
 
 }
