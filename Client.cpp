@@ -42,13 +42,13 @@ int main()
 
 	cCube.getN();
 	cCube.print();
-	cCube.TopCrossQuestion();
+	//cCube.TopCrossQuestion();
   	//cout << "Verbindung mit Server hergestellt" << endl;
 	
 	//cCube.SendQuestion();
 	
-	//cCube.SendMoveCommand(true);
-	//cout << "Positions und Farbvektor gesendet" << endl;
+	cCube.transmitData(false,true);
+	cout << "Positions und Farbvektor gesendet" << endl;
 
 
 	

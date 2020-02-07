@@ -74,6 +74,9 @@ void transmitData(bool bSendQuestion, bool bSendMoveCommand);
 
 	void GiveFeedback();
 
+	void ExecuteMoveCommands();
+
+
 
 // CubeSolver-Stuff
 	void r();
