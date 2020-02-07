@@ -33,7 +33,8 @@ void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == not
 void Cube::FillQuestion(){
     //cout << "IM IN FillQuestion"<< endl;
     int TmpPrioCnt=0;
-    int k=0;
+    int k=0;   
+    Qcnt=0;
     for(int i=PrioCnt;i<n+PrioCnt;i++){        
              
 
@@ -71,7 +72,7 @@ void Cube::AdjustQuestion(){
     if(feedcnt!=-1){
         if(feedcntOld<feedcnt){ // we hit something good
             cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=0;
-            cout << "Feedback groesser, Qcnt: " << Qcnt << "Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
+            cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"
             HitCnt++;
@@ -88,11 +89,65 @@ void Cube::AdjustQuestion(){
         feedcntOld=feedcnt;
         if(Qcnt>n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
             FillQuestion();
-            Qcnt=0;
         }
     }else {
         //do we need to do anything, if we didnt get a new feedbackvector? Send Question again?
         SendQuestion();
+    }
+}
+void Cube::FindPosInPrio(int facePos){
+    for(int i=0; i<Pos.size(); ++i){
+        if(Prio[i]==facePos){
+            PrioCnt=i;
+            break;
+        } 
+    }   
+}
+
+void Cube::FindSingleColor(int facePos){
+    FindPosInPrio(facePos);
+    FillQuestion();
+
+    while(1){
+        SendQuestion();
+        ReadFeedback();
+
+        // We dont care about Qcnt in this Function at all - we only want to know Col of Qcnt == 0
+
+        if(feedcnt!=-1){
+            if(feedcntOld<feedcnt){ // we hit something good
+                cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=Col[Qcnt];
+                cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
+                return;
+                //Qcnt++;
+                /*
+                HitCnt++;*/
+            }else if(feedcntOld>feedcnt){
+                cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
+                cout << "Feedback kleiner, Qcnt: " << Qcnt << endl;
+                return;
+                /*
+                Qcnt++;
+                Col[Qcnt]=0; // Write Color = "Yellow"*/
+            } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
+                cout << "Feedback gleich, Qcnt: " << Qcnt << endl;
+                if(Col[Qcnt]<5){
+                    Col[Qcnt]++; // Write next Color"
+                }else {
+                    cout << "Error - FindSingleColor: We looped through all colors and found shit."<<endl;
+                }
+                /*
+                Qcnt++;
+                Col[Qcnt]=0; // Write Color = "Yellow"      */      
+            }
+            feedcntOld=feedcnt;
+            /*if(Qcnt>n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
+                FillQuestion();
+            }*/
+        }else { // this is in case there is an error
+            //do we need to do anything, if we didnt get a new feedbackvector? Send Question again?
+            SendQuestion();
+        }
     }
 }
 
@@ -107,6 +162,9 @@ void Cube::TopCrossQuestion(){
         SendQuestion();
     }
     cout << "Found 4 Yellow edges"<<endl;
+    HitCnt=0; // Reset HitCnt for next Question-Set
+
+
     /*for(int i=0;i<10 && HitCnt<4;i++){ // this is trash
         AdjustQuestion();
         if(Qcnt >1){
@@ -116,8 +174,6 @@ void Cube::TopCrossQuestion(){
     }*/
     // Throw shit into solver to get the moves necessery
     // do moves on our cube too
-    HitCnt=0; // Reset HitCnt for next Question-Set
-
 
     //SendQuestion();
     /*while(feedback!=0){
@@ -164,11 +220,11 @@ void Cube::clearCube(){ // writes 9 into every unknown face of the cube
     /*cube[0][1][0]=0;
     cube[0][1][2]=0;
     cube[5][0][1]=0;
-    cube[5][2][1]=0;*/
+    cube[5][2][1]=0;
     cube[2][1][0]=0;
     cube[2][1][2]=0;
     cube[2][0][1]=0;
-    cube[2][2][1]=0;
+    cube[2][2][1]=0;*/
 };
 
 int Cube::X(int Pos){ // Hier wird die Positionsinformation auf x y z aufgeteilt

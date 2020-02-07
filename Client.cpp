@@ -39,10 +39,14 @@ int main()
 	//cout << "Test Vektor erstellt" << endl;
 	cCube.ConnectToServer(); // Hier wird die Verbindung zum Server hergestellt
 
-
+	cCube.clearCube();
 	cCube.getN();
 	cCube.print();
-	cCube.TopCrossQuestion();
+	//cCube.TopCrossQuestion();
+	cCube.FindSingleColor(300);
+	cCube.print();
+	
+
   	//cout << "Verbindung mit Server hergestellt" << endl;
 	
 	//cCube.SendQuestion();

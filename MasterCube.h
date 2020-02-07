@@ -33,6 +33,8 @@ public:
 	void ReadFeedback();
 	void FillQuestion();
 	void AdjustQuestion();
+	void FindSingleColor(int);
+	void FindPosInPrio(int);
 	void TopCrossQuestion();
 	void TopCornerQuestion();
 	void MiddleQuestion();
