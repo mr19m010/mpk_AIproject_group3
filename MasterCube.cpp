@@ -60,14 +60,10 @@ void Cube::FillQuestion(){
 
     PrioCnt+=TmpPrioCnt;
     // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)    
-    //SendQuestion(); 
-    //ReadFeedback();
-    // CM -> neue Funktion
+    
     transmitData(true,false); // Parameter 1 -> Question+Feedback; Parameter 2 -> MoveCommand
     feedcntOld=feedcnt;
     Col[Qcnt]=0; // Write Color = "Yellow"
-    //FAKEfeedbackVector = { 1, 2, 2, 2, 2, 2, 2,2};
-    //SendQuestion();
     transmitData(true,false);
 
     //PrintVector(Pos);
@@ -101,7 +97,6 @@ void Cube::AdjustQuestion(){
         }
     }else {
         //do we need to do anything, if we didnt get a new feedbackvector? Send Question again?
-        //SendQuestion();
         transmitData(true,false);
     }
 }
@@ -122,7 +117,7 @@ void Cube::FindSingleColor(int facePos){
     //PrintVector(Pos);
 
     while(1){
-        SendQuestion();
+        transmitData(true,false);
         ReadFeedback();
         //cout << "ANFANGS IST DIE FARBE: " << Col[Qcnt] << endl;
         // We dont care about Qcnt in this Function at all - we only want to know Col of Qcnt == 0
@@ -135,9 +130,6 @@ void Cube::FindSingleColor(int facePos){
                 PrintVector(feedbackVector);
 
                 return;
-                //Qcnt++;
-                /*
-                HitCnt++;*/
             }else if(feedcntOld>feedcnt){
                 cout<<"feedback kleiner - Col[Qcnt] = "<<Col[Qcnt]<< " should be 0, but we wrote 5 because we know its white"<<endl;
                 cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
@@ -146,9 +138,6 @@ void Cube::FindSingleColor(int facePos){
 
 
                 return;
-                /*
-                Qcnt++;
-                Col[Qcnt]=0; // Write Color = "Yellow"*/
             } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
                 cout<<"feedback gleich - Col[Qcnt] = "<< Col[Qcnt]<< " - Die Farbe wars net."<<endl;
                 cout << "Feedback gleich, Qcnt: " << Qcnt << endl;
@@ -157,10 +146,7 @@ void Cube::FindSingleColor(int facePos){
                     //cout << "DIE JETZIGE FARBE IST: " << Col[Qcnt] << endl;
                 }else {
                     cout << "Error - FindSingleColor: We looped through all colors and found shit."<<endl;
-                }
-                /*
-                Qcnt++;
-                Col[Qcnt]=0; // Write Color = "Yellow"      */      
+                }    
             }
             feedcntOld=feedcnt;
             /*if(Qcnt>n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
@@ -168,7 +154,7 @@ void Cube::FindSingleColor(int facePos){
             }*/
         }else { // this is in case there is an error
             //do we need to do anything, if we didnt get a new feedbackvector? Send Question again?
-            SendQuestion();
+            transmitData(true,false);
         }
     }
 }
@@ -176,38 +162,15 @@ void Cube::FindSingleColor(int facePos){
 
 void Cube::TopCrossQuestion(){
     //cout << "IM IN TopCrossQuestion"<< endl;
-    //FAKEfeedbackVector.resize(40,0);
-    //FAKEfeedbackVector.assign(40,0);
     FillQuestion();
     while(HitCnt<4){
         AdjustQuestion();
-        //SendQuestion();
         transmitData(true,false);
     }
     cout << "Found 4 Yellow edges"<<endl;
     HitCnt=0; // Reset HitCnt for next Question-Set
 
 
-    /*for(int i=0;i<10 && HitCnt<4;i++){ // this is trash
-        AdjustQuestion();
-        if(Qcnt >1){
-            cout << "Feedbackvector auf 111111"<< endl;
-            FAKEfeedbackVector = { 1, 0, 2, 2, 2, 2, 2,2};
-        }
-    }*/
-    // Throw shit into solver to get the moves necessery
-    // do moves on our cube too
-
-    //SendQuestion();
-    /*while(feedback!=0){
-        AdjustQuestion;
-        SendQuestion;
-    }
-
-    //emptyQuesttion is ready, start looking for topcrosspieces
-
-
-    */
 
 }
 
@@ -216,8 +179,6 @@ void Cube::TopCornerQuestion(){
     FillQuestion();
     //while...?
     AdjustQuestion();
-
-
 
 
 };
@@ -1553,7 +1514,7 @@ void Cube::StartServer()
             FindSingleColor(121);
 
             int color = cube[1][2][1];
-            cout<<"Side=5 - cube 121";
+            cout<<"Side=5 - cube 121"<<endl;
             if(color==9){
                 cout<<"Fuck, color is unkown even through we asked it right beforhand.";
             }
@@ -1574,7 +1535,7 @@ void Cube::StartServer()
             FindSingleColor(510);
 
             int color = cube[5][1][0];
-            cout<<"Side!=5 - cube510";
+            cout<<"Side!=5 - cube510"<<endl;
             if(color==9){
                 cout<<"Fuck, color is unkown even through we asked it right beforhand.";
             }

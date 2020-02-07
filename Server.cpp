@@ -34,4 +34,5 @@ int main()
 		myCube.CloseSocket();
 		cout << "socket closed " << endl;
 
+	}
 }
