@@ -42,10 +42,12 @@ int main()
 	cCube.clearCube();
 	cCube.getN();
 	cCube.print();
-	cout << "###############################TopCrossQuestion######################################";
+	cout << " ##################### TopCrossQuestion #############"<<endl;
 	cCube.TopCrossQuestion();
 	cCube.print();
-	cout << "###############################solveTopCross######################################";
+	cout << " ##################### solveTopCross #############"<<endl;
+	cCube.solveTopCross();
+	cCube.print();
 	
 	cCube.FindSingleColor(212);
 	cCube.print();
