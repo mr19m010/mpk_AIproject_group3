@@ -46,9 +46,9 @@ public:
 
 	void GenerateTransmissionString();
 
-	void SendQuestion();
+	void SendQuestion(bool bSendQuestion);
 
-	void ReceiveAnswer();
+	void ReceiveAnswer(bool bGetFeedback);
 
 	void CloseConnection();
 
@@ -64,6 +64,8 @@ void PrintVector(vector <int> &v);
 bool DetectChange(int number);
 
 void SendMoveCommand(bool sendVector);
+
+void transmitData(bool bSendQuestion, bool bSendMoveCommand);
 
 // Server
 	void StartServer();
