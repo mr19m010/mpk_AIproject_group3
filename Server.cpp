@@ -16,23 +16,26 @@ int main()
 
 
 
-	while(1){
+	while(myCube.StopServer()==false){
 
 		myCube.HandleTCPClient();	// Client abfragen
 		cout<< "done handle tcp client" << endl;
 		//myCube.GiveFeedback();
 		
 		myCube.print();
+
+		//int debugInt=0;
+		//cin >> debugInt;
 	    
 	    //myCube.print();
 		
 		// Die Funktion GiveFeedback wird in der Funktion HandleTCPClient aufgerufen
 		//myCube.GiveFeedback();
 		//cout<< "done give GiveFeedback" << endl;
-	//}
+	}
 
 		myCube.CloseSocket();
 		cout << "socket closed " << endl;
 
-	}
+	//}
 }

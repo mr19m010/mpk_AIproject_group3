@@ -789,6 +789,8 @@ void Cube::StartServer()
     int packageSizeMoveCommand=0;
     int messageCounter=0;
 
+    stopServer=true;
+
     cout << endl;
 
 
@@ -802,6 +804,7 @@ void Cube::StartServer()
         cout << "Paketlänge der Frage  = " << packageSizeQuestion << endl;
 
         if (packageSizeQuestion>0){
+            stopServer=false;
             positionVectorServer.resize(packageSizeQuestion);
             colorVectorServer.resize(packageSizeQuestion);
 
@@ -826,6 +829,7 @@ void Cube::StartServer()
 
         if (packageSizeMoveCommand>0)
         {
+            stopServer=false;
             vector<char> moveCommandsChar;
             moveCommandsChar.resize(packageSizeMoveCommand);
 
@@ -869,9 +873,16 @@ void Cube::StartServer()
             GiveFeedback();
         }
 
+        
+
 
     //close(clntSock);    /* Close client socket */
 
+    }
+
+    bool Cube::StopServer()
+    {
+        return stopServer;
     }
 
   

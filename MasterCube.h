@@ -77,7 +77,7 @@ void transmitData(bool bSendQuestion, bool bSendMoveCommand);
 	void GiveFeedback();
 
 	void ExecuteMoveCommands();
-
+	bool StopServer();
 
 
 // CubeSolver-Stuff
@@ -172,6 +172,7 @@ private:
   vector<int> colorVectorServer; 
   //int testServer=3;
   int messageSize=0;
+  bool stopServer=false;
   
 
   int servSock;                    /* Socket descriptor for server */
