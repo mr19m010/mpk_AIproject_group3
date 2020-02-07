@@ -25,7 +25,9 @@ int main()
 		
 	    
 	    //myCube.print();
-		myCube.GiveFeedback();
+		
+		// Die Funktion GiveFeedback wird in der Funktion HandleTCPClient aufgerufen
+		//myCube.GiveFeedback();
 		//cout<< "done give GiveFeedback" << endl;
 	}
 
