@@ -38,11 +38,11 @@ void Cube::FillQuestion(){
     for(int i=PrioCnt;i<n+PrioCnt;i++){        
              
 
-            if((i+PrioCnt)>=54){ // this is for filling the Question, when there is no more stuff in the Priolist -> we fill from start again
+            if((i)>=54){ // this is for filling the Question, when there is no more stuff in the Priolist -> we fill from start again
                 Pos.push_back(Prio[k++]);     // Fill Question with Prio List from start
                 Col.push_back(5);                   // Write Color = 5 ("nicht yellow")    
             }else {
-                Pos.push_back(Prio[i+PrioCnt]);     // Fill Question with Prio List
+                Pos.push_back(Prio[i]);     // Fill Question with Prio List
                 Col.push_back(5);                   // Write Color = 5 ("nicht yellow")    
                 TmpPrioCnt++; 
             }
@@ -96,9 +96,10 @@ void Cube::AdjustQuestion(){
     }
 }
 void Cube::FindPosInPrio(int facePos){
-    for(int i=0; i<Pos.size(); ++i){
+    for(int i=0; i<sizeof(Prio)/sizeof(Prio[0]); ++i){
         if(Prio[i]==facePos){
             PrioCnt=i;
+            cout << "PrioCnt: "<<PrioCnt<<endl;
             break;
         } 
     }   
@@ -107,6 +108,8 @@ void Cube::FindPosInPrio(int facePos){
 void Cube::FindSingleColor(int facePos){
     FindPosInPrio(facePos);
     FillQuestion();
+    //cout << "im in FindSingleColor and have filled my Pos, which is: ";
+    //PrintVector(Pos);
 
     while(1){
         SendQuestion();
@@ -116,6 +119,7 @@ void Cube::FindSingleColor(int facePos){
 
         if(feedcnt!=-1){
             if(feedcntOld<feedcnt){ // we hit something good
+                cout<<"feedback groesser - Col[Qcnt] = "<<Col[Qcnt]<<endl;
                 cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=Col[Qcnt];
                 cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
                 return;
@@ -123,6 +127,7 @@ void Cube::FindSingleColor(int facePos){
                 /*
                 HitCnt++;*/
             }else if(feedcntOld>feedcnt){
+                cout<<"feedback kleiner - Col[Qcnt] = "<<Col[Qcnt]<< " should be 0, but we wrote 5 because we know its white"<<endl;
                 cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
                 cout << "Feedback kleiner, Qcnt: " << Qcnt << endl;
                 return;
@@ -130,6 +135,7 @@ void Cube::FindSingleColor(int facePos){
                 Qcnt++;
                 Col[Qcnt]=0; // Write Color = "Yellow"*/
             } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
+                cout<<"feedback gleich - Col[Qcnt] = "<< Col[Qcnt]<< "Die Farbe wars net"<<endl;
                 cout << "Feedback gleich, Qcnt: " << Qcnt << endl;
                 if(Col[Qcnt]<5){
                     Col[Qcnt]++; // Write next Color"
@@ -240,11 +246,11 @@ int Cube::Z(int Pos){
     return z;
 }
 void Cube::PrintVector(vector <int> &v){
-    cout << "Printing Vector: ";
+    cout << "PrintVector(): ";
     for(int i=0; i<v.size(); ++i){
         cout << v[i] << " ";   
     }   
-    cout << "Done with printing vector" << endl;
+    cout << endl;
 }
 
 void Cube::ConnectToServer()
@@ -731,10 +737,7 @@ void Cube::ReceiveAnswer()
         cout << "ERROR - Feedback konnte nicht empfangen werden." << endl;
     }
     else{
-        for(int i=0; i<feedbackVector.size(); i++){
-            cout << feedbackVector[i] << " " ;
-        }
-        cout << endl;
+        //PrintVector(feedbackVector);
     }
     //cout << "Question size = " << n << endl;
     //cout << "Size = " << recvMsgSize << endl;
