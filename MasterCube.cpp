@@ -4,15 +4,13 @@
 
 using namespace std;
 
-
 int Cube::getN()
 {
-	cout <<	"Enter amount of question asked inbetween the range [2-53]: " << endl;
+	cout <<	"Please enter the n-length: " << endl;
 	cin >> n;
 }
 
-
-void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == nothing OK
+void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == nothing OK 
     //cout << "IM IN ReadFeedback"<< endl;
     feedcnt=0;
     for(int i = 0;i<n;i++){
@@ -34,26 +32,26 @@ void Cube::FillQuestion(){
     //cout << "IM IN FillQuestion"<< endl;
     int TmpPrioCnt=0;
     int k=0;
-    for(int i=PrioCnt;i<n+PrioCnt;i++){
-
+    for(int i=PrioCnt;i<n+PrioCnt;i++){        
+             
 
             if((i+PrioCnt)>=54){ // this is for filling the Question, when there is no more stuff in the Priolist -> we fill from start again
                 Pos.push_back(Prio[k++]);     // Fill Question with Prio List from start
-                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")
+                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")    
             }else {
                 Pos.push_back(Prio[i+PrioCnt]);     // Fill Question with Prio List
-                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")
-                TmpPrioCnt++;
+                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")    
+                TmpPrioCnt++; 
             }
 
 
-
-            //cout << "Pos: " <<Pos[i] << " Col: " <<Col[i]<<endl;
+             
+            //cout << "Pos: " <<Pos[i] << " Col: " <<Col[i]<<endl;    
             //cout << "Prio: " << Prio[i] << endl;
         }
     PrioCnt+=TmpPrioCnt;
-    // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)
-    //SendQuestion();
+    // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)    
+    //SendQuestion(); 
     ReadFeedback();
     feedcntOld=feedcnt;
     Col[Qcnt]=0; // Write Color = "Yellow"
@@ -63,7 +61,7 @@ void Cube::FillQuestion(){
     PrintVector(Pos);
     PrintVector(Col);
 
-    }
+    } 
 
 void Cube::AdjustQuestion(){
     //cout << "IM IN AdjustQuestion"<< endl;
@@ -76,14 +74,14 @@ void Cube::AdjustQuestion(){
             Col[Qcnt]=0; // Write Color = "Yellow"
             HitCnt++;
         }else if(feedcntOld>feedcnt){
-            // Stuff is white - save that info?
+            cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
             cout << "Feedback kleiner, Qcnt: " << Qcnt << endl;
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"
         } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
             cout << "Feedback gleich, Qcnt: " << Qcnt << endl;
             Qcnt++;
-            Col[Qcnt]=0; // Write Color = "Yellow"
+            Col[Qcnt]=0; // Write Color = "Yellow"            
         }
         feedcntOld=feedcnt;
         if(Qcnt>n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
@@ -99,10 +97,12 @@ void Cube::AdjustQuestion(){
 
 void Cube::TopCrossQuestion(){
     //cout << "IM IN TopCrossQuestion"<< endl;
+    FAKEfeedbackVector.resize(40,0);
+    FAKEfeedbackVector.assign(40,0);
     FillQuestion();
-    while(HitCnt<4){
+    //while(HitCnt<4){
         AdjustQuestion();
-    }
+    //}
     /*for(int i=0;i<10 && HitCnt<4;i++){ // this is trash
         AdjustQuestion();
         if(Qcnt >1){
@@ -117,7 +117,7 @@ void Cube::TopCrossQuestion(){
 
     //SendQuestion();
     /*while(feedback!=0){
-        AdjustQuesttion;
+        AdjustQuestion;
         SendQuestion;
     }
 
@@ -129,12 +129,14 @@ void Cube::TopCrossQuestion(){
 }
 
 void Cube::TopCornerQuestion(){
-    // fill question with stuff from prio that is not yet solved
-    // use int TopCrossPrioCounter = 5;
-    //int TopCornerPrioCounter = 4;
-    //int MiddlePrioCounter = 20;
-    //int BottomPrioCounter = 25;
-    // or write 0 into solved Pos in Prio list
+    PrioCnt=24; // So our FillQuestion knows to start in the Priolist at the Corners
+    FillQuestion();
+    //while...?
+    AdjustQuestion();
+
+
+
+
 };
 void Cube::MiddleQuestion(){
 
@@ -153,6 +155,16 @@ void Cube::clearCube(){ // writes 9 into every unknown face of the cube
             }
         }
     }
+
+    // THIS IS FOR TESTING ONLY
+    /*cube[0][1][0]=0;
+    cube[0][1][2]=0;
+    cube[5][0][1]=0;
+    cube[5][2][1]=0;*/
+    cube[2][1][0]=0;
+    cube[2][1][2]=0;
+    cube[2][0][1]=0;
+    cube[2][2][1]=0;
 };
 
 int Cube::X(int Pos){ // Hier wird die Positionsinformation auf x y z aufgeteilt
@@ -170,8 +182,8 @@ int Cube::Z(int Pos){
 void Cube::PrintVector(vector <int> &v){
     cout << "Printing Vector: ";
     for(int i=0; i<v.size(); ++i){
-        cout << v[i] << " ";
-    }
+        cout << v[i] << " ";   
+    }   
     cout << endl;
 }
 
@@ -179,13 +191,15 @@ void Cube::ConnectToServer()
 {
 	struct sockaddr_in echoServAddr; /* Echo server address */
 
-	cout << "Connecting to server"  << endl;
+	//cout << "Connecting to server"  << endl;
 
 
     /* Create a reliable, stream socket using TCP */
     if ((sock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-        printf("1");
+        cout << "Error - Socket" << endl;
 
+
+    //cout << "Socket = " << sock << endl;
     /* Construct the server address structure */
     memset(&echoServAddr, 0, sizeof(echoServAddr));     /* Zero out structure */
     echoServAddr.sin_family      = AF_INET;             /* Internet address family */
@@ -194,7 +208,7 @@ void Cube::ConnectToServer()
 
     /* Establish the connection to the echo server */
     if (connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-        printf("2");
+        cout << "Error - Verbindung mit Server konnte nicht hergestellt werden." << endl;
 
 }
 
@@ -246,108 +260,438 @@ void Cube::PrintArray()
             {
                 x=((cols+3)/3);
                 if (Cube::DetectChange(x)==true) z=0;
-                cout << receivedArray[x][y][z] << " ";
+                cout << clientArray[x][y][z] << " ";
                 //cout << z << " ";
                 z++;
-
+                
             }
             else if (cols>=3 && cols<=5)
-            {
+            {   
                 x=((rows)/3)*5/2;
-                cout << receivedArray[x][y][z] << " ";
+                cout << clientArray[x][y][z] << " ";
                 //cout << z << " ";
                 z++;
             }
-
+            
         }
         cout << endl;
         y++;
         if (y>2) y=0;
     }
-
+    
 }
 
 void Cube::ChangeArray()
 {
     for(int x=5; x>=0; x--)
-	{
-		for(int y=2; y>=0; y--)
-		{
-			for(int z=2; z>=0; z--)
-			{
-				receivedArray[x][y][z]*=2;
-			}
-		}
-	}
+    {
+      for(int y=2; y>=0; y--)
+      {
+            for(int z=2; z>=0; z--)
+            {
+            receivedArray[x][y][z]*=2;
+            }   
+        }
+    }
 }
 
-void Cube::ResetQuestion()
+void Cube::ResetQuestion() // Diese Funktion ist ALT und kann gelöscht werden
 {
     int cntNumber=9;
 	//cout << number << endl;
-	for(int x=5; x>=0; x--)
-	{
-		for(int y=2; y>=0; y--)
-		{
-			for(int z=2; z>=0; z--)
-			{
+    for(int x=5; x>=0; x--)
+    {
+      for(int y=2; y>=0; y--)
+      {
+            for(int z=2; z>=0; z--)
+            {
 				//(question+(x*6)+(y*3)+z)=0;
-				question[x][y][z]=cntNumber--;
-                if (cntNumber<1) cntNumber=9;
+            question[x][y][z]=cntNumber--;
+            if (cntNumber<1) cntNumber=9;
 				//cout << question[x][y][z] << " ";
-			}
+            }
 			//cout << endl;
-		}
+        }
 		//cout << "-----" << endl;
-	}
+    }
 }
 
-void Cube::GenerateTransmissionString(int *quest)
+void Cube::GenerateTransmissionString() // Diese Funktion dient zum Testen des Feedbacks
 {
-	Cube::ResetQuestion();
-}
+    Pos.resize(n);
+    Pos[0]=11;
+    Pos[1]=110;
+    Pos[2]=222;
+    Pos[3]=300;
+    Pos[4]=401;
+    Pos[5]=511;
+    Pos[6]=20;
+    Pos[7]=21;
+    Pos[8]=11;
+    Pos[9]=0;
+    Pos[10]=12;
+    Pos[11]=21;
+    Pos[12]=112;
+    Pos[13]=521;
+    Pos[14]=510;
+    Pos[15]=520;
+    Pos[16]=400;
+    Pos[17]=401;
+    Pos[18]=402;
+    Pos[19]=410;
+    Pos[20]=412;
+    Pos[21]=420;
+    Pos[22]=421;
+    Pos[23]=422;
+    Pos[24]=300;
+    Pos[25]=301;
+    Pos[26]=302;
+    Pos[27]=310;
+    Pos[28]=312;
+    Pos[29]=320;
+    Pos[30]=321;
+    
+    Col.resize(n);
 
+
+    //cout << "Vector size = " << Pos.size()*sizeof(int) << endl;
+    //cout << "Vector capazity = " << Pos.capacity()*sizeof(int) << endl;
+}
 
 void Cube::SendQuestion()
 {
-	if (send(sock, &question, 6*3*3*sizeof(int), 0) < 0)
-		cout << "3" << endl;
+    // Die Vectorelemente werden einzeln übertragen
+    // Zuerst wird die Anzahl der Elemente übertragen,
+    // damit der Server weiß wieviele Elemente noch folgen
+    int elementCounter=1;
+    int elements =10;
+    testClient=Pos.size();
+
+    if (send(sock, &testClient, sizeof(int), 0) < 0)
+        cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
+
+    if (send(sock, &Pos[0], Pos.size()*sizeof(int), 0) < 0)
+        cout << "error - Vector konnte nicht uebertragen werden." << endl;
+
+    if (send(sock, &Col[0], Col.size()*sizeof(int), 0) < 0)
+        cout << "error - Vector konnte nicht uebertragen werden." << endl;
+
+
+}
+
+void Cube::SendMoveCommand(bool sendVector)
+{
+    int elements =0;
+    vector<char> moveCommandsChar;
+
+    moveCommandsString.resize(10);
+    moveCommandsString[0]="ri";
+    moveCommandsString[1]="lu";
+    moveCommandsString[2]="u";
+    moveCommandsString[3]="i";
+    moveCommandsString[4]="di";
+    moveCommandsString[5]="cr";
+    moveCommandsString[6]="t";
+    moveCommandsString[7]="ri";
+    
+
+    for(int i=0; i<moveCommandsString.size();i++)
+    {
+        copy(moveCommandsString[i].begin(), moveCommandsString[i].end(), back_inserter(moveCommandsChar));
+    }
+
+
+    for(int i=0; i<moveCommandsChar.size();i++)
+    {
+        cout << moveCommandsChar[i] << endl;
+    }
+    
+    
+    if (sendVector==true)
+    {
+        elements=moveCommandsChar.size();
+        cout << moveCommandsChar.size()*sizeof(char);
+
+        if (send(sock, &elements, sizeof(int), 0) < 0)
+            cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
+
+        if (send(sock, &moveCommandsChar[0], moveCommandsChar.size()*sizeof(char), 0) < 0)
+            cout << "error - Vector konnte nicht uebertragen werden." << endl;
+    }
+    else
+    {
+        elements=0;
+        
+        if (send(sock, &elements, sizeof(int), 0) < 0)
+            cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
+
+   
+    }
+    
+
+    
+}
+
+void Cube::GiveFeedback()
+{
+    /*
+    Schritt 1:  Positionen aus Vektor abrufen
+    Schritt 2:  Farbe der Position überprüfen
+    Schritt 3:  Prüfen ob die Position eine Ecke, Kante oder Mitte ist
+    Schritt 4:  Wenn Nachbarelemente vorhanden sind, wird auch deren Farbinformation überprüft
+    Schritt 5:  Nachdem die Positionen überprüft wurden, wird das Feedback randomisiert in einen Vektor
+                geschrieben welcher an den Client übertragen wird
+    */
+    int countQuestions=0;
+    vector<int> answerArray;
+    vector<int> randArray;
+    answerArray.resize(messageSize);
+    randArray.resize(messageSize); 
+
+    srand (time(NULL)); 
+
+    int idX[3]={0,0,0};
+    int idY[3]={0,0,0};
+    int idZ[3]={0,0,0};
+    
+    // Schritt 1   
+    for (int i=0; i<positionVectorServer.size(); i++)
+    {
+        answerArray[i]=0;
+        //cout << "-----------------------------"<< endl;
+        
+        // Hier wird die Positionsinformation auf x y z aufgeteilt
+        int x = positionVectorServer[i]/100;
+        int y = (positionVectorServer[i]-(x*100))/10;
+        int z = positionVectorServer[i]-(x*100)-(y*10);
+
+        // Schritt 2
+        if (colorVectorServer[i] == cube[x][y][z])
+        {
+            //cout << "OK -> Die Farben stimmen überein." << endl 
+            //<< "Jetzt muss nur noch die Position auf ihre Richtigkeit überprüft werden." << endl;
+
+            // Schritt 3
+            // Prüfen ob Ecke
+            if ((y!=1) & (z!=1)) 
+            {
+                // suche ID in ecken array
+                // Hier werden die zugehörigen Nachbarseiten der Ecke gesucht
+                //cout << "ECKE -> " << colorVectorServer[i] << " -> " << positionVectorServer[i] << endl;
+
+                // Schleife 2/3 -> Nachbarseiten der Ecke überprüfen
+                for (int a=7;a>=0;a--){         // a -> Es gibt 8 Ecken
+                    for (int b=2;b>=0;b--){     // b -> Eine Ecke besteht aus drei Elementen (Nachbarseiten)
+                        
+                        // Hier wird überprüft welche Ecke gefragt wurde
+                        if ( (ecken[a][b][0]==x) & (ecken[a][b][1]==y) & (ecken[a][b][2]==z)) 
+                        {
+                            //cout << "Ecken ID -> " << a << "/" << b << endl;
+
+                            // Hier werden die Koordinaten von den 3 Eckseiten abgerufen
+                            idX[0]=ecken[a][0][0];
+                            idX[1]=ecken[a][1][0];
+                            idX[2]=ecken[a][2][0];
+                            
+                            idY[0]=ecken[a][0][1];
+                            idY[1]=ecken[a][1][1];
+                            idY[2]=ecken[a][2][1];
+                            
+                            idZ[0]=ecken[a][0][2];
+                            idZ[1]=ecken[a][1][2];
+                            idZ[2]=ecken[a][2][2];
+                            
+                            //cout << "Nachbar elemente -> "  << idX[0] << idY[0] << idZ[0] << " ; "
+                            ///<< idX[1] << idY[1] << idZ[1] <<  " ; "
+                            //<< idX[2] << idY[2] << idZ[2]  << endl;
+                            
+                            // An dieser Stelle werden alle Farben der Ecke auf ihre Richtigkeit überprüft
+                            // Schritt 4
+                            bool eckeRichtig=true;
+                            for (int j=2; j>=0; j--)
+                            {
+                                if ((cube[idX[j]][idY[j]][idZ[j]] == cube[idX[j]][1][1]))
+                                {
+                                    ;
+                                }
+                                else
+                                {
+                                    eckeRichtig=false;
+                                }
+                                if (eckeRichtig==true){
+                                    //cout << "ECKE RICHTIG"<< endl;
+                                    answerArray[i]=1;
+                                    randArray[i]=rand();
+                                } 
+                                else {
+                                    //cout << "ECKE FALSCH"<< endl;
+                                    randArray[i]=rand();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // Prüfe ob Kante
+            if (((y==1) | (z==1)) & !(y==1 & z==1))
+            {
+                //cout << "KANTE -> " << colorVectorServer[i] << " -> " << positionVectorServer[i] << endl;
+                // suche ID in kanten array
+                for (int a=11;a>=0;a--){
+                    for (int b=1;b>=0;b--){
+                        if ( (kanten[a][b][0]==x) & (kanten[a][b][1]==y) & (kanten[a][b][2]==z) ) 
+                        {
+                            idX[0]=kanten[a][0][0];
+                            idX[1]=kanten[a][1][0];
+
+                            idY[0]=kanten[a][0][1];
+                            idY[1]=kanten[a][1][1];
+
+                            idZ[0]=kanten[a][0][2];
+                            idZ[1]=kanten[a][1][2];
+
+                            //cout << "Nachbar elemente -> "  << idX[0] << idY[0] << idZ[0] << " ; "
+                            //<< idX[1] << idY[1] << idZ[1]  << endl;
+
+
+                            // Prüfen ob sich die Kantenelemente auf der richtigen Seite befinden
+                            // Schritt 4
+                            bool kanteRichtig=true;
+                            for (int j=1; j>=0; j--)
+                            {
+                                if ((cube[idX[j]][idY[j]][idZ[j]] == cube[idX[j]][1][1])) 
+                                {
+                                    ;
+                                }
+                                else {
+                                    kanteRichtig=false;
+                                }
+                                if (kanteRichtig==true){
+                                    //cout << "KANTE RICHTIG"<< endl;
+                                    answerArray[i]=1;
+                                    randArray[i]=rand();
+                                } 
+                                else {
+                                    //cout << "KANTE FALSCH"<< endl;
+                                    randArray[i]=rand();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // Prüfen ob Mitte
+            if (y==1 & z==1)
+            {
+                //cout << "MITTE RICHTIG" << endl;
+                answerArray[i]=1;
+                randArray[i]=rand();
+            }
+            else{
+                ;
+            }
+        }
+        else {
+            //cout << "Die gefragte Farbe ist falsch." << endl;
+            answerArray[i]=2;
+            randArray[i]=rand();
+        }
+    }
+
+    /*
+    // Schritt 5
+    FEEDBACK GENERIERT PRÜFEN OB RICHTIG
+    das feedback muss an dieser stelle noch randomisiert werden
+    */
+    cout << "vector size = " << answerArray.size() << endl;
+    cout << "Feedback[" << messageSize <<  "] = " << endl;
+
+    bool switched=false;
+
+    int testVar;
+    //cin >> testVar;
+    
+    do{
+        switched=false;
+        for (int j=(messageSize-1); j>0; j--)
+        {
+            int merkerR=0;
+            int merkerA=0;
+
+            // Der größe nach ordnen
+            if (randArray[j]<=randArray[j-1]){
+                //cout << "OK -> " << randArray[j] << "/" << randArray[j-1]<<endl;
+                //cout << "OK -> " << answerArray[j] << "/" << answerArray[j-1]<<endl;
+            }
+            else{
+                merkerR=randArray[j];
+                randArray[j]=randArray[j-1];
+                randArray[j-1]=merkerR;
+
+                merkerA=answerArray[j];
+                answerArray[j]=answerArray[j-1];
+                answerArray[j-1]=merkerA;
+
+                switched=true;
+                //cout << "switched -> " << randArray[j] << "/" << randArray[j-1]<<endl;
+                //cout << "switched -> " << answerArray[j] << "/" << answerArray[j-1]<<endl;
+            }
+            //cout << endl << "Counter = " << j << endl;
+        }
+        //cout << " | " << endl;
+        //cin >> testVar;
+    }while(switched==true);
+    //cout << endl;
+
+    //cout << "AnswerArray = " << answerArray.size() << endl;
+
+    if (send(clntSock, &answerArray[0], answerArray.size()*sizeof(int), 0) < 0)
+        cout << "ERROR - Feedback konnte nicht gesendet werden." << endl;
+
 
 }
 
 void Cube::ReceiveAnswer()
 {
-    /* Receive the same string back from the server */
-    totalBytesRcvd = 0;
-    cout << "Received: " << endl;                /* Setup to print the echoed string */
-    while (totalBytesRcvd < (6*3*3*sizeof(int)))
-    {
-        cout << "OK?" << endl;
-        /* Receive up to the buffer size (minus 1 to leave space for
-           a null terminator) bytes from the sender */
-        if ((bytesRcvd = recv(sock, receivedArray, (6*3*3*sizeof(int)), 0)) <= 0)
-			cout << "4" << endl;
+    int recvMsgSize;
+    feedbackVector.resize(n);
+    //cout<<"-------------------------"<<endl;
 
-        cout << "Bytes received = " << bytesRcvd << endl;
-        totalBytesRcvd += bytesRcvd;   /* Keep tally of total bytes */
-        cout << "Total bytes received = " << totalBytesRcvd << endl;
-        echoBuffer[bytesRcvd] = '\0';  /* Terminate the string! */
-        //Cube::PrintArray();
-        Cube::PrintArray();
-	}
+    //if ((recvMsgSize = recv(sock, &testServer, sizeof(int), 0)) < 0)
+    //    cout << "error - 1" << endl;
+
+    // Empfangen der Frage
+    if ((recvMsgSize = recv(sock, &feedbackVector[0], feedbackVector.size()*sizeof(int), 0)) < 0)
+    {
+        cout << "ERROR - Feedback konnte nicht empfangen werden." << endl;
+    }
+    else{
+        for(int i=0; i<feedbackVector.size(); i++){
+            cout << feedbackVector[i] << " " ;
+        }
+        cout << endl;
+    }
+    //cout << "Question size = " << n << endl;
+    //cout << "Size = " << recvMsgSize << endl;
+    //cout << "Vector size = " <<  feedbackVector.size()*sizeof(int) << endl;
+
 }
 
 void Cube::CloseConnection()
 {
-	close(sock);
+    close(sock);
 }
 // Server
 
 void Cube::StartServer()
 {
 	/* Create socket for incoming connections */
-    if ((servSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-        cout << "1" << endl;
+        if ((servSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+            cout << "error - 1" << endl;
+
+    int enable = 1;
+    if (setsockopt(servSock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+        cout << "setsockopt(SO_REUSEADDR) failed" << endl;
 
     /* Construct local address structure */
     memset(&echoServAddr, 0, sizeof(echoServAddr));   /* Zero out structure */
@@ -356,596 +700,597 @@ void Cube::StartServer()
     echoServAddr.sin_port = htons(echoServPort);      /* Local port */
 
     /* Bind to the local address */
-    if (bind(servSock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-        cout << "2" << endl;
+        if (bind(servSock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
+            cout << "error - 2" << endl;
 
     /* Mark the socket so it will listen for incoming connections */
-    if (listen(servSock, MAXPENDING) < 0)
-        cout << "3" << endl;
+        if (listen(servSock, MAXPENDING) < 0)
+            cout << "error - 3" << endl;
 
-    for (;;) /* Run forever */
-    {
-        /* Set the size of the in-out parameter */
+    /* Set the size of the in-out parameter */
         clntLen = sizeof(echoClntAddr);
 
-        /* Wait for a client to connect */
+    /* Wait for a client to connect */
         if ((clntSock = accept(servSock, (struct sockaddr *) &echoClntAddr,
-                               &clntLen)) < 0)
-            cout << "4" << endl;
+            &clntLen)) < 0)
+            cout << "error - 4" << endl;
 
-        /* clntSock is connected to a client! */
-
+    /* clntSock is connected to a client! */
         printf("Handling client %s\n", inet_ntoa(echoClntAddr.sin_addr));
 
-
-        Cube::HandleTCPClient();
-        //Cube::GenerateFeedback();
-        //Cube::SendFeedback();
-
-
-        /*
-        #############################################################################
-        #############################################################################
-        ################# Our main here ##############################################
-        #############################################################################
-        #############################################################################
-        */
-
-        print();
-        scramble();
-        print();
-     }
-}
-
-void Cube::HandleTCPClient()
-{
-    //char echoBuffer[RCVBUFSIZE];        /* Buffer for echo string */
-    int recvMsgSize;                    /* Size of received message */
-
-    /* Receive message from client */
-    if ((recvMsgSize = recv(clntSock, receivedArray, 6*3*3*sizeof(int), 0)) < 0)
-        cout << "1" << endl;
-
-    cout << "Receive Size = " << recvMsgSize << endl;
-    cout << "Size of int = " << sizeof(int) << " -> 6*3*3 sizeof(int) = "
-    << 6*3*3*sizeof(int) << endl;
-
-    //Cube::ChangeArray();
-
-    /* Send received string and receive again until end of transmission */
-    while (recvMsgSize > 0)      /* zero indicates end of transmission */
-    {
-        cout << "Received message size = " << recvMsgSize << endl;
-        /* Echo message back to client */
-        if (send(clntSock, &receivedArray, recvMsgSize, 0) != recvMsgSize)
-            cout << "1" << endl;
-
-        /* See if there is more data to receive */
-        if ((recvMsgSize = recv(clntSock, receivedArray, 6*3*3*sizeof(int), 0)) < 0)
-            cout << "1" << endl;
     }
 
-    close(clntSock);    /* Close client socket */
+    void Cube::HandleTCPClient()
+    {
+    int recvMsgSize;                    /* Size of received message */
+        
+        int messageCounter=0;
 
-}
+
+    // Empfangen der Länge des Pakets
+        if ((recvMsgSize = recv(clntSock, &testServer, sizeof(int), 0)) < 0)
+            cout << "error - 1" << endl;
+
+        messageSize=testServer;
+
+
+        positionVectorServer.resize(messageSize);
+        colorVectorServer.resize(messageSize);
+        cout << "Paketlänge  = " << testServer << endl;
+
+    // Empfangen der Frage
+        if ((recvMsgSize = recv(clntSock, &positionVectorServer[0], positionVectorServer.size()*sizeof(int), 0)) < 0)
+            cout << "error - 1" << endl;
+
+        if ((recvMsgSize = recv(clntSock, &colorVectorServer[0], colorVectorServer.size()*sizeof(int), 0)) < 0)
+            cout << "error - 1" << endl;
+
+        cout << "recvMsgSize" << recvMsgSize << endl;
+        cout << "clntSock" << clntSock << endl;
+        cout << "&colorVectorServer[0]" << &colorVectorServer[0] << endl;
+
+        cout << "Vektorgröße pos -> " << positionVectorServer.size() << endl; 
+        cout << "Vektorgröße color -> " << colorVectorServer.size() << endl; 
+
+        if ((recvMsgSize = recv(clntSock, &testServer, sizeof(int), 0)) < 0)
+            cout << "error - 1" << endl;
+
+        if (testServer>0)
+        {
+            vector<char> moveCommandsChar;
+            moveCommandsChar.resize(testServer);
+
+            cout << moveCommandsChar.size()*sizeof(char);
+            if ((recvMsgSize = recv(clntSock, &moveCommandsChar[0], moveCommandsChar.size()*sizeof(char), 0)) < 0)
+                cout << "error - 1" << endl;
+
+            int i=0;
+            int j=0;
+            moveCommandsString.push_back("");
+            do
+            {
+                //cout << moveCommandsChar[i] << endl;
+                moveCommandsString[j] += moveCommandsChar[i];
+                //cout << "char added to string"<<endl;
+                
+                if (moveCommandsChar[i+1]=='i')
+                {
+                    ;
+                }
+                else{
+                    //cout << "String = " << moveCommandsString[j] << endl;
+                    j++;
+                    moveCommandsString.push_back("");
+                }
+                i++;
+            }while(i<(moveCommandsChar.size()-1));
+            moveCommandsString[j] += moveCommandsChar[i];
+
+             for(int i=0; i<moveCommandsString.size();i++)
+            {
+                cout << moveCommandsString[i] << endl;
+            }
+
+            
+        }
+
+
+    //close(clntSock);    /* Close client socket */
+
+    }
+
+    void Cube::CloseSocket()
+    {
+        close(clntSock);    /* Close client socket */
+        //close(servSock);
+    }
 
 
 /*
+#############################################################################
+#############################################################################
 ################# SOLVER-STUFF ##############################################
-OLD CODE
---> Purpose is to cross check old text!
-// Cube Solver
-//#include "stdafx.h"
-#include <iostream>
-#include <stdlib.h>
-#include <string>
-#include <cmath>
-#include <time.h>
-#include <stdio.h>
-using namespace std;
-
-int main()
-{
-    scramble();
-    cout << "scramble: " << moves << endl;
-    clearMoves();
-    print();
-    solveTopCross();
-    cout << "cross: " << moves << endl;
-    clearMoves();
-    print();
-    solveTopCorners();
-    cout << "corners: " << moves << endl;
-    clearMoves();
-    print();
-    solveMiddleLayer();
-    cout << "middle layer: " << moves << endl;
-    clearMoves();
-    print();
-    solveBottomLayer();
-    cout << "Bottom: " << moves << endl;
-    clearMoves();
-    print();
-    return 0;
-}
+#############################################################################
+#############################################################################
 */
 
-void Cube::r()
-{
-    if (last() == "r  ")
+
+    void Cube::r()
     {
-        removeLast();
-        moves += "r2 ";
-    }
-    else if (last() == "r2 ")
-    {
-        removeLast();
-        moves += "ri ";
-    }
-    else if (last() == "ri ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "r  ";
+        if (last() == "r  ")
+        {
+            removeLast();
+            moves += "r2 ";
+        }
+        else if (last() == "r2 ")
+        {
+            removeLast();
+            moves += "ri ";
+        }
+        else if (last() == "ri ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "r  ";
+        }
+
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[2][i][2] = old[5][i][2];
+            cube[0][i][2] = old[2][i][2];
+            cube[4][i][0] = old[0][2 - i][2];
+            cube[5][i][2] = old[4][2 - i][0];
+        }
+        cube[3][0][2] = old[3][0][0];
+        cube[3][2][2] = old[3][0][2];
+        cube[3][2][0] = old[3][2][2];
+        cube[3][0][0] = old[3][2][0];
+
+        cube[3][1][2] = old[3][0][1];
+        cube[3][2][1] = old[3][1][2];
+        cube[3][1][0] = old[3][2][1];
+        cube[3][0][1] = old[3][1][0];
     }
 
-    copyCube();
-    for (int i = 0; i < 3; i++)
+    void Cube::ri()
     {
-        cube[2][i][2] = old[5][i][2];
-        cube[0][i][2] = old[2][i][2];
-        cube[4][i][0] = old[0][2 - i][2];
-        cube[5][i][2] = old[4][2 - i][0];
-    }
-    cube[3][0][2] = old[3][0][0];
-    cube[3][2][2] = old[3][0][2];
-    cube[3][2][0] = old[3][2][2];
-    cube[3][0][0] = old[3][2][0];
+        if (last() == "ri ")
+        {
+            removeLast();
+            moves += "r2 ";
+        }
+        else if (last() == "r2 ")
+        {
+            removeLast();
+            moves += "r  ";
+        }
+        else if (last() == "r  ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "ri ";
+        }
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[5][i][2] = old[2][i][2];
+            cube[2][i][2] = old[0][i][2];
+            cube[0][2 - i][2] = old[4][i][0];
+            cube[4][2 - i][0] = old[5][i][2];
+        }
+        cube[3][0][0] = old[3][0][2];
+        cube[3][0][2] = old[3][2][2];
+        cube[3][2][2] = old[3][2][0];
+        cube[3][2][0] = old[3][0][0];
 
-    cube[3][1][2] = old[3][0][1];
-    cube[3][2][1] = old[3][1][2];
-    cube[3][1][0] = old[3][2][1];
-    cube[3][0][1] = old[3][1][0];
-}
-
-void Cube::ri()
-{
-    if (last() == "ri ")
-    {
-        removeLast();
-        moves += "r2 ";
-    }
-    else if (last() == "r2 ")
-    {
-        removeLast();
-        moves += "r  ";
-    }
-    else if (last() == "r  ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "ri ";
-    }
-    copyCube();
-    for (int i = 0; i < 3; i++)
-    {
-        cube[5][i][2] = old[2][i][2];
-        cube[2][i][2] = old[0][i][2];
-        cube[0][2 - i][2] = old[4][i][0];
-        cube[4][2 - i][0] = old[5][i][2];
-    }
-    cube[3][0][0] = old[3][0][2];
-    cube[3][0][2] = old[3][2][2];
-    cube[3][2][2] = old[3][2][0];
-    cube[3][2][0] = old[3][0][0];
-
-    cube[3][0][1] = old[3][1][2];
-    cube[3][1][2] = old[3][2][1];
-    cube[3][2][1] = old[3][1][0];
-    cube[3][1][0] = old[3][0][1];
-}
-
-void Cube::l()
-{
-    if (last() == "l  ")
-    {
-        removeLast();
-        moves += "l2 ";
-    }
-    else if (last() == "l2 ")
-    {
-        removeLast();
-        moves += "li ";
-    }
-    else if (last() == "li ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "l  ";
-    }
-    copyCube();
-    for (int i = 0; i < 3; i++)
-    {
-        cube[5][i][0] = old[2][i][0];
-        cube[2][i][0] = old[0][i][0];
-        cube[0][i][0] = old[4][2 - i][2];
-        cube[4][2 - i][2] = old[5][i][0];
-    }
-    cube[1][0][2] = old[1][0][0];
-    cube[1][2][2] = old[1][0][2];
-    cube[1][2][0] = old[1][2][2];
-    cube[1][0][0] = old[1][2][0];
-
-    cube[1][1][2] = old[1][0][1];
-    cube[1][2][1] = old[1][1][2];
-    cube[1][1][0] = old[1][2][1];
-    cube[1][0][1] = old[1][1][0];
-}
-
-void Cube::li()
-{
-    if (last() == "li ")
-    {
-        removeLast();
-        moves += "l2 ";
-    }
-    else if (last() == "l2 ")
-    {
-        removeLast();
-        moves += "l  ";
-    }
-    else if (last() == "l  ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "li ";
-    }
-    copyCube();
-    for (int i = 0; i < 3; i++)
-    {
-        cube[2][i][0] = old[5][i][0];
-        cube[0][i][0] = old[2][i][0];
-        cube[4][i][2] = old[0][2 - i][0];
-        cube[5][i][0] = old[4][2 - i][2];
-    }
-    cube[1][0][0] = old[1][0][2];
-    cube[1][0][2] = old[1][2][2];
-    cube[1][2][2] = old[1][2][0];
-    cube[1][2][0] = old[1][0][0];
-
-    cube[1][0][1] = old[1][1][2];
-    cube[1][1][2] = old[1][2][1];
-    cube[1][2][1] = old[1][1][0];
-    cube[1][1][0] = old[1][0][1];
-}
-
-void Cube::u()
-{
-    if (last() == "u  ")
-    {
-        removeLast();
-        moves += "u2 ";
-    }
-    else if (last() == "u2 ")
-    {
-        removeLast();
-        moves += "ui ";
-    }
-    else if (last() == "ui ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "u  ";
+        cube[3][0][1] = old[3][1][2];
+        cube[3][1][2] = old[3][2][1];
+        cube[3][2][1] = old[3][1][0];
+        cube[3][1][0] = old[3][0][1];
     }
 
-    copyCube();
-    for (int i = 0; i < 3; i++)
+    void Cube::l()
     {
-        cube[1][0][i] = old[2][0][i];
-        cube[4][0][i] = old[1][0][i];
-        cube[3][0][i] = old[4][0][i];
-        cube[2][0][i] = old[3][0][i];
-    }
-    cube[0][0][0] = old[0][2][0];
-    cube[0][0][2] = old[0][0][0];
-    cube[0][2][2] = old[0][0][2];
-    cube[0][2][0] = old[0][2][2];
+        if (last() == "l  ")
+        {
+            removeLast();
+            moves += "l2 ";
+        }
+        else if (last() == "l2 ")
+        {
+            removeLast();
+            moves += "li ";
+        }
+        else if (last() == "li ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "l  ";
+        }
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[5][i][0] = old[2][i][0];
+            cube[2][i][0] = old[0][i][0];
+            cube[0][i][0] = old[4][2 - i][2];
+            cube[4][2 - i][2] = old[5][i][0];
+        }
+        cube[1][0][2] = old[1][0][0];
+        cube[1][2][2] = old[1][0][2];
+        cube[1][2][0] = old[1][2][2];
+        cube[1][0][0] = old[1][2][0];
 
-    cube[0][0][1] = old[0][1][0];
-    cube[0][1][2] = old[0][0][1];
-    cube[0][2][1] = old[0][1][2];
-    cube[0][1][0] = old[0][2][1];
-}
+        cube[1][1][2] = old[1][0][1];
+        cube[1][2][1] = old[1][1][2];
+        cube[1][1][0] = old[1][2][1];
+        cube[1][0][1] = old[1][1][0];
+    }
 
-void Cube::ui()
-{
-    if (last() == "ui ")
+    void Cube::li()
     {
-        removeLast();
-        moves += "u2 ";
-    }
-    else if (last() == "u2 ")
-    {
-        removeLast();
-        moves += "u  ";
-    }
-    else if (last() == "u  ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "ui ";
-    }
-    copyCube();
-    for (int i = 0; i < 3; i++)
-    {
-        cube[2][0][i] = old[1][0][i];
-        cube[1][0][i] = old[4][0][i];
-        cube[4][0][i] = old[3][0][i];
-        cube[3][0][i] = old[2][0][i];
-    }
-    cube[0][2][0] = old[0][0][0];
-    cube[0][0][0] = old[0][0][2];
-    cube[0][0][2] = old[0][2][2];
-    cube[0][2][2] = old[0][2][0];
+        if (last() == "li ")
+        {
+            removeLast();
+            moves += "l2 ";
+        }
+        else if (last() == "l2 ")
+        {
+            removeLast();
+            moves += "l  ";
+        }
+        else if (last() == "l  ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "li ";
+        }
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[2][i][0] = old[5][i][0];
+            cube[0][i][0] = old[2][i][0];
+            cube[4][i][2] = old[0][2 - i][0];
+            cube[5][i][0] = old[4][2 - i][2];
+        }
+        cube[1][0][0] = old[1][0][2];
+        cube[1][0][2] = old[1][2][2];
+        cube[1][2][2] = old[1][2][0];
+        cube[1][2][0] = old[1][0][0];
 
-    cube[0][1][0] = old[0][0][1];
-    cube[0][0][1] = old[0][1][2];
-    cube[0][1][2] = old[0][2][1];
-    cube[0][2][1] = old[0][1][0];
-}
+        cube[1][0][1] = old[1][1][2];
+        cube[1][1][2] = old[1][2][1];
+        cube[1][2][1] = old[1][1][0];
+        cube[1][1][0] = old[1][0][1];
+    }
 
-void Cube::d()
-{
-    if (last() == "d  ")
+    void Cube::u()
     {
-        removeLast();
-        moves += "d2 ";
-    }
-    else if (last() == "d2 ")
-    {
-        removeLast();
-        moves += "di ";
-    }
-    else if (last() == "di ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "d  ";
-    }
-    copyCube();
-    for (int i = 0; i < 3; i++)
-    {
-        cube[2][2][i] = old[1][2][i];
-        cube[1][2][i] = old[4][2][i];
-        cube[4][2][i] = old[3][2][i];
-        cube[3][2][i] = old[2][2][i];
-    }
-    cube[5][0][0] = old[5][2][0];
-    cube[5][0][2] = old[5][0][0];
-    cube[5][2][2] = old[5][0][2];
-    cube[5][2][0] = old[5][2][2];
+        if (last() == "u  ")
+        {
+            removeLast();
+            moves += "u2 ";
+        }
+        else if (last() == "u2 ")
+        {
+            removeLast();
+            moves += "ui ";
+        }
+        else if (last() == "ui ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "u  ";
+        }
 
-    cube[5][0][1] = old[5][1][0];
-    cube[5][1][2] = old[5][0][1];
-    cube[5][2][1] = old[5][1][2];
-    cube[5][1][0] = old[5][2][1];
-}
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[1][0][i] = old[2][0][i];
+            cube[4][0][i] = old[1][0][i];
+            cube[3][0][i] = old[4][0][i];
+            cube[2][0][i] = old[3][0][i];
+        }
+        cube[0][0][0] = old[0][2][0];
+        cube[0][0][2] = old[0][0][0];
+        cube[0][2][2] = old[0][0][2];
+        cube[0][2][0] = old[0][2][2];
 
-void Cube::di()
-{
-    if (last() == "di ")
-    {
-        removeLast();
-        moves += "d2 ";
+        cube[0][0][1] = old[0][1][0];
+        cube[0][1][2] = old[0][0][1];
+        cube[0][2][1] = old[0][1][2];
+        cube[0][1][0] = old[0][2][1];
     }
-    else if (last() == "d2 ")
-    {
-        removeLast();
-        moves += "d  ";
-    }
-    else if (last() == "d  ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "di ";
-    }
-    copyCube();
-    for (int i = 0; i < 3; i++)
-    {
-        cube[1][2][i] = old[2][2][i];
-        cube[4][2][i] = old[1][2][i];
-        cube[3][2][i] = old[4][2][i];
-        cube[2][2][i] = old[3][2][i];
-    }
-    cube[5][2][0] = old[5][0][0];
-    cube[5][0][0] = old[5][0][2];
-    cube[5][0][2] = old[5][2][2];
-    cube[5][2][2] = old[5][2][0];
 
-    cube[5][1][0] = old[5][0][1];
-    cube[5][0][1] = old[5][1][2];
-    cube[5][1][2] = old[5][2][1];
-    cube[5][2][1] = old[5][1][0];
-}
+    void Cube::ui()
+    {
+        if (last() == "ui ")
+        {
+            removeLast();
+            moves += "u2 ";
+        }
+        else if (last() == "u2 ")
+        {
+            removeLast();
+            moves += "u  ";
+        }
+        else if (last() == "u  ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "ui ";
+        }
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[2][0][i] = old[1][0][i];
+            cube[1][0][i] = old[4][0][i];
+            cube[4][0][i] = old[3][0][i];
+            cube[3][0][i] = old[2][0][i];
+        }
+        cube[0][2][0] = old[0][0][0];
+        cube[0][0][0] = old[0][0][2];
+        cube[0][0][2] = old[0][2][2];
+        cube[0][2][2] = old[0][2][0];
 
-void Cube::f()
-{
-    if (last() == "f  ")
-    {
-        removeLast();
-        moves += "f2 ";
+        cube[0][1][0] = old[0][0][1];
+        cube[0][0][1] = old[0][1][2];
+        cube[0][1][2] = old[0][2][1];
+        cube[0][2][1] = old[0][1][0];
     }
-    else if (last() == "f2 ")
-    {
-        removeLast();
-        moves += "fi ";
-    }
-    else if (last() == "fi ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "f  ";
-    }
-    copyCube();
-    for (int i = 0; i < 3; i++)
-    {
-        cube[0][2][i] = old[1][2 - i][2];
-        cube[3][i][0] = old[0][2][i];
-        cube[5][0][2 - i] = old[3][i][0];
-        cube[1][2 - i][2] = old[5][0][2 - i];
-    }
-    cube[2][0][2] = old[2][0][0];
-    cube[2][2][2] = old[2][0][2];
-    cube[2][2][0] = old[2][2][2];
-    cube[2][0][0] = old[2][2][0];
 
-    cube[2][1][2] = old[2][0][1];
-    cube[2][2][1] = old[2][1][2];
-    cube[2][1][0] = old[2][2][1];
-    cube[2][0][1] = old[2][1][0];
-}
+    void Cube::d()
+    {
+        if (last() == "d  ")
+        {
+            removeLast();
+            moves += "d2 ";
+        }
+        else if (last() == "d2 ")
+        {
+            removeLast();
+            moves += "di ";
+        }
+        else if (last() == "di ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "d  ";
+        }
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[2][2][i] = old[1][2][i];
+            cube[1][2][i] = old[4][2][i];
+            cube[4][2][i] = old[3][2][i];
+            cube[3][2][i] = old[2][2][i];
+        }
+        cube[5][0][0] = old[5][2][0];
+        cube[5][0][2] = old[5][0][0];
+        cube[5][2][2] = old[5][0][2];
+        cube[5][2][0] = old[5][2][2];
 
-void Cube::fi()
-{
-    if (last() == "fi ")
-    {
-        removeLast();
-        moves += "f2 ";
+        cube[5][0][1] = old[5][1][0];
+        cube[5][1][2] = old[5][0][1];
+        cube[5][2][1] = old[5][1][2];
+        cube[5][1][0] = old[5][2][1];
     }
-    else if (last() == "f2 ")
-    {
-        removeLast();
-        moves += "f  ";
-    }
-    else if (last() == "f  ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "fi ";
-    }
-    copyCube();
-    for (int i = 0; i < 3; i++)
-    {
-        cube[1][i][2] = old[0][2][2 - i];
-        cube[0][2][2 - i] = old[3][2 - i][0];
-        cube[3][2 - i][0] = old[5][0][i];
-        cube[5][0][i] = old[1][i][2];
-    }
-    cube[2][0][0] = old[2][0][2];
-    cube[2][0][2] = old[2][2][2];
-    cube[2][2][2] = old[2][2][0];
-    cube[2][2][0] = old[2][0][0];
 
-    cube[2][0][1] = old[2][1][2];
-    cube[2][1][2] = old[2][2][1];
-    cube[2][2][1] = old[2][1][0];
-    cube[2][1][0] = old[2][0][1];
-}
+    void Cube::di()
+    {
+        if (last() == "di ")
+        {
+            removeLast();
+            moves += "d2 ";
+        }
+        else if (last() == "d2 ")
+        {
+            removeLast();
+            moves += "d  ";
+        }
+        else if (last() == "d  ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "di ";
+        }
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[1][2][i] = old[2][2][i];
+            cube[4][2][i] = old[1][2][i];
+            cube[3][2][i] = old[4][2][i];
+            cube[2][2][i] = old[3][2][i];
+        }
+        cube[5][2][0] = old[5][0][0];
+        cube[5][0][0] = old[5][0][2];
+        cube[5][0][2] = old[5][2][2];
+        cube[5][2][2] = old[5][2][0];
 
-void Cube::b()
-{
-    if (last() == "b  ")
-    {
-        removeLast();
-        moves += "b2 ";
+        cube[5][1][0] = old[5][0][1];
+        cube[5][0][1] = old[5][1][2];
+        cube[5][1][2] = old[5][2][1];
+        cube[5][2][1] = old[5][1][0];
     }
-    else if (last() == "b2 ")
-    {
-        removeLast();
-        moves += "bi ";
-    }
-    else if (last() == "bi ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "b  ";
-    }
-    copyCube();
-    for (int i = 0; i < 3; i++)
-    {
-        cube[1][2 - i][0] = old[0][0][i];
-        cube[0][0][i] = old[3][i][2];
-        cube[3][i][2] = old[5][2][2 - i];
-        cube[5][2][2 - i] = old[1][2 - i][0];
-    }
-    cube[4][0][2] = old[4][0][0];
-    cube[4][2][2] = old[4][0][2];
-    cube[4][2][0] = old[4][2][2];
-    cube[4][0][0] = old[4][2][0];
 
-    cube[4][1][2] = old[4][0][1];
-    cube[4][2][1] = old[4][1][2];
-    cube[4][1][0] = old[4][2][1];
-    cube[4][0][1] = old[4][1][0];
-}
+    void Cube::f()
+    {
+        if (last() == "f  ")
+        {
+            removeLast();
+            moves += "f2 ";
+        }
+        else if (last() == "f2 ")
+        {
+            removeLast();
+            moves += "fi ";
+        }
+        else if (last() == "fi ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "f  ";
+        }
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[0][2][i] = old[1][2 - i][2];
+            cube[3][i][0] = old[0][2][i];
+            cube[5][0][2 - i] = old[3][i][0];
+            cube[1][2 - i][2] = old[5][0][2 - i];
+        }
+        cube[2][0][2] = old[2][0][0];
+        cube[2][2][2] = old[2][0][2];
+        cube[2][2][0] = old[2][2][2];
+        cube[2][0][0] = old[2][2][0];
 
-void Cube::bi()
-{
-    if (last() == "bi ")
-    {
-        removeLast();
-        moves += "b2 ";
+        cube[2][1][2] = old[2][0][1];
+        cube[2][2][1] = old[2][1][2];
+        cube[2][1][0] = old[2][2][1];
+        cube[2][0][1] = old[2][1][0];
     }
-    else if (last() == "b2 ")
-    {
-        removeLast();
-        moves += "b  ";
-    }
-    else if (last() == "b  ")
-    {
-        removeLast();
-    }
-    else
-    {
-        moves += "bi ";
-    }
-    copyCube();
-    for (int i = 0; i < 3; i++)
-    {
-        cube[0][0][i] = old[1][2 - i][0];
-        cube[3][i][2] = old[0][0][i];
-        cube[5][2][2 - i] = old[3][i][2];
-        cube[1][2 - i][0] = old[5][2][2 - i];
-    }
-    cube[4][0][0] = old[4][0][2];
-    cube[4][0][2] = old[4][2][2];
-    cube[4][2][2] = old[4][2][0];
-    cube[4][2][0] = old[4][0][0];
 
-    cube[4][0][1] = old[4][1][2];
-    cube[4][1][2] = old[4][2][1];
-    cube[4][2][1] = old[4][1][0];
-    cube[4][1][0] = old[4][0][1];
-}
+    void Cube::fi()
+    {
+        if (last() == "fi ")
+        {
+            removeLast();
+            moves += "f2 ";
+        }
+        else if (last() == "f2 ")
+        {
+            removeLast();
+            moves += "f  ";
+        }
+        else if (last() == "f  ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "fi ";
+        }
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[1][i][2] = old[0][2][2 - i];
+            cube[0][2][2 - i] = old[3][2 - i][0];
+            cube[3][2 - i][0] = old[5][0][i];
+            cube[5][0][i] = old[1][i][2];
+        }
+        cube[2][0][0] = old[2][0][2];
+        cube[2][0][2] = old[2][2][2];
+        cube[2][2][2] = old[2][2][0];
+        cube[2][2][0] = old[2][0][0];
 
-void Cube::solveTopCross()
-{
-    moveTopEdges();
+        cube[2][0][1] = old[2][1][2];
+        cube[2][1][2] = old[2][2][1];
+        cube[2][2][1] = old[2][1][0];
+        cube[2][1][0] = old[2][0][1];
+    }
+
+    void Cube::b()
+    {
+        if (last() == "b  ")
+        {
+            removeLast();
+            moves += "b2 ";
+        }
+        else if (last() == "b2 ")
+        {
+            removeLast();
+            moves += "bi ";
+        }
+        else if (last() == "bi ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "b  ";
+        }
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[1][2 - i][0] = old[0][0][i];
+            cube[0][0][i] = old[3][i][2];
+            cube[3][i][2] = old[5][2][2 - i];
+            cube[5][2][2 - i] = old[1][2 - i][0];
+        }
+        cube[4][0][2] = old[4][0][0];
+        cube[4][2][2] = old[4][0][2];
+        cube[4][2][0] = old[4][2][2];
+        cube[4][0][0] = old[4][2][0];
+
+        cube[4][1][2] = old[4][0][1];
+        cube[4][2][1] = old[4][1][2];
+        cube[4][1][0] = old[4][2][1];
+        cube[4][0][1] = old[4][1][0];
+    }
+
+    void Cube::bi()
+    {
+        if (last() == "bi ")
+        {
+            removeLast();
+            moves += "b2 ";
+        }
+        else if (last() == "b2 ")
+        {
+            removeLast();
+            moves += "b  ";
+        }
+        else if (last() == "b  ")
+        {
+            removeLast();
+        }
+        else
+        {
+            moves += "bi ";
+        }
+        copyCube();
+        for (int i = 0; i < 3; i++)
+        {
+            cube[0][0][i] = old[1][2 - i][0];
+            cube[3][i][2] = old[0][0][i];
+            cube[5][2][2 - i] = old[3][i][2];
+            cube[1][2 - i][0] = old[5][2][2 - i];
+        }
+        cube[4][0][0] = old[4][0][2];
+        cube[4][0][2] = old[4][2][2];
+        cube[4][2][2] = old[4][2][0];
+        cube[4][2][0] = old[4][0][0];
+
+        cube[4][0][1] = old[4][1][2];
+        cube[4][1][2] = old[4][2][1];
+        cube[4][2][1] = old[4][1][0];
+        cube[4][1][0] = old[4][0][1];
+    }
+
+    void Cube::solveTopCross()
+    {
+        moveTopEdges();
     //look for the 4 yellow edges
-    for (int i = 1; i < 5; i++)
-    {
+        for (int i = 1; i < 5; i++)
+        {
         int side = 0; //side that the yellow sticker is on
         int pos = 0; //position (1-4) of the yellow sticker
         findNextTopEdge(side, pos);
@@ -1067,6 +1412,7 @@ void Cube::solveTopCross()
         }
         if (side == 5) //algorithm for when the sticker is on the bottom
         {
+            // WE NEED CODE HERE TO FIND OUT THE COLOR OF 121
             int color = cube[1][2][1];
             for (int a = 1; a < color; a++) //set-up so that the edge goes into the right spot
             {
@@ -1081,6 +1427,7 @@ void Cube::solveTopCross()
         }
         else //algorithm for when th esticker is not on the bottom
         {
+            // WE NEED CODE HERE TO FIND OUT THE COLOR OF 510
             int color = cube[5][1][0];
             if (color < 4) //set-up so that the sticker goes into the right spot
             {
@@ -1305,7 +1652,7 @@ void Cube::solveMiddleLayer()
     int color = -1;
     int count = 0;
 
-beginning:
+    beginning:
     if (side != -1)
     {
         placeMiddleEdge(color, side);
@@ -2678,6 +3025,7 @@ void Cube::print()
         }
         cout <<"|"<< endl;
     }
+    cout << endl;
 }
 
 string Cube::last()
@@ -2712,42 +3060,44 @@ void Cube::scramble()
         int num = rand() % 12 + 1;
         switch (num)
         {
-        case 1:
+            case 1:
             r();
             break;
-        case 2:
+            case 2:
             ri();
             break;
-        case 3:
+            case 3:
             u();
             break;
-        case 4:
+            case 4:
             ui();
             break;
-        case 5:
+            case 5:
             f();
             break;
-        case 6:
+            case 6:
             fi();
             break;
-        case 7:
+            case 7:
             l();
             break;
-        case 8:
+            case 8:
             li();
             break;
-        case 9:
+            case 9:
             b();
             break;
-        case 10:
+            case 10:
             bi();
             break;
-        case 11:
+            case 11:
             d();
             break;
-        case 12:
+            case 12:
             di();
             break;
         }
     }
 }
+
+

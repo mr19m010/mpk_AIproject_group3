@@ -8,7 +8,7 @@
 #include <time.h>		/* for randomizer in scramble();*/
 #include <iostream>
 #include <vector>
-
+//#include <bits/stdc++.h> 
 
 
 #define RCVBUFSIZE 32   /* Size of receive buffer */
@@ -22,6 +22,8 @@ class Cube
 {
 
 public:
+	string moves = "";	// saves a list of performed moves
+	
 
 	int X(int);
 	int Y(int);
@@ -49,6 +51,8 @@ public:
 	void ReceiveAnswer();
 
 	void CloseConnection();
+
+	void CloseSocket();
 	
 	int getN();
 
@@ -59,6 +63,7 @@ void PrintVector(vector <int> &v);
 
 bool DetectChange(int number);
 
+void SendMoveCommand(bool sendVector);
 
 // Server
 	void StartServer();
@@ -138,6 +143,7 @@ private:
   int feedcntOld=0;
   int Qcnt=0; // Question Position Counter
   int HitCnt=0;
+  vector <int> FAKEfeedbackVector;
 
 
   // Client
@@ -145,6 +151,10 @@ private:
   vector<int> Pos; 
   vector<int> Col; 
   vector<int> feedbackVector;
+  //vector<char> moveCommandsChar;
+  vector<string> moveCommandsString;
+  
+
   int testClient=34;
   
   
@@ -154,6 +164,7 @@ private:
   vector<int> positionVectorServer; 
   vector<int> colorVectorServer; 
   int testServer=3;
+  int messageSize=0;
   
 
   int servSock;                    /* Socket descriptor for server */
@@ -184,7 +195,7 @@ private:
 							{{5,1,0},{1,2,1}},
 							{{5,1,2},{3,2,1}},
 							{{5,2,1},{4,2,1}},
-							{{1,1,0},{4,2,1}},
+							{{1,1,0},{4,1,2}},
 							{{1,1,2},{2,1,0}},
 							{{2,1,2},{3,1,0}},
 							{{3,1,2},{4,1,0}}
@@ -193,7 +204,7 @@ private:
 	
 	//CubeSolver-Stuff
 
-	string moves = "";	// saves a list of performed moves
+	//string moves = "";	// saves a list of performed moves
 	
 	int old[6][3][3] =
 	{
@@ -231,21 +242,21 @@ private:
 					201, 210, 212, 221,
 					301, 310, 312, 321,
 					401, 410, 412, 421,
-					501, 510, 512, 521,	// 6x4 Crossedges = 26 Flächen
-					000, 000, 000, 000, 000,
-					000, 000, 000, 000, 000,
-					000, 000, 000, 000, 000,
-					000, 000, 000, 000,	000,
-					000, 000, 000, 000, 000,
-					000, 000, 000
+					501, 510, 512, 521,	// 6sides x 4 edges = 24 Areas
+					
+					  0,   2,  20, 022, //  6sides x 4 corners = 24 Areas
+					100, 102, 120, 122,
+					200, 202, 220, 222,
+					300, 302, 320, 322,
+					400, 402, 420, 422,
+					500, 502, 520, 522,
+
+					 11, 111, 211, 311,	// useless middlepieces
+					411, 511
 					 
 			};
 	int PrioCnt=0; // saves our Position in the Priolist for filling the Question
 
-	int TopCrossPrioCounter = 5;
-	int TopCornerPrioCounter = 4;
-	int MiddlePrioCounter = 20;
-	int BottomPrioCounter = 19;
 
  
 };
