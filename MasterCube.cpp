@@ -447,24 +447,24 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
     int transmissionSize =0;
     vector<char> moveCommandsChar;
 
-    moveCommandsString.resize(10);
-    moveCommandsString[0]="r";
+    //moveSingle.resize(10);
+    /*moveCommandsString[0]="r";
     moveCommandsString[1]="ri";
     moveCommandsString[2]="l";
     moveCommandsString[3]="li";
     moveCommandsString[4]="d";
     moveCommandsString[5]="di";
     moveCommandsString[6]="ui";
-    moveCommandsString[7]="u";
+    moveCommandsString[7]="u";*/
     
 
-    for(int i=0; i<moveCommandsString.size();i++)
+    for(int i=0; i<moveSingle.size();i++)
     {
-        copy(moveCommandsString[i].begin(), moveCommandsString[i].end(), back_inserter(moveCommandsChar));
+        copy(moveSingle[i].begin(), moveSingle[i].end(), back_inserter(moveCommandsChar));
     }
 
-
-    /*for(int i=0; i<moveCommandsChar.size();i++)
+    //printVector(moveSingle);
+    /*for(int i=0; i<moveCommandsChar.size();i++)exe
     {
         cout << moveCommandsChar[i] << endl;
     }*/
@@ -839,11 +839,11 @@ void Cube::StartServer()
 
             int i=0;
             int j=0;
-            moveCommandsString.push_back("");
+            moveSingle.push_back("");
             do
             {
                 //cout << moveCommandsChar[i] << endl;
-                moveCommandsString[j] += moveCommandsChar[i];
+                moveSingle[j] += moveCommandsChar[i];
                 //cout << "char added to string"<<endl;
                 
                 if (moveCommandsChar[i+1]=='i')
@@ -851,17 +851,17 @@ void Cube::StartServer()
                     ;
                 }
                 else{
-                    //cout << "String = " << moveCommandsString[j] << endl;
+                    //cout << "String = " << moveSingle[j] << endl;
                     j++;
-                    moveCommandsString.push_back("");
+                    moveSingle.push_back("");
                 }
                 i++;
             }while(i<(moveCommandsChar.size()-1));
-            moveCommandsString[j] += moveCommandsChar[i];
+            moveSingle[j] += moveCommandsChar[i];
 
-             for(int i=0; i<moveCommandsString.size();i++)
+             for(int i=0; i<moveSingle.size();i++)
             {
-                cout << moveCommandsString[i] << endl;
+                cout << moveSingle[i] << endl;
             }
 
             ExecuteMoveCommands();
@@ -889,20 +889,26 @@ void Cube::StartServer()
     void Cube::ExecuteMoveCommands()
     {
         cout << endl << "Execute MoveCommands..." << endl;
-        for(int i=0; i<(moveCommandsString.size());i++)
+        for(int i=0; i<(moveSingle.size());i++)
         {
-            if (moveCommandsString[i]=="r")         r();
-            else if (moveCommandsString[i]=="ri")   ri();
-            else if (moveCommandsString[i]=="l")    l();
-            else if (moveCommandsString[i]=="li")   li();
-            else if (moveCommandsString[i]=="u")    u();
-            else if (moveCommandsString[i]=="ui")   ui();
-            else if (moveCommandsString[i]=="d")    d();
-            else if (moveCommandsString[i]=="di")   di();
-            else if (moveCommandsString[i]=="f")    f();
-            else if (moveCommandsString[i]=="fi")   fi();
-            else if (moveCommandsString[i]=="b")    b();
-            else if (moveCommandsString[i]=="bi")   bi();
+            if (moveSingle[i]=="r")         r();
+            else if (moveSingle[i]=="ri")   ri();
+            else if (moveSingle[i]=="r2")   {r();r();}
+            else if (moveSingle[i]=="l")    l();
+            else if (moveSingle[i]=="li")   li();
+            else if (moveSingle[i]=="l2")   {l();l();}
+            else if (moveSingle[i]=="u")    u();
+            else if (moveSingle[i]=="ui")   ui();
+            else if (moveSingle[i]=="u2")   {u();u();}
+            else if (moveSingle[i]=="d")    d();
+            else if (moveSingle[i]=="di")   di();
+            else if (moveSingle[i]=="d2")   {d();d();}
+            else if (moveSingle[i]=="f")    f();
+            else if (moveSingle[i]=="fi")   fi();
+            else if (moveSingle[i]=="f2")   {f();f();}
+            else if (moveSingle[i]=="b")    b();
+            else if (moveSingle[i]=="bi")   bi();
+            else if (moveSingle[i]=="b2")   {b();b();}
             else cout << "ERROR -> MoveCommand konnte nicht ausgeführt werden" << endl;
             
         }
@@ -962,6 +968,10 @@ void Cube::StartServer()
         cube[3][2][1] = old[3][1][2];
         cube[3][1][0] = old[3][2][1];
         cube[3][0][1] = old[3][1][0];
+        
+        moveSingle.assign(1,"r");
+        transmitData(false,true);
+       
     }
 
     void Cube::ri()
@@ -1001,6 +1011,11 @@ void Cube::StartServer()
         cube[3][1][2] = old[3][2][1];
         cube[3][2][1] = old[3][1][0];
         cube[3][1][0] = old[3][0][1];
+        
+        
+        moveSingle.assign(1,"ri");
+        transmitData(false,true);
+        
     }
 
     void Cube::l()
@@ -1040,6 +1055,11 @@ void Cube::StartServer()
         cube[1][2][1] = old[1][1][2];
         cube[1][1][0] = old[1][2][1];
         cube[1][0][1] = old[1][1][0];
+        
+        
+        moveSingle.assign(1,"l");
+        transmitData(false,true);
+        
     }
 
     void Cube::li()
@@ -1079,6 +1099,11 @@ void Cube::StartServer()
         cube[1][1][2] = old[1][2][1];
         cube[1][2][1] = old[1][1][0];
         cube[1][1][0] = old[1][0][1];
+        
+        
+        moveSingle.assign(1,"li");
+        transmitData(false,true);
+        
     }
 
     void Cube::u()
@@ -1119,6 +1144,11 @@ void Cube::StartServer()
         cube[0][1][2] = old[0][0][1];
         cube[0][2][1] = old[0][1][2];
         cube[0][1][0] = old[0][2][1];
+        
+        
+        moveSingle.assign(1,"u");
+        transmitData(false,true);
+        
     }
 
     void Cube::ui()
@@ -1158,6 +1188,9 @@ void Cube::StartServer()
         cube[0][0][1] = old[0][1][2];
         cube[0][1][2] = old[0][2][1];
         cube[0][2][1] = old[0][1][0];
+        
+        moveSingle.assign(1,"ui");
+        transmitData(false,true);
     }
 
     void Cube::d()
@@ -1197,6 +1230,9 @@ void Cube::StartServer()
         cube[5][1][2] = old[5][0][1];
         cube[5][2][1] = old[5][1][2];
         cube[5][1][0] = old[5][2][1];
+        
+        moveSingle.assign(1,"d");
+        transmitData(false,true);
     }
 
     void Cube::di()
@@ -1236,6 +1272,9 @@ void Cube::StartServer()
         cube[5][0][1] = old[5][1][2];
         cube[5][1][2] = old[5][2][1];
         cube[5][2][1] = old[5][1][0];
+        
+        moveSingle.assign(1,"di");
+        transmitData(false,true);
     }
 
     void Cube::f()
@@ -1275,7 +1314,10 @@ void Cube::StartServer()
         cube[2][2][1] = old[2][1][2];
         cube[2][1][0] = old[2][2][1];
         cube[2][0][1] = old[2][1][0];
-    }
+        
+        moveSingle.assign(1,"f");
+        transmitData(false,true);
+        }
 
     void Cube::fi()
     {
@@ -1314,6 +1356,9 @@ void Cube::StartServer()
         cube[2][1][2] = old[2][2][1];
         cube[2][2][1] = old[2][1][0];
         cube[2][1][0] = old[2][0][1];
+        
+        moveSingle.assign(1,"fi");
+        transmitData(false,true);
     }
 
     void Cube::b()
@@ -1353,6 +1398,9 @@ void Cube::StartServer()
         cube[4][2][1] = old[4][1][2];
         cube[4][1][0] = old[4][2][1];
         cube[4][0][1] = old[4][1][0];
+        
+        moveSingle.assign(1,"b");
+        transmitData(false,true);
     }
 
     void Cube::bi()
@@ -1392,6 +1440,9 @@ void Cube::StartServer()
         cube[4][1][2] = old[4][2][1];
         cube[4][2][1] = old[4][1][0];
         cube[4][1][0] = old[4][0][1];
+        
+        moveSingle.assign(1,"bi");
+        transmitData(false,true);
     }
 
     void Cube::solveTopCross()

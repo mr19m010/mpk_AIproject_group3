@@ -22,8 +22,7 @@ class Cube
 {
 
 public:
-	string moves = "";	// saves a list of performed moves
-	
+		
 
 	int X(int);
 	int Y(int);
@@ -139,6 +138,8 @@ void transmitData(bool bSendQuestion, bool bSendMoveCommand);
 void ChangeArray();
 
 private:
+	string moves = "";	// saves a list of performed moves
+	vector <string> moveSingle;
 	int n;
 	int question[6][3][3];
 	int sock;
@@ -158,8 +159,9 @@ private:
   vector<int> Pos; 
   vector<int> Col; 
   vector<int> feedbackVector;
-  //vector<char> moveCommandsChar;
-  vector<string> moveCommandsString;
+  vector<char> moveCommandsChar;
+  //vector<string> moveCommandsString;
+
   
 
   int testClient=34;

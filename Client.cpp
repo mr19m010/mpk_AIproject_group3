@@ -48,9 +48,8 @@ int main()
 	cout << " ##################### solveTopCross #############"<<endl;
 	cCube.solveTopCross();
 	cCube.print();
+
 	
-	cCube.FindSingleColor(212);
-	cCube.print();
 
 
 
