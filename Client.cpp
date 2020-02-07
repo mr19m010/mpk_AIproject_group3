@@ -62,8 +62,8 @@ int main()
 	
 	//cCube.SendQuestion();
 	
-	//cCube.SendMoveCommand(true);
-	//cout << "Positions und Farbvektor gesendet" << endl;
+	cCube.transmitData(false,true);
+	cout << "Positions und Farbvektor gesendet" << endl;
 
 
 	

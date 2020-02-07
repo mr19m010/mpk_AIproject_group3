@@ -488,14 +488,14 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
     vector<char> moveCommandsChar;
 
     moveCommandsString.resize(10);
-    moveCommandsString[0]="ri";
-    moveCommandsString[1]="lu";
-    moveCommandsString[2]="u";
-    moveCommandsString[3]="i";
-    moveCommandsString[4]="di";
-    moveCommandsString[5]="cr";
-    moveCommandsString[6]="t";
-    moveCommandsString[7]="ri";
+    moveCommandsString[0]="r";
+    moveCommandsString[1]="ri";
+    moveCommandsString[2]="l";
+    moveCommandsString[3]="li";
+    moveCommandsString[4]="d";
+    moveCommandsString[5]="di";
+    moveCommandsString[6]="ui";
+    moveCommandsString[7]="u";
     
 
     for(int i=0; i<moveCommandsString.size();i++)
@@ -513,7 +513,7 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
     if (bSendMoveCommand==true)
     {
         transmissionSize=moveCommandsChar.size();
-        cout << moveCommandsChar.size()*sizeof(char);
+        cout << endl << "Paketgröße von MoveCommand = " << moveCommandsChar.size()*sizeof(char);
 
         if (send(sock, &transmissionSize, sizeof(int), 0) < 0)
             cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
@@ -899,6 +899,8 @@ void Cube::StartServer()
             {
                 cout << moveCommandsString[i] << endl;
             }
+
+            ExecuteMoveCommands();
             
         }
 
@@ -910,6 +912,29 @@ void Cube::StartServer()
 
     //close(clntSock);    /* Close client socket */
 
+    }
+
+  
+    void Cube::ExecuteMoveCommands()
+    {
+        cout << endl << "Execute MoveCommands..." << endl;
+        for(int i=0; i<(moveCommandsString.size());i++)
+        {
+            if (moveCommandsString[i]=="r")         r();
+            else if (moveCommandsString[i]=="ri")   ri();
+            else if (moveCommandsString[i]=="l")    l();
+            else if (moveCommandsString[i]=="li")   li();
+            else if (moveCommandsString[i]=="u")    u();
+            else if (moveCommandsString[i]=="ui")   ui();
+            else if (moveCommandsString[i]=="d")    d();
+            else if (moveCommandsString[i]=="di")   di();
+            else if (moveCommandsString[i]=="f")    f();
+            else if (moveCommandsString[i]=="fi")   fi();
+            else if (moveCommandsString[i]=="b")    b();
+            else if (moveCommandsString[i]=="bi")   bi();
+            else cout << "ERROR -> MoveCommand konnte nicht ausgeführt werden" << endl;
+            
+        }
     }
 
     void Cube::CloseSocket()

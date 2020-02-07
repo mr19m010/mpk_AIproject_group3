@@ -29,7 +29,7 @@ int main()
 		// Die Funktion GiveFeedback wird in der Funktion HandleTCPClient aufgerufen
 		//myCube.GiveFeedback();
 		//cout<< "done give GiveFeedback" << endl;
-	}
+	//}
 
 		myCube.CloseSocket();
 		cout << "socket closed " << endl;
