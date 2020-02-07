@@ -35,14 +35,16 @@ void Cube::FillQuestion(){
     int TmpPrioCnt=0;
     int k=0;   
     Qcnt=0;
+    Pos.clear();
+    Col.clear();
     for(int i=PrioCnt;i<n+PrioCnt;i++){        
              
 
-            if((i)>=54){ // this is for filling the Question, when there is no more stuff in the Priolist -> we fill from start again
-                Pos.push_back(Prio[k++]);     // Fill Question with Prio List from start
+            if(i>=54){ // this is for filling the Question, when there is no more stuff in the Priolist -> we fill from start again
+                Pos.push_back(Prio[k++]);           // Fill Question with Prio List from start
                 Col.push_back(5);                   // Write Color = 5 ("nicht yellow")    
             }else {
-                Pos.push_back(Prio[i]);     // Fill Question with Prio List
+                Pos.push_back(Prio[i]);             // Fill Question with Prio List
                 Col.push_back(5);                   // Write Color = 5 ("nicht yellow")    
                 TmpPrioCnt++; 
             }
@@ -73,21 +75,26 @@ void Cube::AdjustQuestion(){
         if(feedcntOld<feedcnt){ // we hit something good
             cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=0;
             cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
+
+            cout << "Position: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt]) << endl;
+
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"
             HitCnt++;
         }else if(feedcntOld>feedcnt){
             cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
-            cout << "Feedback kleiner, Qcnt: " << Qcnt << endl;
+            cout << "Feedback kleiner, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
+            cout << "Position: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<< endl;
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"
         } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
             cout << "Feedback gleich, Qcnt: " << Qcnt << endl;
+            cout << "Position: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<endl;
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"            
         }
         feedcntOld=feedcnt;
-        if(Qcnt>n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
+        if(Qcnt>=n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
             FillQuestion();
         }
     }else {
@@ -114,7 +121,7 @@ void Cube::FindSingleColor(int facePos){
     while(1){
         SendQuestion();
         ReadFeedback();
-
+        //cout << "ANFANGS IST DIE FARBE: " << Col[Qcnt] << endl;
         // We dont care about Qcnt in this Function at all - we only want to know Col of Qcnt == 0
 
         if(feedcnt!=-1){
@@ -122,6 +129,8 @@ void Cube::FindSingleColor(int facePos){
                 cout<<"feedback groesser - Col[Qcnt] = "<<Col[Qcnt]<<endl;
                 cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=Col[Qcnt];
                 cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
+                PrintVector(feedbackVector);
+
                 return;
                 //Qcnt++;
                 /*
@@ -129,7 +138,10 @@ void Cube::FindSingleColor(int facePos){
             }else if(feedcntOld>feedcnt){
                 cout<<"feedback kleiner - Col[Qcnt] = "<<Col[Qcnt]<< " should be 0, but we wrote 5 because we know its white"<<endl;
                 cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
-                cout << "Feedback kleiner, Qcnt: " << Qcnt << endl;
+                cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
+                PrintVector(feedbackVector);
+
+
                 return;
                 /*
                 Qcnt++;
@@ -139,6 +151,7 @@ void Cube::FindSingleColor(int facePos){
                 cout << "Feedback gleich, Qcnt: " << Qcnt << endl;
                 if(Col[Qcnt]<5){
                     Col[Qcnt]++; // Write next Color"
+                    //cout << "DIE JETZIGE FARBE IST: " << Col[Qcnt] << endl;
                 }else {
                     cout << "Error - FindSingleColor: We looped through all colors and found shit."<<endl;
                 }
@@ -1481,6 +1494,8 @@ void Cube::StartServer()
         if (side == 5) //algorithm for when the sticker is on the bottom
         {
             // WE NEED CODE HERE TO FIND OUT THE COLOR OF 121
+            FindSingleColor(121);
+
             int color = cube[1][2][1];
             for (int a = 1; a < color; a++) //set-up so that the edge goes into the right spot
             {
@@ -1496,6 +1511,8 @@ void Cube::StartServer()
         else //algorithm for when th esticker is not on the bottom
         {
             // WE NEED CODE HERE TO FIND OUT THE COLOR OF 510
+            FindSingleColor(510);
+
             int color = cube[5][1][0];
             if (color < 4) //set-up so that the sticker goes into the right spot
             {

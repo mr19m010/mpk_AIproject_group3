@@ -42,9 +42,20 @@ int main()
 	cCube.clearCube();
 	cCube.getN();
 	cCube.print();
-	//cCube.TopCrossQuestion();
-	cCube.FindSingleColor(300);
+	cout << "###############################TopCrossQuestion######################################";
+	cCube.TopCrossQuestion();
 	cCube.print();
+	cout << "###############################solveTopCross######################################";
+	
+	cCube.FindSingleColor(212);
+	cCube.print();
+
+
+
+
+	//cCube.solveTopCross();
+	//cCube.print();
+	//cout << "TopCross: " << moves;
 	
 
   	//cout << "Verbindung mit Server hergestellt" << endl;

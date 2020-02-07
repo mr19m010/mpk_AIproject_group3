@@ -9,9 +9,12 @@ int main()
 	Cube myCube;
 	myCube.scramble();
 	cout<< "done mycube erstellen" << endl;
+	myCube.print();
 
 	myCube.StartServer();		// Server starten
 	cout<< "done startserver" << endl;
+
+
 
 	while(1){
 
@@ -19,11 +22,11 @@ int main()
 		cout<< "done handle tcp client" << endl;
 		//myCube.GiveFeedback();
 		
-		//myCube.print();
+		
 	    
 	    //myCube.print();
 		myCube.GiveFeedback();
-		cout<< "done give GiveFeedback" << endl;
+		//cout<< "done give GiveFeedback" << endl;
 	}
 
 		myCube.CloseSocket();
