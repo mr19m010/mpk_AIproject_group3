@@ -165,7 +165,7 @@ private:
   int serverArray[6][3][3];
   vector<int> positionVectorServer; 
   vector<int> colorVectorServer; 
-  int testServer=3;
+  //int testServer=3;
   int messageSize=0;
   
 

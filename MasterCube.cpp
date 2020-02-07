@@ -53,12 +53,15 @@ void Cube::FillQuestion(){
         }
     PrioCnt+=TmpPrioCnt;
     // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)    
-    SendQuestion(); 
-    ReadFeedback();
+    //SendQuestion(); 
+    //ReadFeedback();
+    // CM -> neue Funktion
+    transmitData(true,false); // Parameter 1 -> Question+Feedback; Parameter 2 -> MoveCommand
     feedcntOld=feedcnt;
     Col[Qcnt]=0; // Write Color = "Yellow"
     //FAKEfeedbackVector = { 1, 2, 2, 2, 2, 2, 2,2};
-    SendQuestion();
+    //SendQuestion();
+    transmitData(true,false);
 
     //PrintVector(Pos);
     //PrintVector(Col);
@@ -92,7 +95,8 @@ void Cube::AdjustQuestion(){
         }
     }else {
         //do we need to do anything, if we didnt get a new feedbackvector? Send Question again?
-        SendQuestion();
+        //SendQuestion();
+        transmitData(true,false);
     }
 }
 
@@ -104,7 +108,8 @@ void Cube::TopCrossQuestion(){
     FillQuestion();
     while(HitCnt<4){
         AdjustQuestion();
-        SendQuestion();
+        //SendQuestion();
+        transmitData(true,false);
     }
     cout << "Found 4 Yellow edges"<<endl;
     /*for(int i=0;i<10 && HitCnt<4;i++){ // this is trash
@@ -362,34 +367,49 @@ void Cube::GenerateTransmissionString() // Diese Funktion dient zum Testen des F
     //cout << "Vector capazity = " << Pos.capacity()*sizeof(int) << endl;
 }
 
-void Cube::SendQuestion()
+void Cube::transmitData(bool bSendQuestion, bool bSendMoveCommand)
+{
+    SendQuestion(bSendQuestion);
+    SendMoveCommand(bSendMoveCommand);
+    ReceiveAnswer(bSendQuestion);
+}
+
+void Cube::SendQuestion(bool bSendQuestion)
 {
     //cout << "IM IN SendQuestion"<< endl;
     // Die Vectorelemente werden einzeln übertragen
     // Zuerst wird die Anzahl der Elemente übertragen,
     // damit der Server weiß wieviele Elemente noch folgen
-    int elementCounter=1;
-    int elements =10;
-    testClient=Pos.size();
-    //cout << " Pos.size: " << Pos.size()<<endl;
+    int transmissionSize=0;
 
-    if (send(sock, &testClient, sizeof(int), 0) < 0)
-        cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
+    
+    if (bSendQuestion==true)
+    {
+        transmissionSize=Pos.size();
 
-    if (send(sock, &Pos[0], Pos.size()*sizeof(int), 0) < 0)
-        cout << "error - Vector konnte nicht uebertragen werden." << endl;
+        if (send(sock, &transmissionSize, sizeof(int), 0) < 0)
+            cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
 
-    if (send(sock, &Col[0], Col.size()*sizeof(int), 0) < 0)
-        cout << "error - Vector konnte nicht uebertragen werden." << endl;
+        if (send(sock, &Pos[0], Pos.size()*sizeof(int), 0) < 0)
+            cout << "error - Vector konnte nicht uebertragen werden." << endl;
 
-    SendMoveCommand(false);
-    ReceiveAnswer(); // "receivefeedback, client side"
-    //cout << "Done with SendQuestion - Received Answer done too"<< endl;
+        if (send(sock, &Col[0], Col.size()*sizeof(int), 0) < 0)
+            cout << "error - Vector konnte nicht uebertragen werden." << endl;
+
+    }
+    else
+    {
+        transmissionSize=0;
+
+        if (send(sock, &transmissionSize, sizeof(int), 0) < 0)
+            cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
+    }
+    
 }
 
-void Cube::SendMoveCommand(bool sendVector)
+void Cube::SendMoveCommand(bool bSendMoveCommand)
 {
-    int elements =0;
+    int transmissionSize =0;
     vector<char> moveCommandsChar;
 
     moveCommandsString.resize(10);
@@ -415,12 +435,12 @@ void Cube::SendMoveCommand(bool sendVector)
     }*/
     
     
-    if (sendVector==true)
+    if (bSendMoveCommand==true)
     {
-        elements=moveCommandsChar.size();
+        transmissionSize=moveCommandsChar.size();
         cout << moveCommandsChar.size()*sizeof(char);
 
-        if (send(sock, &elements, sizeof(int), 0) < 0)
+        if (send(sock, &transmissionSize, sizeof(int), 0) < 0)
             cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
 
         if (send(sock, &moveCommandsChar[0], moveCommandsChar.size()*sizeof(char), 0) < 0)
@@ -428,12 +448,10 @@ void Cube::SendMoveCommand(bool sendVector)
     }
     else
     {
-        elements=0;
+        transmissionSize=0;
         
-        if (send(sock, &elements, sizeof(int), 0) < 0)
+        if (send(sock, &transmissionSize, sizeof(int), 0) < 0)
             cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
-
-   
     }
     
 
@@ -453,6 +471,9 @@ void Cube::GiveFeedback()
     int countQuestions=0;
     vector<int> answerArray;
     vector<int> randArray;
+
+    cout << "Paketlänge der Anwort  = " << messageSize << endl;
+
     answerArray.resize(messageSize);
     randArray.resize(messageSize); 
 
@@ -611,8 +632,7 @@ void Cube::GiveFeedback()
     FEEDBACK GENERIERT PRÜFEN OB RICHTIG
     das feedback muss an dieser stelle noch randomisiert werden
     */
-    cout << "vector size = " << answerArray.size() << endl;
-    cout << "Feedback[" << messageSize <<  "] = " << endl;
+    //cout << "Paketlänge der Anwort  = " << answerArray.size() << endl;
 
     bool switched=false;
 
@@ -659,31 +679,29 @@ void Cube::GiveFeedback()
 
 }
 
-void Cube::ReceiveAnswer()
+void Cube::ReceiveAnswer(bool bReceiceFeedback)
 {
     //cout << "IM IN ReceiveAnswer"<< endl;
     int recvMsgSize;
     feedbackVector.resize(n);
-    //cout<<"-------------------------"<<endl;
 
-    //if ((recvMsgSize = recv(sock, &testServer, sizeof(int), 0)) < 0)
-    //    cout << "error - 1" << endl;
-
-    // Empfangen der Frage
-    if ((recvMsgSize = recv(sock, &feedbackVector[0], feedbackVector.size()*sizeof(int), 0)) < 0)
+    if(bReceiceFeedback==true)
     {
-        cout << "ERROR - Feedback konnte nicht empfangen werden." << endl;
-    }
-    else{
-        for(int i=0; i<feedbackVector.size(); i++){
-            cout << feedbackVector[i] << " " ;
+        if ((recvMsgSize = recv(sock, &feedbackVector[0], feedbackVector.size()*sizeof(int), 0)) < 0)
+        {
+            cout << "ERROR -> Feedback konnte nicht empfangen werden." << endl;
         }
-        cout << endl;
+        else{
+            for(int i=0; i<feedbackVector.size(); i++){
+                cout << feedbackVector[i] << " " ;
+            }
+            cout << endl;
+        }
     }
-    //cout << "Question size = " << n << endl;
-    //cout << "Size = " << recvMsgSize << endl;
-    //cout << "Vector size = " <<  feedbackVector.size()*sizeof(int) << endl;
-    //cout << "Done with ReceiveAnswer"<< endl;
+    else
+    {
+        cout << endl << "INFO -> Feedback wurde nicht abgerufen da keine Frage gestellt wurde." << endl;
+    }
 }
 
 void Cube::CloseConnection()
@@ -696,11 +714,11 @@ void Cube::StartServer()
 {
 	/* Create socket for incoming connections */
         if ((servSock = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
-            cout << "error - 1" << endl;
+            cout << "ERROR -> Socket konnte nicht erstellt werden" << endl;
 
     int enable = 1;
     if (setsockopt(servSock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
-        cout << "setsockopt(SO_REUSEADDR) failed" << endl;
+        cout << "ERROR -> setsockopt(SO_REUSEADDR) failed" << endl;
 
     /* Construct local address structure */
     memset(&echoServAddr, 0, sizeof(echoServAddr));   /* Zero out structure */
@@ -710,11 +728,11 @@ void Cube::StartServer()
 
     /* Bind to the local address */
         if (bind(servSock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-            cout << "error - 2" << endl;
+            cout << "ERROR -> Bind to local address failed" << endl;
 
     /* Mark the socket so it will listen for incoming connections */
         if (listen(servSock, MAXPENDING) < 0)
-            cout << "error - 3" << endl;
+            cout << "ERROR -> Listening for incoming connections failed" << endl;
 
     /* Set the size of the in-out parameter */
         clntLen = sizeof(echoClntAddr);
@@ -722,7 +740,7 @@ void Cube::StartServer()
     /* Wait for a client to connect */
         if ((clntSock = accept(servSock, (struct sockaddr *) &echoClntAddr,
             &clntLen)) < 0)
-            cout << "error - 4" << endl;
+            cout << "ERROR -> Connection with client failed" << endl;
 
     /* clntSock is connected to a client! */
         printf("Handling client %s\n", inet_ntoa(echoClntAddr.sin_addr));
@@ -732,46 +750,53 @@ void Cube::StartServer()
     void Cube::HandleTCPClient()
     {
     int recvMsgSize;                    /* Size of received message */
-        
-        int messageCounter=0;
+    int packageSizeQuestion=0;
+    int packageSizeMoveCommand=0;
+    int messageCounter=0;
+
+    cout << endl;
 
 
-    // Empfangen der Länge des Pakets
-        if ((recvMsgSize = recv(clntSock, &testServer, sizeof(int), 0)) < 0)
-            cout << "error - 1" << endl;
+    // Empfangen der Länge des Fragepakets
+        if ((recvMsgSize = recv(clntSock, &packageSizeQuestion, sizeof(int), 0)) < 0)
+            cout << "ERROR -> Paketlänge der Frage konnte nicht empfangen werden" << endl;
 
-        messageSize=testServer;
+        messageSize=packageSizeQuestion; // auf "globale Variable schreiben damit die Feedback funktion die richte Größe kennt"
+        // CM -> kann sein, dass ich das noch anders löse
 
+        cout << "Paketlänge der Frage  = " << packageSizeQuestion << endl;
 
-        positionVectorServer.resize(messageSize);
-        colorVectorServer.resize(messageSize);
-        cout << "Paketlänge  = " << testServer << endl;
+        if (packageSizeQuestion>0){
+            positionVectorServer.resize(packageSizeQuestion);
+            colorVectorServer.resize(packageSizeQuestion);
 
-    // Empfangen der Frage
-        if ((recvMsgSize = recv(clntSock, &positionVectorServer[0], positionVectorServer.size()*sizeof(int), 0)) < 0)
-            cout << "error - 1" << endl;
+            // Empfangen der Frage
+            if ((recvMsgSize = recv(clntSock, &positionVectorServer[0], positionVectorServer.size()*sizeof(int), 0)) < 0)
+                cout << "ERROR -> Positionsvektor konnte nicht empfangen werden" << endl;
 
-        if ((recvMsgSize = recv(clntSock, &colorVectorServer[0], colorVectorServer.size()*sizeof(int), 0)) < 0)
-            cout << "error - 1" << endl;
+            if ((recvMsgSize = recv(clntSock, &colorVectorServer[0], colorVectorServer.size()*sizeof(int), 0)) < 0)
+                cout << "ERROR -> Farbvektor konnte nicht empfangen werden" << endl;
+            
+            //cout << "recvMsgSize" << recvMsgSize << endl;
+            //cout << "clntSock" << clntSock << endl;
+            //cout << "&colorVectorServer[0]" << &colorVectorServer[0] << endl;
 
-        cout << "recvMsgSize" << recvMsgSize << endl;
-        cout << "clntSock" << clntSock << endl;
-        cout << "&colorVectorServer[0]" << &colorVectorServer[0] << endl;
+            //cout << "Vektorgröße pos -> " << positionVectorServer.size() << endl; 
+            //cout << "Vektorgröße color -> " << colorVectorServer.size() << endl;
+        }
 
-        cout << "Vektorgröße pos -> " << positionVectorServer.size() << endl; 
-        cout << "Vektorgröße color -> " << colorVectorServer.size() << endl; 
+        //Empfangen der Länge des MoveCommandpakets
+        if ((recvMsgSize = recv(clntSock, &packageSizeMoveCommand, sizeof(int), 0)) < 0)
+            cout << "ERROR -> Paketlänge des MoveCommands konnte nicht empfangen werden" << endl;
 
-        if ((recvMsgSize = recv(clntSock, &testServer, sizeof(int), 0)) < 0)
-            cout << "error - 1" << endl;
-
-        if (testServer>0)
+        if (packageSizeMoveCommand>0)
         {
             vector<char> moveCommandsChar;
-            moveCommandsChar.resize(testServer);
+            moveCommandsChar.resize(packageSizeMoveCommand);
 
-            cout << moveCommandsChar.size()*sizeof(char);
+            cout << "Paketlänge des MoveCommands  = " << packageSizeMoveCommand << endl;
             if ((recvMsgSize = recv(clntSock, &moveCommandsChar[0], moveCommandsChar.size()*sizeof(char), 0)) < 0)
-                cout << "error - 1" << endl;
+                cout << "ERROR -> MoveCommandVektor konnte nicht empfangen werden" << endl;
 
             int i=0;
             int j=0;
@@ -799,8 +824,12 @@ void Cube::StartServer()
             {
                 cout << moveCommandsString[i] << endl;
             }
-
             
+        }
+
+        if (packageSizeQuestion>0)
+        {
+            GiveFeedback();
         }
 
 
