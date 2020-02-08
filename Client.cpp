@@ -62,14 +62,6 @@ int main()
 
   	//cout << "Verbindung mit Server hergestellt" << endl;
 	
-	//cCube.SendQuestion();
-	
-	cCube.transmitData(false,true);
-	cout << "Positions und Farbvektor gesendet" << endl;
-
-
-	
-	//cout << "Feedback empfangen" << endl;
 	cCube.CloseConnection();
     exit(0);
 

@@ -502,7 +502,7 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
     if (bSendMoveCommand==true)
     {
         transmissionSize=moveCommandsChar.size();
-        cout << endl << "Paketgröße von MoveCommand = " << moveCommandsChar.size()*sizeof(char);
+        cout << endl << "Paketgröße von MoveCommand = " << moveCommandsChar.size()*sizeof(char) << endl;
 
         if (send(sock, &transmissionSize, sizeof(int), 0) < 0)
             cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
@@ -883,29 +883,30 @@ void Cube::StartServer()
                 cout << "ERROR -> MoveCommandVektor konnte nicht empfangen werden" << endl;
 
             int i=0;
-            int j=0;
-            moveSingle.push_back("");
-            cout << "Char = ";
-            do
+            int j=-1; //-1 so we can do j++ always at the start
+            moveSingle.clear();        
+
+            cout << "moveCommandsChar= "; // printing the transmitted Chars
+            for(int i=0; i<moveCommandsChar.size();i++)
             {
                 cout << moveCommandsChar[i];
-                moveSingle[j] += moveCommandsChar[i];
-                //cout << "char added to string"<<endl;
-                
-                if (moveCommandsChar[i+1]=='i')
-                {
-                    ;
-                }
-                else{
-                    //cout << "String = " << moveSingle[j] << endl;
-                    j++;
-                    moveSingle.push_back("");
-                }
-                i++;
-            }while(i<(moveCommandsChar.size()-1));
-            moveSingle[j] += moveCommandsChar[i];
+            }
+            cout << endl;
 
-             for(int i=0; i<moveSingle.size();i++)
+            while(i<moveCommandsChar.size()){ 
+                if(moveCommandsChar[i]=='i' && i!=0){
+                    moveSingle[j] += moveCommandsChar[i];
+                    i++;
+                }else {
+                    j++;
+                    moveSingle.push_back("");               //expanding the vector
+                    moveSingle[j] += moveCommandsChar[i];
+                    i++;
+                }
+            }
+
+            cout << "moveSingle[i]: "; //printing the rebuild commands from the vector
+            for(int i=0; i<moveSingle.size();i++)
             {
                 cout << moveSingle[i] << endl;
             }
