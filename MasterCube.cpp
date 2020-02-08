@@ -191,6 +191,9 @@ void Cube::TopCrossQuestion(){
 
 void Cube::TopCornersQuestion(){
     PrioCnt=24; // So our FillQuestion knows to start in the Priolist at the Corners
+    
+
+
     FillQuestion();
     while(HitCnt<4){
         AdjustQuestion();
@@ -201,6 +204,24 @@ void Cube::TopCornersQuestion(){
 
 };
 void Cube::MiddleLayerQuestion(){
+
+
+FindSingleColor(110);
+FindSingleColor(112);
+FindSingleColor(210);
+FindSingleColor(212);
+FindSingleColor(310);
+FindSingleColor(312);
+FindSingleColor(410);
+FindSingleColor(412);
+FindSingleColor(121);
+FindSingleColor(221);
+FindSingleColor(321);
+FindSingleColor(421);
+FindSingleColor(501);
+FindSingleColor(510);
+FindSingleColor(512);
+FindSingleColor(521);
 
 };
 void Cube::BottomLayerQuestion(){
@@ -2369,24 +2390,40 @@ void Cube::getCorner(int num, int corners[])
 {
     if (num == 0)
     {
+        FindSingleColor(122);
+        FindSingleColor(220);
+        FindSingleColor(500);
+
         corners[0] = cube[1][2][2];
         corners[1] = cube[2][2][0];
         corners[2] = cube[5][0][0];
     }
     else if (num == 1)
     {
+        FindSingleColor(222);
+        FindSingleColor(320);
+        FindSingleColor(502);
+
         corners[0] = cube[2][2][2];
         corners[1] = cube[3][2][0];
         corners[2] = cube[5][0][2];
     }
     else if (num == 2)
-    {
+    {   
+        FindSingleColor(322);
+        FindSingleColor(420);
+        FindSingleColor(522);
+
         corners[0] = cube[3][2][2];
         corners[1] = cube[4][2][0];
         corners[2] = cube[5][2][2];
     }
     else if (num == 3)
     {
+        FindSingleColor(422);
+        FindSingleColor(120);
+        FindSingleColor(520);
+
         corners[0] = cube[4][2][2];
         corners[1] = cube[1][2][0];
         corners[2] = cube[5][2][0];

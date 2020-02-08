@@ -56,6 +56,10 @@ int main()
 	cCube.solveTopCorners();
 	cCube.print();
 
+	
+
+
+	
 
 
 
