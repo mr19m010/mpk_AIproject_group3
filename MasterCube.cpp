@@ -39,9 +39,9 @@ void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == not
         }
     }
     //FAKEfeedbackVector.assign(n,9); // writes n times 9 into vector to make sure we dont read the same feedbackvector twice
-    cout << "Feedcnt= "<< feedcnt<< endl;
-    cout << "feedbackVector: ";
-    PrintVector(feedbackVector);
+    //cout << "Feedcnt= "<< feedcnt<< endl;
+    //cout << "feedbackVector: ";
+    //PrintVector(feedbackVector);
 }
 
 void Cube::FillQuestion(){
@@ -69,8 +69,8 @@ void Cube::FillQuestion(){
             //cout << "Prio: " << Prio[i] << endl;
         }
 
-    cout << "Pos after FillQuestion: ";
-    PrintVector(Pos);
+   // cout << "Pos after FillQuestion: ";
+    //PrintVector(Pos);
 
     PrioCnt+=TmpPrioCnt;
     // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)    
@@ -92,17 +92,17 @@ void Cube::AdjustQuestion(){
     if(feedcnt!=-1){
         if(feedcntOld<feedcnt){ // we hit something good
             cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=0;
-            cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<< " - Hit!"<<endl;
+            //cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<< " - Hit!"<<endl;
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"
             HitCnt++;
         }else if(feedcntOld>feedcnt){
             cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
-            cout << "Feedback kleiner, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])] << endl;
+            //cout << "Feedback kleiner, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])] << endl;
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"
         } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
-            cout << "Feedback gleich, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<< endl;
+            //cout << "Feedback gleich, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<< endl;
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"            
         }
@@ -119,14 +119,17 @@ void Cube::FindPosInPrio(int facePos){
     for(int i=0; i<sizeof(Prio)/sizeof(Prio[0]); ++i){
         if(Prio[i]==facePos){
             PrioCnt=i;
-            cout << "PrioCnt: "<<PrioCnt<<endl;
+            //cout << "PrioCnt: "<<PrioCnt<<endl;
             break;
         } 
     }   
 }
 
 void Cube::FindSingleColor(int facePos){
-    if(cube[X(facePos)][Y(facePos)][Z(facePos)]!=9) return; // return if we know color already
+    if(cube[X(facePos)][Y(facePos)][Z(facePos)]!=9) {
+        //cout<<"Farbe bereits bekannt."<<endl;
+        return; // return if we know color already
+    }
 
     FindPosInPrio(facePos);
     FillQuestion();
@@ -141,28 +144,28 @@ void Cube::FindSingleColor(int facePos){
 
         if(feedcnt!=-1){
             if(feedcntOld<feedcnt){ // we hit something good
-                cout<<"feedback groesser - Col[Qcnt] = "<<Col[Qcnt]<<endl;
+                //cout<<"feedback groesser - Col[Qcnt] = "<<Col[Qcnt]<<endl;
                 cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=Col[Qcnt];
-                cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
-                PrintVector(feedbackVector);
+                //cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
+                //PrintVector(feedbackVector);
 
                 return;
             }else if(feedcntOld>feedcnt){
-                cout<<"feedback kleiner - Col[Qcnt] = "<<Col[Qcnt]<< " should be 0, but we wrote 5 because we know its white"<<endl;
+               // cout<<"feedback kleiner - Col[Qcnt] = "<<Col[Qcnt]<< " should be 0, but we wrote 5 because we know its white"<<endl;
                 cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
-                cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
-                PrintVector(feedbackVector);
+                //cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
+                //PrintVector(feedbackVector);
 
 
                 return;
             } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
-                cout<<"feedback gleich - Col[Qcnt] = "<< Col[Qcnt]<< " - Die Farbe wars net."<<endl;
-                cout << "Feedback gleich, Qcnt: " << Qcnt << endl;
+                //cout<<"feedback gleich - Col[Qcnt] = "<< Col[Qcnt]<< " - Die Farbe wars net."<<endl;
+                //cout << "Feedback gleich, Qcnt: " << Qcnt << endl;
                 if(Col[Qcnt]<5){
                     Col[Qcnt]++; // Write next Color"
                     //cout << "DIE JETZIGE FARBE IST: " << Col[Qcnt] << endl;
                 }else {
-                    cout << "Error - FindSingleColor: We looped through all colors and found shit."<<endl;
+                    cout << "Error - FindSingleColor: We looped through all colors and found nothing."<<endl;
                 }    
             }
             feedcntOld=feedcnt;
@@ -184,28 +187,29 @@ void Cube::TopCrossQuestion(){
         AdjustQuestion();
         transmitData(true,false);
     }
-    cout << "Found 4 Yellow edges"<<endl;
+   // cout << "Found 4 Yellow edges"<<endl;
     HitCnt=0; // Reset HitCnt for next Question-Set
 
 }
 
 void Cube::TopCornersQuestion(){
-    PrioCnt=24; // So our FillQuestion knows to start in the Priolist at the Corners
     
 
 
-void Cube::TopCornerQuestion(){
+
     PrioCnt=24; // So our FillQuestion knows to start in the Priolist at the Corners
     FillQuestion();
     while(HitCnt<4){
         AdjustQuestion();
         transmitData(true,false);
     }
-    cout << "Found 4 Yellow corners"<<endl;
+   // cout << "Found 4 Yellow corners"<<endl;
     HitCnt=0; // Reset HitCnt for next Question-Set
 
 };
-void Cube::MiddleLayerQuestion(){
+
+
+/*void Cube::MiddleLayerQuestion(){
 
 
 FindSingleColor(110);
@@ -225,10 +229,12 @@ FindSingleColor(510);
 FindSingleColor(512);
 FindSingleColor(521);
 
-};
-void Cube::BottomLayerQuestion(){
+};*/
 
-};
+/*void Cube::BottomLayerQuestion(){
+
+};*/
+
 void Cube::clearCube(){ // writes 9 into every unknown face of the cube
     for (int i = 0; i < 6; i++){
         for (int j = 0; j < 3; j++){
@@ -457,7 +463,7 @@ void Cube::transmitData(bool bSendQuestion, bool bSendMoveCommand)
     }
     else if (bServerActive==true)
     {
-        cout << "INFO -> transmitData can only be executed by the client" << endl;
+        //cout << "INFO -> transmitData can only be executed by the client" << endl;
     }
     else
     {
@@ -518,7 +524,7 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
 
     for(int i=0; i<moveSingle.size();i++)
     {
-        cout << endl << "MoveSingle = " << moveSingle[i] << endl;
+        //cout << endl << "MoveSingle = " << moveSingle[i] << endl;
         copy(moveSingle[i].begin(), moveSingle[i].end(), back_inserter(moveCommandsChar));
     }
 
@@ -532,7 +538,7 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
     if (bSendMoveCommand==true)
     {
         transmissionSize=moveCommandsChar.size();
-        cout << endl << "Paketgröße von MoveCommand = " << moveCommandsChar.size()*sizeof(char) << endl;
+       // cout << endl << "Paketgröße von MoveCommand = " << moveCommandsChar.size()*sizeof(char) << endl;
 
         if (send(sock, &transmissionSize, sizeof(int), 0) < 0)
             cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
@@ -568,7 +574,7 @@ void Cube::GiveFeedback()
     vector<int> answerArray;
     vector<int> randArray;
 
-    cout << "Paketlänge der Anwort  = " << messageSize << endl;
+    //cout << "Paketlänge der Anwort  = " << messageSize << endl;
 
     answerArray.resize(messageSize);
     randArray.resize(messageSize); 
@@ -801,10 +807,10 @@ void Cube::ReceiveAnswer(bool bReceiceFeedback)
             cout << "ERROR -> Feedback konnte nicht empfangen werden." << endl;
         }
         else{
-            for(int i=0; i<feedbackVector.size(); i++){
+            /*for(int i=0; i<feedbackVector.size(); i++){
                 cout << feedbackVector[i] << " " ;
             }
-            cout << endl;
+            cout << endl;*/
         }
     }
     else
@@ -866,8 +872,7 @@ void Cube::StartServer()
 
     stopServer=true;
 
-    cout << endl;
-
+    
 
     // Empfangen der Länge des Fragepakets
         if ((recvMsgSize = recv(clntSock, &packageSizeQuestion, sizeof(int), 0)) < 0)
@@ -876,7 +881,7 @@ void Cube::StartServer()
         messageSize=packageSizeQuestion; // auf "globale Variable schreiben damit die Feedback funktion die richte Größe kennt"
         // CM -> kann sein, dass ich das noch anders löse
 
-        cout << "Paketlänge der Frage  = " << packageSizeQuestion << endl;
+       // cout << "Paketlänge der Frage  = " << packageSizeQuestion << endl;
 
         if (packageSizeQuestion>0){
             stopServer=false;
@@ -908,7 +913,7 @@ void Cube::StartServer()
             vector<char> moveCommandsChar;
             moveCommandsChar.resize(packageSizeMoveCommand);
 
-            cout << "Paketlänge des MoveCommands  = " << packageSizeMoveCommand << endl;
+            //cout << "Paketlänge des MoveCommands  = " << packageSizeMoveCommand << endl;
             if ((recvMsgSize = recv(clntSock, &moveCommandsChar[0], moveCommandsChar.size()*sizeof(char), 0)) < 0)
                 cout << "ERROR -> MoveCommandVektor konnte nicht empfangen werden" << endl;
 
@@ -916,12 +921,12 @@ void Cube::StartServer()
             int j=-1; //-1 so we can do j++ always at the start
             moveSingle.clear();        
 
-            cout << "moveCommandsChar= "; // printing the transmitted Chars
-            for(int i=0; i<moveCommandsChar.size();i++)
+           // cout << "moveCommandsChar= "; // printing the transmitted Chars
+            /*for(int i=0; i<moveCommandsChar.size();i++)
             {
                 cout << moveCommandsChar[i];
             }
-            cout << endl;
+            cout << endl;*/
 
             while(i<moveCommandsChar.size()){ 
                 if(moveCommandsChar[i]=='i' && i!=0){
@@ -935,11 +940,11 @@ void Cube::StartServer()
                 }
             }
 
-            cout << "moveSingle[i]: "; //printing the rebuild commands from the vector
-            for(int i=0; i<moveSingle.size();i++)
+            //cout << "moveSingle[i]: "; //printing the rebuild commands from the vector
+            /*for(int i=0; i<moveSingle.size();i++)
             {
                 cout << moveSingle[i] << endl;
-            }
+            }*/
 
             ExecuteMoveCommands();
             //SendAcknowledge();
@@ -966,7 +971,7 @@ void Cube::StartServer()
   
     void Cube::ExecuteMoveCommands()
     {
-        cout << endl << "Execute MoveCommands..." << endl;
+        //cout << endl << "Execute MoveCommands..." << endl;
         for(int i=0; i<(moveSingle.size());i++)
         {
             if (moveSingle[i]=="r")         r();
@@ -989,7 +994,7 @@ void Cube::StartServer()
             else if (moveSingle[i]=="b2")   {b();b();}
             else cout << "ERROR -> MoveCommand konnte nicht ausgeführt werden" << endl;
 
-            cout << endl << "MoveCommand = " << moveSingle[i] << endl;
+           // cout << endl << "MoveCommand = " << moveSingle[i] << endl;
             
         }
     }
@@ -1663,11 +1668,7 @@ void Cube::StartServer()
             // WE NEED CODE HERE TO FIND OUT THE COLOR OF 121
             FindSingleColor(121);
 
-            int color = cube[1][2][1];
-            cout<<"Side=5 - cube 121"<<endl;
-            if(color==9){
-                cout<<"Fuck, color is unkown even through we asked it right beforhand.";
-            }
+            int color = cube[1][2][1];            
             for (int a = 1; a < color; a++) //set-up so that the edge goes into the right spot
             {
                 u();
@@ -1685,10 +1686,6 @@ void Cube::StartServer()
             FindSingleColor(510);
 
             int color = cube[5][1][0];
-            cout<<"Side!=5 - cube510"<<endl;
-            if(color==9){
-                cout<<"Fuck, color is unkown even through we asked it right beforhand.";
-            }
             if (color < 4) //set-up so that the sticker goes into the right spot
             {
                 for (int a = 1; a < color + 1; a++)
@@ -1967,9 +1964,10 @@ void Cube::solveMiddleLayer()
 }
 
 int Cube::findBottomMatch(int color)
-{
+{   
     for (int i = 1; i <= 4; i++)
-    {
+    {   int temp=i*100+21;
+        FindSingleColor(temp);
         if (cube[i][2][1] == color)
         {
             if (i % 2 == 0)
@@ -2036,7 +2034,8 @@ void Cube::placeMiddleEdge(int color, int edgeSide)
 void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothing
 {
     if (color == 1)
-    {
+    {   
+        FindSingleColor(510);
         if (cube[5][1][0] == 4 || direction == 1)
         {
             d();
@@ -2061,7 +2060,8 @@ void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothin
         }
     }
     else if (color == 2)
-    {
+    {   
+        FindSingleColor(501);
         if (cube[5][0][1] == 1 || direction == 1)
         {
             d();
@@ -2086,7 +2086,8 @@ void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothin
         }
     }
     else if (color == 3)
-    {
+    {   
+        FindSingleColor(512);
         if (cube[5][1][2] == 2 || direction == 1)
         {
             d();
@@ -2111,7 +2112,8 @@ void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothin
         }
     }
     else if (color == 4)
-    {
+    {   
+        FindSingleColor(521);
         if (cube[5][2][1] == 3 || direction == 1)
         {
             d();

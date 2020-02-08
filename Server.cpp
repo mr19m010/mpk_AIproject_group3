@@ -5,25 +5,25 @@ using namespace std;
 
 int main()
 {
-	cout<< "main from server" << endl;
+	//cout<< "main from server" << endl;
 	Cube myCube;
 	myCube.SetServer();
 	myCube.scramble();
-	cout<< "done mycube erstellen" << endl;
+	//cout<< "done mycube erstellen" << endl;
 	myCube.print();
 
 	myCube.StartServer();		// Server starten
-	cout<< "done startserver" << endl;
+	//cout<< "done startserver" << endl;
 
 
 
 	while(myCube.StopServer()==false){
 
 		myCube.HandleTCPClient();	// Client abfragen
-		cout<< "done handle tcp client" << endl;
+		//cout<< "done handle tcp client" << endl;
 		//myCube.GiveFeedback();
 		
-		myCube.print();
+		//myCube.print();
 
 		
 	    
@@ -34,7 +34,9 @@ int main()
 		//cout<< "done give GiveFeedback" << endl;
 	}
 
+	myCube.print();
+
 		myCube.CloseSocket();
-		cout << "socket closed " << endl;
+		//cout << "socket closed " << endl;
 }
 
