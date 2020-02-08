@@ -72,6 +72,7 @@ void Cube::FillQuestion(){
     // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)    
     
     transmitData(true,false); // Parameter 1 -> Question+Feedback; Parameter 2 -> MoveCommand
+    ReadFeedback();
     feedcntOld=feedcnt;
     Col[Qcnt]=0; // Write Color = "Yellow"
     transmitData(true,false);
@@ -1016,7 +1017,8 @@ void Cube::StartServer()
         cube[3][2][1] = old[3][1][2];
         cube[3][1][0] = old[3][2][1];
         cube[3][0][1] = old[3][1][0];
-        
+
+        moveSingle.clear();
         moveSingle.assign(1,"r");
         transmitData(false,true);
        
@@ -1060,7 +1062,7 @@ void Cube::StartServer()
         cube[3][2][1] = old[3][1][0];
         cube[3][1][0] = old[3][0][1];
         
-        
+        moveSingle.clear();
         moveSingle.assign(1,"ri");
         transmitData(false,true);
         
@@ -1104,7 +1106,7 @@ void Cube::StartServer()
         cube[1][1][0] = old[1][2][1];
         cube[1][0][1] = old[1][1][0];
         
-        
+        moveSingle.clear();
         moveSingle.assign(1,"l");
         transmitData(false,true);
         
@@ -1148,7 +1150,7 @@ void Cube::StartServer()
         cube[1][2][1] = old[1][1][0];
         cube[1][1][0] = old[1][0][1];
         
-        
+        moveSingle.clear();
         moveSingle.assign(1,"li");
         transmitData(false,true);
         
@@ -1193,7 +1195,7 @@ void Cube::StartServer()
         cube[0][2][1] = old[0][1][2];
         cube[0][1][0] = old[0][2][1];
         
-        
+        moveSingle.clear();
         moveSingle.assign(1,"u");
         transmitData(false,true);
         
@@ -1236,7 +1238,8 @@ void Cube::StartServer()
         cube[0][0][1] = old[0][1][2];
         cube[0][1][2] = old[0][2][1];
         cube[0][2][1] = old[0][1][0];
-        
+
+        moveSingle.clear();
         moveSingle.assign(1,"ui");
         transmitData(false,true);
     }
@@ -1279,6 +1282,7 @@ void Cube::StartServer()
         cube[5][2][1] = old[5][1][2];
         cube[5][1][0] = old[5][2][1];
         
+        moveSingle.clear();
         moveSingle.assign(1,"d");
         transmitData(false,true);
     }
@@ -1321,6 +1325,7 @@ void Cube::StartServer()
         cube[5][1][2] = old[5][2][1];
         cube[5][2][1] = old[5][1][0];
         
+        moveSingle.clear();
         moveSingle.assign(1,"di");
         transmitData(false,true);
     }
@@ -1363,6 +1368,7 @@ void Cube::StartServer()
         cube[2][1][0] = old[2][2][1];
         cube[2][0][1] = old[2][1][0];
         
+        moveSingle.clear();
         moveSingle.assign(1,"f");
         transmitData(false,true);
         }
@@ -1405,6 +1411,7 @@ void Cube::StartServer()
         cube[2][2][1] = old[2][1][0];
         cube[2][1][0] = old[2][0][1];
         
+        moveSingle.clear();
         moveSingle.assign(1,"fi");
         transmitData(false,true);
     }
@@ -1447,6 +1454,7 @@ void Cube::StartServer()
         cube[4][1][0] = old[4][2][1];
         cube[4][0][1] = old[4][1][0];
         
+        moveSingle.clear();
         moveSingle.assign(1,"b");
         transmitData(false,true);
     }
@@ -1489,6 +1497,7 @@ void Cube::StartServer()
         cube[4][2][1] = old[4][1][0];
         cube[4][1][0] = old[4][0][1];
         
+        moveSingle.clear();
         moveSingle.assign(1,"bi");
         transmitData(false,true);
     }
