@@ -7,6 +7,7 @@ int main()
 {
 	
 	Cube cCube; // Client-Cube
+	cCube.SetClient();
 
 	/*
 	cCube.print();

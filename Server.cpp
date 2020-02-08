@@ -7,6 +7,7 @@ int main()
 {
 	cout<< "main from server" << endl;
 	Cube myCube;
+	myCube.SetServer();
 	myCube.scramble();
 	cout<< "done mycube erstellen" << endl;
 	myCube.print();
@@ -24,8 +25,7 @@ int main()
 		
 		myCube.print();
 
-		//int debugInt=0;
-		//cin >> debugInt;
+		
 	    
 	    //myCube.print();
 		

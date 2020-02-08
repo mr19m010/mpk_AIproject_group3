@@ -68,6 +68,9 @@ void SendMoveCommand(bool sendVector);
 
 void transmitData(bool bSendQuestion, bool bSendMoveCommand);
 
+void SetClient();
+void GetAcknowledge();
+
 // Server
 	void StartServer();
 
@@ -77,6 +80,8 @@ void transmitData(bool bSendQuestion, bool bSendMoveCommand);
 
 	void ExecuteMoveCommands();
 	bool StopServer();
+	void SetServer();
+	void SendAcknowledge();
 
 
 // CubeSolver-Stuff
@@ -161,8 +166,8 @@ private:
   vector<int> feedbackVector;
   vector<char> moveCommandsChar;
   //vector<string> moveCommandsString;
-
-  
+	bool bClientActive=false;
+  bool bServerReady=false;
 
   int testClient=34;
   
@@ -175,6 +180,7 @@ private:
   //int testServer=3;
   int messageSize=0;
   bool stopServer=false;
+  bool bServerActive=false;
   
 
   int servSock;                    /* Socket descriptor for server */

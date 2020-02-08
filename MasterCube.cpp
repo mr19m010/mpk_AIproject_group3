@@ -4,6 +4,16 @@
 
 using namespace std;
 
+void Cube::SetServer()
+{
+    bServerActive=true;
+}
+
+void Cube::SetClient()
+{
+    bClientActive=true;
+}
+
 int Cube::getN()
 {
 	cout <<	"Please enter the n-length: " << endl;
@@ -404,9 +414,26 @@ void Cube::GenerateTransmissionString() // Diese Funktion dient zum Testen des F
 
 void Cube::transmitData(bool bSendQuestion, bool bSendMoveCommand)
 {
-    SendQuestion(bSendQuestion);
-    SendMoveCommand(bSendMoveCommand);
-    ReceiveAnswer(bSendQuestion);
+    if((bClientActive==true) && (bServerActive==true))
+    {
+        cout << "ERROR -> You can't be server and client at the same time" << endl;
+    }
+    else if(bClientActive==true)
+    {
+        SendQuestion(bSendQuestion);
+        SendMoveCommand(bSendMoveCommand);
+        ReceiveAnswer(bSendQuestion);
+    }
+    else if (bServerActive==true)
+    {
+        cout << "INFO -> transmitData can only be executed by the client" << endl;
+    }
+    else
+    {
+        cout << "ERROR -> this should not happen" << endl;
+    }
+    
+    
 }
 
 void Cube::SendQuestion(bool bSendQuestion)
@@ -456,10 +483,11 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
     moveCommandsString[5]="di";
     moveCommandsString[6]="ui";
     moveCommandsString[7]="u";*/
-    
+
 
     for(int i=0; i<moveSingle.size();i++)
     {
+        cout << endl << "MoveSingle = " << moveSingle[i] << endl;
         copy(moveSingle[i].begin(), moveSingle[i].end(), back_inserter(moveCommandsChar));
     }
 
@@ -480,6 +508,8 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
 
         if (send(sock, &moveCommandsChar[0], moveCommandsChar.size()*sizeof(char), 0) < 0)
             cout << "error - Vector konnte nicht uebertragen werden." << endl;
+
+        //GetAcknowledge();
     }
     else
     {
@@ -714,6 +744,19 @@ void Cube::GiveFeedback()
 
 }
 
+void Cube::GetAcknowledge()
+{   int recvMsgSize=0;
+    if ((recvMsgSize = recv(clntSock, &bServerReady, sizeof(bool), 0)) < 0)
+            cout << "ERROR -> bServerReady konnte nicht empfangen werden" << endl;
+}
+
+void Cube::SendAcknowledge()
+{
+    bool ready=true;
+    if (send(clntSock, &ready, sizeof(bool), 0) < 0)
+        cout << "ERROR - ready konnte nicht gesendet werden." << endl;
+}
+
 void Cube::ReceiveAnswer(bool bReceiceFeedback)
 {
     //cout << "IM IN ReceiveAnswer"<< endl;
@@ -735,7 +778,8 @@ void Cube::ReceiveAnswer(bool bReceiceFeedback)
     }
     else
     {
-        cout << endl << "INFO -> Feedback wurde nicht abgerufen da keine Frage gestellt wurde." << endl;
+        //cout << endl << "INFO -> Feedback wurde nicht abgerufen da keine Frage gestellt wurde." << endl;
+        //cout << "Wenn diese Meldung auf der Serverseite erscheint haben wir ein Problem" << endl;
     }
 }
 
@@ -840,9 +884,10 @@ void Cube::StartServer()
             int i=0;
             int j=0;
             moveSingle.push_back("");
+            cout << "Char = ";
             do
             {
-                //cout << moveCommandsChar[i] << endl;
+                cout << moveCommandsChar[i];
                 moveSingle[j] += moveCommandsChar[i];
                 //cout << "char added to string"<<endl;
                 
@@ -865,6 +910,7 @@ void Cube::StartServer()
             }
 
             ExecuteMoveCommands();
+            //SendAcknowledge();
             
         }
 
@@ -910,6 +956,8 @@ void Cube::StartServer()
             else if (moveSingle[i]=="bi")   bi();
             else if (moveSingle[i]=="b2")   {b();b();}
             else cout << "ERROR -> MoveCommand konnte nicht ausgeführt werden" << endl;
+
+            cout << endl << "MoveCommand = " << moveSingle[i] << endl;
             
         }
     }
