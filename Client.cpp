@@ -49,8 +49,13 @@ int main()
 	cout << " ##################### solveTopCross #############"<<endl;
 	cCube.solveTopCross();
 	cCube.print();
+	cout << " ##################### TopCornersQuestion #############"<<endl;
+	cCube.TopCornersQuestion();
+	cCube.print();
+	cout << " ##################### solveTopCorner #############"<<endl;
+	cCube.solveTopCorners();
+	cCube.print();
 
-	
 
 
 

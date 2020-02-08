@@ -14,10 +14,14 @@ void Cube::SetClient()
     bClientActive=true;
 }
 
-int Cube::getN()
+void Cube::getN()
 {
-	cout <<	"Please enter the n-length: " << endl;
+	cout <<	"Please enter Questionlength between 2 and 53: " << endl;
 	cin >> n;
+    if(n<2 || n>53){
+        cout << "Input was not correct, please try again."<<endl;
+        getN();
+    }
 }
 
 void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == nothing OK 
@@ -122,6 +126,8 @@ void Cube::FindPosInPrio(int facePos){
 }
 
 void Cube::FindSingleColor(int facePos){
+    if(cube[X(facePos)][Y(facePos)][Z(facePos)]!=9) return; // return if we know color already
+
     FindPosInPrio(facePos);
     FillQuestion();
     //cout << "im in FindSingleColor and have filled my Pos, which is: ";
@@ -181,22 +187,23 @@ void Cube::TopCrossQuestion(){
     cout << "Found 4 Yellow edges"<<endl;
     HitCnt=0; // Reset HitCnt for next Question-Set
 
-
-
 }
 
-void Cube::TopCornerQuestion(){
+void Cube::TopCornersQuestion(){
     PrioCnt=24; // So our FillQuestion knows to start in the Priolist at the Corners
     FillQuestion();
-    //while...?
-    AdjustQuestion();
-
+    while(HitCnt<4){
+        AdjustQuestion();
+        transmitData(true,false);
+    }
+    cout << "Found 4 Yellow corners"<<endl;
+    HitCnt=0; // Reset HitCnt for next Question-Set
 
 };
-void Cube::MiddleQuestion(){
+void Cube::MiddleLayerQuestion(){
 
 };
-void Cube::BottomQuestion(){
+void Cube::BottomLayerQuestion(){
 
 };
 void Cube::clearCube(){ // writes 9 into every unknown face of the cube
@@ -1755,6 +1762,7 @@ void Cube::solveTopCorners()
         }
         if (rig) //algorithm for when yellow is on the right
         {
+            FindSingleColor(420);
             int color = cube[4][2][0];
             if (color < 4) //move the top so that the corner goes into the correct position
             {
@@ -1776,6 +1784,7 @@ void Cube::solveTopCorners()
         }
         else if (bottom) //algorithm for when yellow is on bottom
         {
+            FindSingleColor(322);
             int color = cube[3][2][2];
             if (color < 4) //move the top so that the corner goes into the correct position
             {
@@ -1802,6 +1811,7 @@ void Cube::solveTopCorners()
         }
         else //algorithm for when yellow is on back
         {
+            FindSingleColor(522);
             int color = cube[5][2][2];
             if (color < 4) //move the top so that the corner goes into the correct position
             {

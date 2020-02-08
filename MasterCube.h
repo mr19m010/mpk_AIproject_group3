@@ -35,9 +35,9 @@ public:
 	void FindSingleColor(int);
 	void FindPosInPrio(int);
 	void TopCrossQuestion();
-	void TopCornerQuestion();
-	void MiddleQuestion();
-	void BottomQuestion();
+	void TopCornersQuestion();
+	void MiddleLayerQuestion();
+	void BottomLayerQuestion();
 
 	void ConnectToServer();
 
@@ -55,7 +55,7 @@ public:
 
 	void CloseSocket();
 	
-	int getN();
+	void getN();
 
 	void clearCube();
 
