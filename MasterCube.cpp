@@ -194,6 +194,8 @@ void Cube::TopCornersQuestion(){
     
 
 
+void Cube::TopCornerQuestion(){
+    PrioCnt=24; // So our FillQuestion knows to start in the Priolist at the Corners
     FillQuestion();
     while(HitCnt<4){
         AdjustQuestion();
