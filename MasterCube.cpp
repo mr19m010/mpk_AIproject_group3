@@ -1924,242 +1924,265 @@ void Cube::findNextTopCorner(int & s, int & p) //locates the next corner that is
 }
 
 void Cube::solveMiddleLayer()
-{
-    int side = -1;
-    int color = -1;
-    int count = 0;
+{   
+    clkFinish=clock();
+    cout << "clkRestart: "<<clkRestart<< " clkFinish-clkStart: " << clkFinish-clkStart << endl;
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
 
-    beginning:
-    if (side != -1)
-    {
-        placeMiddleEdge(color, side);
-        //print();
-        count++;
-        side = -1;
-        color = -1;
-    }
+        int side = -1;
+        int color = -1;
+        int count = 0;
 
-    for (int i = 1; i <= 4; i++)
-    {
-        side = findBottomMatch(i);
-
+        beginning:
         if (side != -1)
         {
-            color = i;
-            goto beginning;
+            placeMiddleEdge(color, side);
+            //print();
+            count++;
+            side = -1;
+            color = -1;
         }
-    }
 
-    for (int i = 1; i <= 4; i++)
-    {
-        if (cube[i][1][0] != (i))
+        for (int i = 1; i <= 4; i++)
         {
-            middleAlgorithm(i, 1);
-            if(count >= 15)
-            {
-                solveTopCross();
-                solveTopCorners();
-            }
+            side = findBottomMatch(i);
 
-            goto beginning;
+            if (side != -1)
+            {
+                color = i;
+                goto beginning;
+            }
         }
-        else if (cube[i][1][2] != i)
+
+        for (int i = 1; i <= 4; i++)
         {
-            middleAlgorithm(i, 2);
-
-            if(count >= 10)
+            if (cube[i][1][0] != (i))
             {
-                solveTopCross();
-                solveTopCorners();
+                middleAlgorithm(i, 1);
+                if(count >= 15)
+                {
+                    solveTopCross();
+                    solveTopCorners();
+                }
+
+                goto beginning;
             }
+            else if (cube[i][1][2] != i)
+            {
+                middleAlgorithm(i, 2);
 
-            goto beginning;
+                if(count >= 10)
+                {
+                    solveTopCross();
+                    solveTopCorners();
+                }
+
+                goto beginning;
+            }
         }
-    }
 
-    int done = 0;
+        int done = 0;
+    }else{
+        restart=1;
+    }
 }
 
 int Cube::findBottomMatch(int color)
 {   
-    for (int i = 1; i <= 4; i++)
-    {   int temp=i*100+21;
-        FindSingleColor(temp);
-        if (cube[i][2][1] == color)
-        {
-            if (i % 2 == 0)
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        for (int i = 1; i <= 4; i++)
+        {   int temp=i*100+21;
+            FindSingleColor(temp);
+            if (cube[i][2][1] == color)
             {
-                //HIER FEHLT VIELLEICHT NOCH WAS -> FindSingleColor()
-                temp=500+(abs(2-i)*10)+1;
-                FindSingleColor(temp);
-
-                if (cube[5][abs(2 - i)][1] != 5)
+                if (i % 2 == 0)
                 {
-                    return i;
+                    //HIER FEHLT VIELLEICHT NOCH WAS -> FindSingleColor()
+                    temp=500+(abs(2-i)*10)+1;
+                    FindSingleColor(temp);
+
+                    if (cube[5][abs(2 - i)][1] != 5)
+                    {
+                        return i;
+                    }
                 }
-            }
-            else
-            {   //HIER AUCH
-                temp=500+(abs(2-i)*10)+(i-1);
-                FindSingleColor(temp);
+                else
+                {   //HIER AUCH
+                    temp=500+(abs(2-i)*10)+(i-1);
+                    FindSingleColor(temp);
 
-                if (cube[5][abs(2 - i)][i - 1] != 5)
-                {
-                    return i;
+                    if (cube[5][abs(2 - i)][i - 1] != 5)
+                    {
+                        return i;
+                    }
                 }
             }
         }
-    }
 
-    return -1;
+        return -1;
+    }else{
+        restart=1;
+        return -1;
+    }
 }
 
 void Cube::placeMiddleEdge(int color, int edgeSide)
-{
-    if (edgeSide - color == 0)
-    {
-        middleAlgorithm(color, -1);
-    }
-    else if (edgeSide - color == 1)
-    {
-        di();
-        middleAlgorithm(color, -1);
-    }
-    else if (edgeSide - color == 2)
-    {
-        di();
-        di();
-        middleAlgorithm(color, -1);
-    }
-    else if (edgeSide - color == 3)
-    {
-        d();
-        middleAlgorithm(color, -1);
-    }
-    else if (edgeSide - color == -1)
-    {
-        d();
-        middleAlgorithm(color, -1);
-    }
-    else if (edgeSide - color == -2)
-    {
-        d();
-        d();
-        middleAlgorithm(color, -1);
-    }
-    else if (edgeSide - color == -3)
-    {
-        di();
-        //print();
-        middleAlgorithm(color, -1);
+{   
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        if (edgeSide - color == 0)
+        {
+            middleAlgorithm(color, -1);
+        }
+        else if (edgeSide - color == 1)
+        {
+            di();
+            middleAlgorithm(color, -1);
+        }
+        else if (edgeSide - color == 2)
+        {
+            di();
+            di();
+            middleAlgorithm(color, -1);
+        }
+        else if (edgeSide - color == 3)
+        {
+            d();
+            middleAlgorithm(color, -1);
+        }
+        else if (edgeSide - color == -1)
+        {
+            d();
+            middleAlgorithm(color, -1);
+        }
+        else if (edgeSide - color == -2)
+        {
+            d();
+            d();
+            middleAlgorithm(color, -1);
+        }
+        else if (edgeSide - color == -3)
+        {
+            di();
+            //print();
+            middleAlgorithm(color, -1);
+        }
+    }else{
+        restart=1;
     }
 }
 
 void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothing
-{
-    if (color == 1)
-    {   
-        FindSingleColor(510);
-        if (cube[5][1][0] == 4 || direction == 1)
-        {
-            d();
-            b();
-            di();
-            bi();
-            di();
-            li();
-            d();
-            l();
+{   
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        if (color == 1)
+        {   
+            FindSingleColor(510);
+            if (cube[5][1][0] == 4 || direction == 1)
+            {
+                d();
+                b();
+                di();
+                bi();
+                di();
+                li();
+                d();
+                l();
+            }
+            else if (cube[5][1][0] == 2 || direction == 2)
+            {
+                di();
+                fi();
+                d();
+                f();
+                d();
+                l();
+                di();
+                li();
+            }
         }
-        else if (cube[5][1][0] == 2 || direction == 2)
-        {
-            di();
-            fi();
-            d();
-            f();
-            d();
-            l();
-            di();
-            li();
+        else if (color == 2)
+        {   
+            FindSingleColor(501);
+            if (cube[5][0][1] == 1 || direction == 1)
+            {
+                d();
+                l();
+                di();
+                li();
+                di();
+                fi();
+                d();
+                f();
+            }
+            else if (cube[5][0][1] == 3 || direction == 2)
+            {
+                di();
+                ri();
+                d();
+                r();
+                d();
+                f();
+                di();
+                fi();
+            }
         }
-    }
-    else if (color == 2)
-    {   
-        FindSingleColor(501);
-        if (cube[5][0][1] == 1 || direction == 1)
-        {
-            d();
-            l();
-            di();
-            li();
-            di();
-            fi();
-            d();
-            f();
+        else if (color == 3)
+        {   
+            FindSingleColor(512);
+            if (cube[5][1][2] == 2 || direction == 1)
+            {
+                d();
+                f();
+                di();
+                fi();
+                di();
+                ri();
+                d();
+                r();
+            }
+            else if (cube[5][1][2] == 4 || direction == 2)
+            {
+                di();
+                bi();
+                d();
+                b();
+                d();
+                r();
+                di();
+                ri();
+            }
         }
-        else if (cube[5][0][1] == 3 || direction == 2)
-        {
-            di();
-            ri();
-            d();
-            r();
-            d();
-            f();
-            di();
-            fi();
+        else if (color == 4)
+        {   
+            FindSingleColor(521);
+            if (cube[5][2][1] == 3 || direction == 1)
+            {
+                d();
+                r();
+                di();
+                ri();
+                di();
+                bi();
+                d();
+                b();
+            }
+            else if (cube[5][2][1] == 1 || direction == 2)
+            {
+                di();
+                li();
+                d();
+                l();
+                d();
+                b();
+                di();
+                bi();
+            }
         }
-    }
-    else if (color == 3)
-    {   
-        FindSingleColor(512);
-        if (cube[5][1][2] == 2 || direction == 1)
-        {
-            d();
-            f();
-            di();
-            fi();
-            di();
-            ri();
-            d();
-            r();
-        }
-        else if (cube[5][1][2] == 4 || direction == 2)
-        {
-            di();
-            bi();
-            d();
-            b();
-            d();
-            r();
-            di();
-            ri();
-        }
-    }
-    else if (color == 4)
-    {   
-        FindSingleColor(521);
-        if (cube[5][2][1] == 3 || direction == 1)
-        {
-            d();
-            r();
-            di();
-            ri();
-            di();
-            bi();
-            d();
-            b();
-        }
-        else if (cube[5][2][1] == 1 || direction == 2)
-        {
-            di();
-            li();
-            d();
-            l();
-            d();
-            b();
-            di();
-            bi();
-        }
+    }else{
+        restart=1;
     }
 }
 
@@ -2176,1149 +2199,1237 @@ void Cube::solveBottomLayer()
         FindSingleColor(i*100+20);
         FindSingleColor(i*100+21);
         FindSingleColor(i*100+22);
-    }*/        
+    }*/
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
     
-    positionBottomCorners();
-    //print();
-    positionBottomEdges();
-    //print();
-    correctBottomCorners();
-    //print();
-    correctBottomEdges();
-    //  print();
+        positionBottomCorners();
+        //print();
+        positionBottomEdges();
+        //print();
+        correctBottomCorners();
+        //print();
+        correctBottomEdges();
+        //  print();
+
+    }
+    else{
+        restart=1;
+    }
+
+    
 }
 
 void Cube::positionBottomCorners()
 {   
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
     //cout << "IN positionBottomCorners" << endl;
-    print();
-    int dTurns[4];
+        print();
+        int dTurns[4];
 
-    int bestNumDTurns = 0;
-    int pos1 = -1;
-    int pos2 = -1;
+        int bestNumDTurns = 0;
+        int pos1 = -1;
+        int pos2 = -1;
 
-    for (int i = 0; i < 4; i++)
-    {
-        dTurns[i] = numCorrectCorners();
-
-        if (dTurns[i] == 4)
+        for (int i = 0; i < 4; i++)
         {
-            pos1 = 4;
-            bestNumDTurns = i;
-            break;
-        }
-        else if (dTurns[i] < 4 && dTurns[i] > -1)
-        {
-            if (pos2 == -1)
+            dTurns[i] = numCorrectCorners();
+
+            if (dTurns[i] == 4)
             {
-                pos1 = dTurns[i];
+                pos1 = 4;
                 bestNumDTurns = i;
+                break;
             }
-        }
-        else if (dTurns[i] > 4)
-        {
-            int side1 = dTurns[i] % 10 + 1;
-            int side2 = (int)(dTurns[i] / 10) + 1;
-
-            //Corners are next to each other
-            if (side2 == (side1 + 1) || side1 == (side2 + 1) || (side2 == 4 && side1 == 1) || (side2 == 1 && side1 == 4))
+            else if (dTurns[i] < 4 && dTurns[i] > -1)
             {
-                pos1 = side1;
-                pos2 = side2;
-                bestNumDTurns = i;
+                if (pos2 == -1)
+                {
+                    pos1 = dTurns[i];
+                    bestNumDTurns = i;
+                }
             }
-            else if (pos2 == -1)
+            else if (dTurns[i] > 4)
             {
-                pos1 = side1;
-                pos2 = side2;
-                bestNumDTurns = i;
+                int side1 = dTurns[i] % 10 + 1;
+                int side2 = (int)(dTurns[i] / 10) + 1;
+
+                //Corners are next to each other
+                if (side2 == (side1 + 1) || side1 == (side2 + 1) || (side2 == 4 && side1 == 1) || (side2 == 1 && side1 == 4))
+                {
+                    pos1 = side1;
+                    pos2 = side2;
+                    bestNumDTurns = i;
+                }
+                else if (pos2 == -1)
+                {
+                    pos1 = side1;
+                    pos2 = side2;
+                    bestNumDTurns = i;
+                }
             }
+
+            d();
+            //print();
         }
 
-        d();
-        //print();
-    }
-
-    for (int i = 0; i < bestNumDTurns && pos1 != 4; i++)
-    {
-        d();
-    }
-
-
-    //Finally Ready to start positioning corners with algorithm!!!!! OMG WHO KNEW A BRAIN COULD DO SO MUCH SO EASILY!!!!!
-
-    if (pos1 == 4)
-    {
-        //One CRAZY lucky scenario, and is the only way to exit this nightmare :D
-        return;
-    }
-    else if (pos2 != -1 && (pos2 == (pos1 + 1) || pos1 == (pos2 + 1) || (pos2 == 4 && pos1 == 1) || (pos2 == 1 && pos1 == 4)))
-    {
-        int oppFace = pos2 + 3;
-        //int face = oppFace + 2;
-
-        if (oppFace > 4)
+        for (int i = 0; i < bestNumDTurns && pos1 != 4; i++)
         {
-            oppFace = oppFace - 4;
+            d();
         }
 
-        swapCorners(oppFace);
-        positionBottomCorners();
-        return;
+
+        //Finally Ready to start positioning corners with algorithm!!!!! OMG WHO KNEW A BRAIN COULD DO SO MUCH SO EASILY!!!!!
+
+        if (pos1 == 4)
+        {
+            //One CRAZY lucky scenario, and is the only way to exit this nightmare :D
+            return;
+        }
+        else if (pos2 != -1 && (pos2 == (pos1 + 1) || pos1 == (pos2 + 1) || (pos2 == 4 && pos1 == 1) || (pos2 == 1 && pos1 == 4)))
+        {
+            int oppFace = pos2 + 3;
+            //int face = oppFace + 2;
+
+            if (oppFace > 4)
+            {
+                oppFace = oppFace - 4;
+            }
+
+            swapCorners(oppFace);
+            positionBottomCorners();
+            return;
+        }
+        else if (pos2 != -1)
+        {
+            //Corners opp. corners correct
+            int face = pos1 + 4;
+
+            if (face > 4)
+            {
+                face = face - 4;
+            }
+
+            int face2 = face + 1;
+            if (face2 > 4)
+            {
+                face2 = face2 - 4;
+            }
+
+            swapCorners(face);
+            swapCorners(face2);
+            swapCorners(face);
+            positionBottomCorners();
+            return;
+        }
+        else
+        {
+            //Only 1 correct, 3 corners wrong... If thats even posible (I'm 99% positive it isnt the way I set the cube up)?????
+            //But just in case
+            int face = pos1 + 2;
+
+            if (face > 4)
+            {
+                face = face - 4;
+            }
+
+            swapCorners(face); //Eventually One of the previous situations above will occur :D
+            positionBottomCorners();
+            return;
+        }
     }
-    else if (pos2 != -1)
-    {
-        //Corners opp. corners correct
-        int face = pos1 + 4;
-
-        if (face > 4)
-        {
-            face = face - 4;
-        }
-
-        int face2 = face + 1;
-        if (face2 > 4)
-        {
-            face2 = face2 - 4;
-        }
-
-        swapCorners(face);
-        swapCorners(face2);
-        swapCorners(face);
-        positionBottomCorners();
-        return;
-    }
-    else
-    {
-        //Only 1 correct, 3 corners wrong... If thats even posible (I'm 99% positive it isnt the way I set the cube up)?????
-        //But just in case
-        int face = pos1 + 2;
-
-        if (face > 4)
-        {
-            face = face - 4;
-        }
-
-        swapCorners(face); //Eventually One of the previous situations above will occur :D
-        positionBottomCorners();
-        return;
+    else{
+        restart=1;
     }
 
 }
 
 void Cube::swapCorners(int face)
 {   
-    //cout << "IN swapCorners" << endl;
-    if (face == 1)
-    {
-        di();
-        fi();
-        d();
-        b();
-        di();
-        f();
-        d();
-        bi();
-        di();
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN swapCorners" << endl;
+        if (face == 1)
+        {
+            di();
+            fi();
+            d();
+            b();
+            di();
+            f();
+            d();
+            bi();
+            di();
+        }
+        else if (face == 2)
+        {
+            di();
+            ri();
+            d();
+            l();
+            di();
+            r();
+            d();
+            li();
+            di();
+        }
+        else if (face == 3)
+        {
+            di();
+            bi();
+            d();
+            f();
+            di();
+            b();
+            d();
+            fi();
+            di();
+        }
+        else if (face == 4)
+        {
+            di();
+            li();
+            d();
+            r();
+            di();
+            l();
+            d();
+            ri();
+            di();
+        }
     }
-    else if (face == 2)
-    {
-        di();
-        ri();
-        d();
-        l();
-        di();
-        r();
-        d();
-        li();
-        di();
-    }
-    else if (face == 3)
-    {
-        di();
-        bi();
-        d();
-        f();
-        di();
-        b();
-        d();
-        fi();
-        di();
-    }
-    else if (face == 4)
-    {
-        di();
-        li();
-        d();
-        r();
-        di();
-        l();
-        d();
-        ri();
-        di();
+    else{
+        restart=1;
     }
 }
 
 int Cube::numCorrectCorners()
 {   
-    //cout << "IN numCorrectCorners" << endl;
-    //If numCorrect ==  4 it will return 4
-    //If numCorrect == 2 it will return 2nd Corner * 10 + 1st corner (i.e. 20)
-    //Else if numCorrect == 1 it will return pos of corner
-    //Else if 0 are correct return -1
-    int cornerColors[3];
-    int side1 = 0;
-    int side2 = 0;
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN numCorrectCorners" << endl;
+        //If numCorrect ==  4 it will return 4
+        //If numCorrect == 2 it will return 2nd Corner * 10 + 1st corner (i.e. 20)
+        //Else if numCorrect == 1 it will return pos of corner
+        //Else if 0 are correct return -1
+        int cornerColors[3];
+        int side1 = 0;
+        int side2 = 0;
 
-    int count = 0;
+        int count = 0;
 
-    int colorsMatch = 0; //if this equals 2 then there is a match per corner
-    int position[4] = { -1, -1, -1, -1 }; //-1 means there is no match, 1 means match
+        int colorsMatch = 0; //if this equals 2 then there is a match per corner
+        int position[4] = { -1, -1, -1, -1 }; //-1 means there is no match, 1 means match
 
-    for (int i = 0; i < 4; i++)
-    {   
-
-        getCorner(i, cornerColors);
-
-        side1 = i + 1;
-        side2 = i + 2;
-
-        if (side2 == 5)
-        {
-            side2 = 1;
-        }
-
-        for (int j = 0; j < 3; j++)
-        {
-            if (cornerColors[j] == side1 || cornerColors[j] == side2)
-            {
-                colorsMatch++;
-            }
-        }
-
-        if (colorsMatch == 2)
-        {
-            position[i] = 1;
-            count++;
-        }
-
-        colorsMatch = 0;
-    }
-
-    int pos = 0;
-    int multiplier = 1;
-
-    if (count == 4)
-    {
-        return 4;
-    }
-    else if (count == 2 || count == 1)
-    {
         for (int i = 0; i < 4; i++)
-        {
-            if (position[i] == 1)
+        {   
+
+            getCorner(i, cornerColors);
+
+            side1 = i + 1;
+            side2 = i + 2;
+
+            if (side2 == 5)
             {
-                pos += i * multiplier;
-                multiplier *= 10;
+                side2 = 1;
+            }
+
+            for (int j = 0; j < 3; j++)
+            {
+                if (cornerColors[j] == side1 || cornerColors[j] == side2)
+                {
+                    colorsMatch++;
+                }
+            }
+
+            if (colorsMatch == 2)
+            {
+                position[i] = 1;
+                count++;
+            }
+
+            colorsMatch = 0;
+        }
+
+        int pos = 0;
+        int multiplier = 1;
+
+        if (count == 4)
+        {
+            return 4;
+        }
+        else if (count == 2 || count == 1)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                if (position[i] == 1)
+                {
+                    pos += i * multiplier;
+                    multiplier *= 10;
+                }
             }
         }
-    }
-    else
-    {
-        pos = -1;
-    }
+        else
+        {
+            pos = -1;
+        }
 
-    return pos;
+        return pos;
+    }
+    else{
+        restart=1;
+    }
 }
 
 void Cube::getCorner(int num, int corners[])
 {   
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
     //cout << "HELP!";
     //cout << "IN GET CORNER: Num= " << num << endl;
-    if (num == 0)
-    {
-        FindSingleColor(122);
-        FindSingleColor(220);
-        FindSingleColor(500);
+        if (num == 0)
+        {
+            FindSingleColor(122);
+            FindSingleColor(220);
+            FindSingleColor(500);
 
-        corners[0] = cube[1][2][2];
-        corners[1] = cube[2][2][0];
-        corners[2] = cube[5][0][0];
+            corners[0] = cube[1][2][2];
+            corners[1] = cube[2][2][0];
+            corners[2] = cube[5][0][0];
+        }
+        else if (num == 1)
+        {
+            FindSingleColor(222);
+            FindSingleColor(320);
+            FindSingleColor(502);
+
+            corners[0] = cube[2][2][2];
+            corners[1] = cube[3][2][0];
+            corners[2] = cube[5][0][2];
+        }
+        else if (num == 2)
+        {   
+            FindSingleColor(322);
+            FindSingleColor(420);
+            FindSingleColor(522);
+
+            corners[0] = cube[3][2][2];
+            corners[1] = cube[4][2][0];
+            corners[2] = cube[5][2][2];
+        }
+        else if (num == 3)
+        {
+            FindSingleColor(422);
+            FindSingleColor(120);
+            FindSingleColor(520);
+
+            corners[0] = cube[4][2][2];
+            corners[1] = cube[1][2][0];
+            corners[2] = cube[5][2][0];
+        }
     }
-    else if (num == 1)
-    {
-        FindSingleColor(222);
-        FindSingleColor(320);
-        FindSingleColor(502);
-
-        corners[0] = cube[2][2][2];
-        corners[1] = cube[3][2][0];
-        corners[2] = cube[5][0][2];
-    }
-    else if (num == 2)
-    {   
-        FindSingleColor(322);
-        FindSingleColor(420);
-        FindSingleColor(522);
-
-        corners[0] = cube[3][2][2];
-        corners[1] = cube[4][2][0];
-        corners[2] = cube[5][2][2];
-    }
-    else if (num == 3)
-    {
-        FindSingleColor(422);
-        FindSingleColor(120);
-        FindSingleColor(520);
-
-        corners[0] = cube[4][2][2];
-        corners[1] = cube[1][2][0];
-        corners[2] = cube[5][2][0];
+    else{
+        restart=1;
     }
 }
 
 void Cube::positionBottomEdges()
 {   
-    //cout << "IN positionBottomEdges" << endl;
-    int pos = numEdgesInCorrectPos();
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN positionBottomEdges" << endl;
+        int pos = numEdgesInCorrectPos();
 
-    if (pos == 0)
-    {
-        rotateEdges(2, true);
-        positionBottomEdges();
-        return;
-    }
-    else if (pos == 5)
-    {
-        return;
-    }
-    else
-    {
-        bool clockwise = pos > 0;
-
-        int face = abs(pos) + 1;
-
-        if (face > 4)
+        if (pos == 0)
         {
-            face = face - 4;
+            rotateEdges(2, true);
+            positionBottomEdges();
+            return;
         }
+        else if (pos == 5)
+        {
+            return;
+        }
+        else
+        {
+            bool clockwise = pos > 0;
 
-        rotateEdges(face, clockwise);
-        return;
+            int face = abs(pos) + 1;
+
+            if (face > 4)
+            {
+                face = face - 4;
+            }
+
+            rotateEdges(face, clockwise);
+            return;
+        }
+    }
+    else{
+        restart=1;
     }
 }
 
 int Cube::numEdgesInCorrectPos()
 {   
-    //cout << "IN numEdgesInCorrectPos" << endl;
-    //Note this will either be 1, 0 or 4...
-    //It will return 0 if none are in correct position
-    //If there is one in correct position it will return the corresponding position pos or neg determining rotation
-    //Note positions are determined by what side they match with, 1 - 4
-    //Return 5 if all are in position
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN numEdgesInCorrectPos" << endl;
+        //Note this will either be 1, 0 or 4...
+        //It will return 0 if none are in correct position
+        //If there is one in correct position it will return the corresponding position pos or neg determining rotation
+        //Note positions are determined by what side they match with, 1 - 4
+        //Return 5 if all are in position
 
-    FindSingleColor(510);
-    FindSingleColor(121);
-    FindSingleColor(501);
-    FindSingleColor(221);
-    FindSingleColor(512);
-    FindSingleColor(321);
-    FindSingleColor(521);
-    FindSingleColor(421);
-    int edges[4][2] = { { cube[5][1][0], cube[1][2][1] }, { cube[5][0][1], cube[2][2][1] }, { cube[5][1][2], cube[3][2][1] }, { cube[5][2][1], cube[4][2][1] } };
+        FindSingleColor(510);
+        FindSingleColor(121);
+        FindSingleColor(501);
+        FindSingleColor(221);
+        FindSingleColor(512);
+        FindSingleColor(321);
+        FindSingleColor(521);
+        FindSingleColor(421);
+        int edges[4][2] = { { cube[5][1][0], cube[1][2][1] }, { cube[5][0][1], cube[2][2][1] }, { cube[5][1][2], cube[3][2][1] }, { cube[5][2][1], cube[4][2][1] } };
 
-    int correctPos = -1;
-    int numCorrect = 0;
-    bool isOneCorrect = false;
-    int positions[4];
+        int correctPos = -1;
+        int numCorrect = 0;
+        bool isOneCorrect = false;
+        int positions[4];
 
-    for (int i = 1; i <= 4; i++)
-    {
-        for (int j = 0; j < 2; j++)
+        for (int i = 1; i <= 4; i++)
         {
-            if (edges[i - 1][j] == i)
+            for (int j = 0; j < 2; j++)
             {
-                isOneCorrect = true;
-                correctPos = i - 1;
-                numCorrect++;
-            }
+                if (edges[i - 1][j] == i)
+                {
+                    isOneCorrect = true;
+                    correctPos = i - 1;
+                    numCorrect++;
+                }
 
-            if (edges[i - 1][j] != 5)
-            {
-                positions[i - 1] = edges[i - 1][j];
+                if (edges[i - 1][j] != 5)
+                {
+                    positions[i - 1] = edges[i - 1][j];
+                }
             }
         }
-    }
 
-    if (numCorrect == 4)
-    {
-        return 5;
-    }
-
-    if (isOneCorrect == false)
-    {
-        return 0;
-    }
-    else
-    {
-        bool clockwise = false;
-        bool firstTime = true;
-        int numTimesThrough = 0;
-        numCorrect = 0;
-        int temp;
-        int temp2;
-
-        while (numCorrect != 4)
+        if (numCorrect == 4)
         {
-            firstTime = true;
+            return 5;
+        }
+
+        if (isOneCorrect == false)
+        {
+            return 0;
+        }
+        else
+        {
+            bool clockwise = false;
+            bool firstTime = true;
+            int numTimesThrough = 0;
             numCorrect = 0;
-            for (int i = 0; i < 4; i++)
+            int temp;
+            int temp2;
+
+            while (numCorrect != 4)
             {
-                if (i != correctPos)
+                firstTime = true;
+                numCorrect = 0;
+                for (int i = 0; i < 4; i++)
                 {
-                    if (firstTime)
+                    if (i != correctPos)
                     {
-                        firstTime = false;
-                        temp = positions[i];
-
-                        int j = i - 1;
-
-                        if (j < 0)
+                        if (firstTime)
                         {
-                            j = 4 + j;
-                        }
+                            firstTime = false;
+                            temp = positions[i];
 
-                        if (j == correctPos)
-                        {
-                            j--;
+                            int j = i - 1;
+
                             if (j < 0)
                             {
                                 j = 4 + j;
                             }
+
+                            if (j == correctPos)
+                            {
+                                j--;
+                                if (j < 0)
+                                {
+                                    j = 4 + j;
+                                }
+                            }
+
+                            positions[i] = positions[j];
                         }
-
-                        positions[i] = positions[j];
+                        else
+                        {
+                            temp2 = positions[i];
+                            positions[i] = temp;
+                            temp = temp2;
+                        }
                     }
-                    else
+
+                    if (positions[i] == i + 1)
                     {
-                        temp2 = positions[i];
-                        positions[i] = temp;
-                        temp = temp2;
+                        numCorrect++;
                     }
                 }
 
-                if (positions[i] == i + 1)
-                {
-                    numCorrect++;
-                }
+                numTimesThrough++;
             }
 
-            numTimesThrough++;
+            clockwise = numTimesThrough == 1;
+            correctPos++;
+
+            if (clockwise == false)
+            {
+                correctPos = -1 * (correctPos);
+            }
         }
 
-        clockwise = numTimesThrough == 1;
-        correctPos++;
-
-        if (clockwise == false)
-        {
-            correctPos = -1 * (correctPos);
-        }
+        return correctPos;
     }
-
-    return correctPos;
+    else{
+        restart=1;
+    }
 }
 
 void Cube::rotateEdges(int face, bool rotClockwise)
-{   //cout << "IN rotateEdges" << endl;
-    if (face == 1)
-    {
-        if (rotClockwise == true)
+{   
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN rotateEdges" << endl;
+        if (face == 1)
         {
-            f();
-            f();
-            d();
-            li();
-            r();
-            f();
-            f();
-            l();
-            ri();
-            d();
-            f();
-            f();
+            if (rotClockwise == true)
+            {
+                f();
+                f();
+                d();
+                li();
+                r();
+                f();
+                f();
+                l();
+                ri();
+                d();
+                f();
+                f();
+            }
+            else
+            {
+                f();
+                f();
+                di();
+                li();
+                r();
+                f();
+                f();
+                l();
+                ri();
+                di();
+                f();
+                f();
+            }
         }
-        else
+        else if (face == 2)
         {
-            f();
-            f();
-            di();
-            li();
-            r();
-            f();
-            f();
-            l();
-            ri();
-            di();
-            f();
-            f();
+            if (rotClockwise == true)
+            {
+                r();
+                r();
+                d();
+                fi();
+                b();
+                r();
+                r();
+                f();
+                bi();
+                d();
+                r();
+                r();
+            }
+            else
+            {
+                r();
+                r();
+                di();
+                fi();
+                b();
+                r();
+                r();
+                f();
+                bi();
+                di();
+                r();
+                r();
+            }
+        }
+        else if (face == 3)
+        {
+            if (rotClockwise == true)
+            {
+                b();
+                b();
+                d();
+                ri();
+                l();
+                b();
+                b();
+                r();
+                li();
+                d();
+                b();
+                b();
+            }
+            else
+            {
+                b();
+                b();
+                di();
+                ri();
+                l();
+                b();
+                b();
+                r();
+                li();
+                di();
+                b();
+                b();
+            }
+        }
+        else if (face == 4)
+        {
+            if (rotClockwise == true)
+            {
+                l();
+                l();
+                d();
+                bi();
+                f();
+                l();
+                l();
+                b();
+                fi();
+                d();
+                l();
+                l();
+            }
+            else
+            {
+                l();
+                l();
+                di();
+                bi();
+                f();
+                l();
+                l();
+                b();
+                fi();
+                di();
+                l();
+                l();
+            }
         }
     }
-    else if (face == 2)
-    {
-        if (rotClockwise == true)
-        {
-            r();
-            r();
-            d();
-            fi();
-            b();
-            r();
-            r();
-            f();
-            bi();
-            d();
-            r();
-            r();
-        }
-        else
-        {
-            r();
-            r();
-            di();
-            fi();
-            b();
-            r();
-            r();
-            f();
-            bi();
-            di();
-            r();
-            r();
-        }
-    }
-    else if (face == 3)
-    {
-        if (rotClockwise == true)
-        {
-            b();
-            b();
-            d();
-            ri();
-            l();
-            b();
-            b();
-            r();
-            li();
-            d();
-            b();
-            b();
-        }
-        else
-        {
-            b();
-            b();
-            di();
-            ri();
-            l();
-            b();
-            b();
-            r();
-            li();
-            di();
-            b();
-            b();
-        }
-    }
-    else if (face == 4)
-    {
-        if (rotClockwise == true)
-        {
-            l();
-            l();
-            d();
-            bi();
-            f();
-            l();
-            l();
-            b();
-            fi();
-            d();
-            l();
-            l();
-        }
-        else
-        {
-            l();
-            l();
-            di();
-            bi();
-            f();
-            l();
-            l();
-            b();
-            fi();
-            di();
-            l();
-            l();
-        }
+    else{
+        restart=1;
     }
 }
 
 void Cube::correctBottomCorners()
 {   
-    //cout << "IN correctBottomCorners" << endl;
-    int result = cornerOrientation();
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN correctBottomCorners" << endl;
+        int result = cornerOrientation();
 
-    while (result != 5)
-    {
-        twoCornerRotate(abs(findBestFace(result)), findBestFace(result) > 0);
-                // old: twoCornerRotate(abs(findBestFace(result)), findBestFace > 0);
+        while (result != 5)
+        {
+            twoCornerRotate(abs(findBestFace(result)), findBestFace(result) > 0);
+                    // old: twoCornerRotate(abs(findBestFace(result)), findBestFace > 0);
 
-        result = cornerOrientation();
+            result = cornerOrientation();
+        }
+    }
+    else{
+        restart=1;
     }
 }
 
 int Cube::cornerOrientation()
 {   
-    //cout << "IN cornerOrientation" << endl;
-    int numCorrect = 0;
-    int wrongPosition = 0;
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN cornerOrientation" << endl;
+        int numCorrect = 0;
+        int wrongPosition = 0;
 
-    FindSingleColor(500);
-    FindSingleColor(502);
-    FindSingleColor(522);
-    FindSingleColor(520);
-    int corners[4] = { cube[5][0][0], cube[5][0][2], cube[5][2][2], cube[5][2][0] };
-   
-    for (int i = 0; i < 4; i++)
-    {
-        if (corners[i] == 5)
+        FindSingleColor(500);
+        FindSingleColor(502);
+        FindSingleColor(522);
+        FindSingleColor(520);
+        int corners[4] = { cube[5][0][0], cube[5][0][2], cube[5][2][2], cube[5][2][0] };
+       
+        for (int i = 0; i < 4; i++)
         {
-            numCorrect++;
+            if (corners[i] == 5)
+            {
+                numCorrect++;
+            }
+            else
+            {
+                wrongPosition = i;
+            }
         }
-        else
+
+        if (numCorrect == 4)
         {
-            wrongPosition = i;
+            return 5;
         }
-    }
 
-    if (numCorrect == 4)
-    {
-        return 5;
+        return wrongPosition;
+    }else{
+        restart=1;
     }
-
-    return wrongPosition;
 }
 
 int Cube::findBestFace(int cornerNum)
-{   //cout << "IN findBestFace" << endl;
+{   
+    clkFinish=clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN findBestFace" << endl;
 
-    FindSingleColor(500);
-    FindSingleColor(502);
-    FindSingleColor(522);
-    FindSingleColor(520);
-    int corners[4] = { cube[5][0][0], cube[5][0][2], cube[5][2][2], cube[5][2][0] };
+        FindSingleColor(500);
+        FindSingleColor(502);
+        FindSingleColor(522);
+        FindSingleColor(520);
+        int corners[4] = { cube[5][0][0], cube[5][0][2], cube[5][2][2], cube[5][2][0] };
 
-    int corner1 = cornerNum + 1;
-    int corner2 = cornerNum - 1;
+        int corner1 = cornerNum + 1;
+        int corner2 = cornerNum - 1;
 
-    if (corner1 > 3)
-    {
-        corner1 = 4 - corner1;
-    }
-
-    if (corner2 < 0)
-    {
-        corner2 = 4 + corner2;
-    }
-
-    //First Determine which corner to go with
-    int finalCorner = -1;
-    int face = -1;
-
-    if (corners[cornerNum] == corners[corner1])
-    {
-        finalCorner = corner1;
-
-        face = corners[finalCorner] + 1;
-
-        if (face > 4)
+        if (corner1 > 3)
         {
-            face = face - 4;
+            corner1 = 4 - corner1;
         }
 
-        return face;
-    }
-    else if (corners[cornerNum] == corners[corner2])
-    {
-        finalCorner = corner2;
-
-        face = corners[finalCorner] + 1;
-
-        if (face > 4)
+        if (corner2 < 0)
         {
-            face = face - 4;
+            corner2 = 4 + corner2;
         }
 
-        return face;
+        //First Determine which corner to go with
+        int finalCorner = -1;
+        int face = -1;
+
+        if (corners[cornerNum] == corners[corner1])
+        {
+            finalCorner = corner1;
+
+            face = corners[finalCorner] + 1;
+
+            if (face > 4)
+            {
+                face = face - 4;
+            }
+
+            return face;
+        }
+        else if (corners[cornerNum] == corners[corner2])
+        {
+            finalCorner = corner2;
+
+            face = corners[finalCorner] + 1;
+
+            if (face > 4)
+            {
+                face = face - 4;
+            }
+
+            return face;
+        }
+        else if (abs(corners[cornerNum] - corners[corner1]) == 2 && corners[corner1] != 5)
+        {
+            finalCorner = corner1;
+            face = corners[finalCorner];
+            return -face;
+        }
+        else if (abs(corners[cornerNum] - corners[corner2]) == 2 && corners[corner2] != 5)
+        {
+            finalCorner = corner2;
+            face = corners[cornerNum];
+            return -face;
+        }
+        else
+        {
+            face = corners[cornerNum];
+            return face;
+        }
     }
-    else if (abs(corners[cornerNum] - corners[corner1]) == 2 && corners[corner1] != 5)
-    {
-        finalCorner = corner1;
-        face = corners[finalCorner];
-        return -face;
-    }
-    else if (abs(corners[cornerNum] - corners[corner2]) == 2 && corners[corner2] != 5)
-    {
-        finalCorner = corner2;
-        face = corners[cornerNum];
-        return -face;
-    }
-    else
-    {
-        face = corners[cornerNum];
-        return face;
+    else{
+        restart=1;
     }
 }
 
 void Cube::twoCornerRotate(int face, bool goForward)
-{   //cout << "IN twoCornerRotate" << endl;
-    if (face == 1)
-    {
-        if (goForward == true)
+{   
+    clkFinish = clock();
+    if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN twoCornerRotate" << endl;
+        if (face == 1)
         {
-            bi();
-            u();
-            b();
-            l();
-            u();
-            li();
-            d();
-            l();
-            ui();
-            li();
-            bi();
-            ui();
-            b();
-            di();
+            if (goForward == true)
+            {
+                bi();
+                u();
+                b();
+                l();
+                u();
+                li();
+                d();
+                l();
+                ui();
+                li();
+                bi();
+                ui();
+                b();
+                di();
+            }
+            else
+            {
+                d();
+                bi();
+                u();
+                b();
+                l();
+                u();
+                li();
+                di();
+                l();
+                ui();
+                li();
+                bi();
+                ui();
+                b();
+            }
         }
-        else
+        else if (face == 2)
         {
-            d();
-            bi();
-            u();
-            b();
-            l();
-            u();
-            li();
-            di();
-            l();
-            ui();
-            li();
-            bi();
-            ui();
-            b();
+            if (goForward == true)
+            {
+                li();
+                u();
+                l();
+                f();
+                u();
+                fi();
+                d();
+                f();
+                ui();
+                fi();
+                li();
+                ui();
+                l();
+                di();
+            }
+            else
+            {
+                d();
+                li();
+                u();
+                l();
+                f();
+                u();
+                fi();
+                di();
+                f();
+                ui();
+                fi();
+                li();
+                ui();
+                l();
+            }
         }
-    }
-    else if (face == 2)
-    {
-        if (goForward == true)
+        else if (face == 3)
         {
-            li();
-            u();
-            l();
-            f();
-            u();
-            fi();
-            d();
-            f();
-            ui();
-            fi();
-            li();
-            ui();
-            l();
-            di();
+            if (goForward == true)
+            {
+                fi();
+                u();
+                f();
+                r();
+                u();
+                ri();
+                d();
+                r();
+                ui();
+                ri();
+                fi();
+                ui();
+                f();
+                di();
+            }
+            else
+            {
+                d();
+                fi();
+                u();
+                f();
+                r();
+                u();
+                ri();
+                di();
+                r();
+                ui();
+                ri();
+                fi();
+                ui();
+                f();
+            }
         }
-        else
+        else if (face == 4)
         {
-            d();
-            li();
-            u();
-            l();
-            f();
-            u();
-            fi();
-            di();
-            f();
-            ui();
-            fi();
-            li();
-            ui();
-            l();
+            if (goForward == true)
+            {
+                ri();
+                u();
+                r();
+                b();
+                u();
+                bi();
+                d();
+                b();
+                ui();
+                bi();
+                ri();
+                ui();
+                r();
+                di();
+            }
+            else
+            {
+                d();
+                ri();
+                u();
+                r();
+                b();
+                u();
+                bi();
+                di();
+                b();
+                ui();
+                bi();
+                ri();
+                ui();
+                r();
+            }
         }
-    }
-    else if (face == 3)
-    {
-        if (goForward == true)
-        {
-            fi();
-            u();
-            f();
-            r();
-            u();
-            ri();
-            d();
-            r();
-            ui();
-            ri();
-            fi();
-            ui();
-            f();
-            di();
-        }
-        else
-        {
-            d();
-            fi();
-            u();
-            f();
-            r();
-            u();
-            ri();
-            di();
-            r();
-            ui();
-            ri();
-            fi();
-            ui();
-            f();
-        }
-    }
-    else if (face == 4)
-    {
-        if (goForward == true)
-        {
-            ri();
-            u();
-            r();
-            b();
-            u();
-            bi();
-            d();
-            b();
-            ui();
-            bi();
-            ri();
-            ui();
-            r();
-            di();
-        }
-        else
-        {
-            d();
-            ri();
-            u();
-            r();
-            b();
-            u();
-            bi();
-            di();
-            b();
-            ui();
-            bi();
-            ri();
-            ui();
-            r();
-        }
+    }else{
+        restart=1;
     }
 }
 
 void Cube::correctBottomEdges()
-{   //cout << "IN correctBottomEdges" << endl;
-    FindSingleColor(510);
-    FindSingleColor(501);
-    FindSingleColor(512);
-    FindSingleColor(521);
-    int edges[4] = { cube[5][1][0], cube[5][0][1], cube[5][1][2], cube[5][2][1] };
+    {   
+        clkFinish=clock();
+        if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN correctBottomEdges" << endl;
+        FindSingleColor(510);
+        FindSingleColor(501);
+        FindSingleColor(512);
+        FindSingleColor(521);
+        int edges[4] = { cube[5][1][0], cube[5][0][1], cube[5][1][2], cube[5][2][1] };
 
-    bool isTogether = false;
-    bool isStart = false;
-    int numWrong = 0;
-    int pos1 = -1;
-    int pos2 = -1;
-    int j = 0;
+        bool isTogether = false;
+        bool isStart = false;
+        int numWrong = 0;
+        int pos1 = -1;
+        int pos2 = -1;
+        int j = 0;
 
-    for (int i = 0; i < 5; i++)
-    {
-        j = i;
-
-        if (i == 4)
+        for (int i = 0; i < 5; i++)
         {
-            j = 0;
-        }
+            j = i;
 
-        if (edges[j] != 5)
-        {
-            numWrong++;
-            if (isStart == false)
+            if (i == 4)
             {
-                pos1 = j;
-                isStart = true;
+                j = 0;
+            }
+
+            if (edges[j] != 5)
+            {
+                numWrong++;
+                if (isStart == false)
+                {
+                    pos1 = j;
+                    isStart = true;
+                }
+                else
+                {
+                    pos2 = j;
+                    isTogether = true;
+                }
             }
             else
             {
-                pos2 = j;
-                isTogether = true;
+                isStart = false;
             }
         }
-        else
-        {
-            isStart = false;
-        }
-    }
 
-    if (numWrong >= 4)
-    {
-        twoEdgeRotate(1, false);
-        twoEdgeRotate(2, false);
-        return;
-    }
-    else
-    {
-        if(pos2 != -1)
+        if (numWrong >= 4)
         {
-            twoEdgeRotate(pos2 + 1, isTogether);
+            twoEdgeRotate(1, false);
+            twoEdgeRotate(2, false);
+            return;
         }
         else
         {
-            twoEdgeRotate(pos1 + 1, isTogether);
+            if(pos2 != -1)
+            {
+                twoEdgeRotate(pos2 + 1, isTogether);
+            }
+            else
+            {
+                twoEdgeRotate(pos1 + 1, isTogether);
+            }
+            return;
         }
-        return;
+    }else{
+        restart=1;
     }
 }
 
 void Cube::twoEdgeRotate(int face, bool isNextTo)
-{   //cout << "IN twoEdgeRotate" << endl;
-    if (face == 1)
-    {
-        if (isNextTo == true)
+    {   
+        clkFinish=clock();
+        if(clkRestart>(clkFinish-clkStart) && restart==0){
+        //cout << "IN twoEdgeRotate" << endl;
+        if (face == 1)
         {
-            l();
-            ui();
-            d();
-            f();
-            f();
-            d();
-            d();
-            u();
-            u();
-            b();
-            d();
-            bi();
-            u();
-            u();
-            d();
-            d();
-            f();
-            f();
-            di();
-            u();
-            li();
-            di();
+            if (isNextTo == true)
+            {
+                l();
+                ui();
+                d();
+                f();
+                f();
+                d();
+                d();
+                u();
+                u();
+                b();
+                d();
+                bi();
+                u();
+                u();
+                d();
+                d();
+                f();
+                f();
+                di();
+                u();
+                li();
+                di();
+            }
+            else
+            {
+                l();
+                ui();
+                d();
+                f();
+                f();
+                d();
+                d();
+                u();
+                u();
+                b();
+                d();
+                d();
+                bi();
+                u();
+                u();
+                d();
+                d();
+                f();
+                f();
+                di();
+                u();
+                li();
+                di();
+                di();
+            }
         }
-        else
+        else if (face == 2)
         {
-            l();
-            ui();
-            d();
-            f();
-            f();
-            d();
-            d();
-            u();
-            u();
-            b();
-            d();
-            d();
-            bi();
-            u();
-            u();
-            d();
-            d();
-            f();
-            f();
-            di();
-            u();
-            li();
-            di();
-            di();
+            if (isNextTo == true)
+            {
+                f();
+                ui();
+                d();
+                r();
+                r();
+                d();
+                d();
+                u();
+                u();
+                l();
+                d();
+                li();
+                u();
+                u();
+                d();
+                d();
+                r();
+                r();
+                di();
+                u();
+                fi();
+                di();
+            }
+            else
+            {
+                f();
+                ui();
+                d();
+                r();
+                r();
+                d();
+                d();
+                u();
+                u();
+                l();
+                d();
+                d();
+                li();
+                u();
+                u();
+                d();
+                d();
+                r();
+                r();
+                di();
+                u();
+                fi();
+                di();
+                di();
+            }
         }
-    }
-    else if (face == 2)
-    {
-        if (isNextTo == true)
+        else if (face == 3)
         {
-            f();
-            ui();
-            d();
-            r();
-            r();
-            d();
-            d();
-            u();
-            u();
-            l();
-            d();
-            li();
-            u();
-            u();
-            d();
-            d();
-            r();
-            r();
-            di();
-            u();
-            fi();
-            di();
+            if (isNextTo == true)
+            {
+                r();
+                ui();
+                d();
+                b();
+                b();
+                d();
+                d();
+                u();
+                u();
+                f();
+                d();
+                fi();
+                u();
+                u();
+                d();
+                d();
+                b();
+                b();
+                di();
+                u();
+                ri();
+                di();
+            }
+            else
+            {
+                r();
+                ui();
+                d();
+                b();
+                b();
+                d();
+                d();
+                u();
+                u();
+                f();
+                d();
+                d();
+                fi();
+                u();
+                u();
+                d();
+                d();
+                b();
+                b();
+                di();
+                u();
+                ri();
+                di();
+                di();
+            }
         }
-        else
+        else if (face == 4)
         {
-            f();
-            ui();
-            d();
-            r();
-            r();
-            d();
-            d();
-            u();
-            u();
-            l();
-            d();
-            d();
-            li();
-            u();
-            u();
-            d();
-            d();
-            r();
-            r();
-            di();
-            u();
-            fi();
-            di();
-            di();
+            if (isNextTo == true)
+            {
+                b();
+                ui();
+                d();
+                l();
+                l();
+                d();
+                d();
+                u();
+                u();
+                r();
+                d();
+                ri();
+                u();
+                u();
+                d();
+                d();
+                l();
+                l();
+                di();
+                u();
+                bi();
+                di();
+            }
+            else
+            {
+                b();
+                ui();
+                d();
+                l();
+                l();
+                d();
+                d();
+                u();
+                u();
+                r();
+                d();
+                d();
+                ri();
+                u();
+                u();
+                d();
+                d();
+                l();
+                l();
+                di();
+                u();
+                bi();
+                di();
+                di();
+            }
         }
-    }
-    else if (face == 3)
-    {
-        if (isNextTo == true)
-        {
-            r();
-            ui();
-            d();
-            b();
-            b();
-            d();
-            d();
-            u();
-            u();
-            f();
-            d();
-            fi();
-            u();
-            u();
-            d();
-            d();
-            b();
-            b();
-            di();
-            u();
-            ri();
-            di();
-        }
-        else
-        {
-            r();
-            ui();
-            d();
-            b();
-            b();
-            d();
-            d();
-            u();
-            u();
-            f();
-            d();
-            d();
-            fi();
-            u();
-            u();
-            d();
-            d();
-            b();
-            b();
-            di();
-            u();
-            ri();
-            di();
-            di();
-        }
-    }
-    else if (face == 4)
-    {
-        if (isNextTo == true)
-        {
-            b();
-            ui();
-            d();
-            l();
-            l();
-            d();
-            d();
-            u();
-            u();
-            r();
-            d();
-            ri();
-            u();
-            u();
-            d();
-            d();
-            l();
-            l();
-            di();
-            u();
-            bi();
-            di();
-        }
-        else
-        {
-            b();
-            ui();
-            d();
-            l();
-            l();
-            d();
-            d();
-            u();
-            u();
-            r();
-            d();
-            d();
-            ri();
-            u();
-            u();
-            d();
-            d();
-            l();
-            l();
-            di();
-            u();
-            bi();
-            di();
-            di();
-        }
+    }else{
+        restart=1;
     }
 }
 

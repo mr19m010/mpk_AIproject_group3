@@ -25,7 +25,11 @@ public:
 
 
 	clock_t clkStart;
-	clock_t clkFinish;		
+	clock_t clkFinish;
+	clock_t clkRestart=0.5*CLOCKS_PER_SEC;		
+	clock_t clkStartAll;
+	bool restart = 0;
+	int restartCnt = 0;
 
 	int X(int);
 	int Y(int);
