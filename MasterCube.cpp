@@ -978,11 +978,11 @@ void Cube::StartServer()
     void Cube::ExecuteMoveCommands()
     {
         //cout << endl << "Execute MoveCommands..." << endl;
-        cout<<"moveSingle: ";
+        /*cout<<"moveSingle: ";
         for(int n=0; n<moveSingle.size();n++){
             cout<<moveSingle[n]<<" ";
         }
-        cout << endl;
+        cout << endl;*/
 
         for(int i=0; i<(moveSingle.size());i++)
         {
@@ -2165,7 +2165,7 @@ void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothin
 
 void Cube::solveBottomLayer()
 {   
-    for(int i=0;i<6;i++){
+    /*for(int i=0;i<6;i++){
             
         FindSingleColor(i*100);
         FindSingleColor(i*100+1);
@@ -2176,8 +2176,7 @@ void Cube::solveBottomLayer()
         FindSingleColor(i*100+20);
         FindSingleColor(i*100+21);
         FindSingleColor(i*100+22);
-    }
-        
+    }*/        
     
     positionBottomCorners();
     //print();
@@ -2191,7 +2190,7 @@ void Cube::solveBottomLayer()
 
 void Cube::positionBottomCorners()
 {   
-    cout << "IN positionBottomCorners" << endl;
+    //cout << "IN positionBottomCorners" << endl;
     print();
     int dTurns[4];
 
@@ -2310,7 +2309,7 @@ void Cube::positionBottomCorners()
 
 void Cube::swapCorners(int face)
 {   
-    cout << "IN swapCorners" << endl;
+    //cout << "IN swapCorners" << endl;
     if (face == 1)
     {
         di();
@@ -2363,7 +2362,7 @@ void Cube::swapCorners(int face)
 
 int Cube::numCorrectCorners()
 {   
-    cout << "IN numCorrectCorners" << endl;
+    //cout << "IN numCorrectCorners" << endl;
     //If numCorrect ==  4 it will return 4
     //If numCorrect == 2 it will return 2nd Corner * 10 + 1st corner (i.e. 20)
     //Else if numCorrect == 1 it will return pos of corner
@@ -2436,7 +2435,7 @@ int Cube::numCorrectCorners()
 void Cube::getCorner(int num, int corners[])
 {   
     //cout << "HELP!";
-    cout << "IN GET CORNER: Num= " << num << endl;
+    //cout << "IN GET CORNER: Num= " << num << endl;
     if (num == 0)
     {
         FindSingleColor(122);
@@ -2481,7 +2480,7 @@ void Cube::getCorner(int num, int corners[])
 
 void Cube::positionBottomEdges()
 {   
-    cout << "IN positionBottomEdges" << endl;
+    //cout << "IN positionBottomEdges" << endl;
     int pos = numEdgesInCorrectPos();
 
     if (pos == 0)
@@ -2512,7 +2511,7 @@ void Cube::positionBottomEdges()
 
 int Cube::numEdgesInCorrectPos()
 {   
-    cout << "IN numEdgesInCorrectPos" << endl;
+    //cout << "IN numEdgesInCorrectPos" << endl;
     //Note this will either be 1, 0 or 4...
     //It will return 0 if none are in correct position
     //If there is one in correct position it will return the corresponding position pos or neg determining rotation
@@ -2631,7 +2630,7 @@ int Cube::numEdgesInCorrectPos()
 }
 
 void Cube::rotateEdges(int face, bool rotClockwise)
-{   cout << "IN rotateEdges" << endl;
+{   //cout << "IN rotateEdges" << endl;
     if (face == 1)
     {
         if (rotClockwise == true)
@@ -2768,7 +2767,7 @@ void Cube::rotateEdges(int face, bool rotClockwise)
 
 void Cube::correctBottomCorners()
 {   
-    cout << "IN correctBottomCorners" << endl;
+    //cout << "IN correctBottomCorners" << endl;
     int result = cornerOrientation();
 
     while (result != 5)
@@ -2782,7 +2781,7 @@ void Cube::correctBottomCorners()
 
 int Cube::cornerOrientation()
 {   
-    cout << "IN cornerOrientation" << endl;
+    //cout << "IN cornerOrientation" << endl;
     int numCorrect = 0;
     int wrongPosition = 0;
 
@@ -2813,7 +2812,12 @@ int Cube::cornerOrientation()
 }
 
 int Cube::findBestFace(int cornerNum)
-{   cout << "IN findBestFace" << endl;
+{   //cout << "IN findBestFace" << endl;
+
+    FindSingleColor(500);
+    FindSingleColor(502);
+    FindSingleColor(522);
+    FindSingleColor(520);
     int corners[4] = { cube[5][0][0], cube[5][0][2], cube[5][2][2], cube[5][2][0] };
 
     int corner1 = cornerNum + 1;
@@ -2879,7 +2883,7 @@ int Cube::findBestFace(int cornerNum)
 }
 
 void Cube::twoCornerRotate(int face, bool goForward)
-{   cout << "IN twoCornerRotate" << endl;
+{   //cout << "IN twoCornerRotate" << endl;
     if (face == 1)
     {
         if (goForward == true)
@@ -3031,11 +3035,11 @@ void Cube::twoCornerRotate(int face, bool goForward)
 }
 
 void Cube::correctBottomEdges()
-{   cout << "IN correctBottomEdges" << endl;
-    /*FindSingleColor(510);
+{   //cout << "IN correctBottomEdges" << endl;
+    FindSingleColor(510);
     FindSingleColor(501);
     FindSingleColor(512);
-    FindSingleColor(521);*/
+    FindSingleColor(521);
     int edges[4] = { cube[5][1][0], cube[5][0][1], cube[5][1][2], cube[5][2][1] };
 
     bool isTogether = false;
@@ -3095,7 +3099,7 @@ void Cube::correctBottomEdges()
 }
 
 void Cube::twoEdgeRotate(int face, bool isNextTo)
-{   cout << "IN twoEdgeRotate" << endl;
+{   //cout << "IN twoEdgeRotate" << endl;
     if (face == 1)
     {
         if (isNextTo == true)

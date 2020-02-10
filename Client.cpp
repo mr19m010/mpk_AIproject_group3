@@ -6,7 +6,11 @@ using namespace std;
 int main()
 {
 	
+	
+
+
 	Cube cCube; // Client-Cube
+	cCube.clkStart = clock();
 	cCube.SetClient();
 
 	/*
@@ -82,6 +86,11 @@ int main()
   	//cout << "Verbindung mit Server hergestellt" << endl;
 	
 	cCube.CloseConnection();
+
+	cCube.clkFinish = clock();
+
+	cout <<"Time: " << (double)(cCube.clkFinish-cCube.clkStart)/CLOCKS_PER_SEC << endl;
+
     exit(0);
 
 }

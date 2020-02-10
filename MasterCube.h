@@ -22,7 +22,10 @@ class Cube
 {
 
 public:
-		
+
+
+	clock_t clkStart;
+	clock_t clkFinish;		
 
 	int X(int);
 	int Y(int);
