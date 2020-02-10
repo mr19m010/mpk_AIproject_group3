@@ -70,7 +70,7 @@ void Cube::FillQuestion(){
         }
 
    // cout << "Pos after FillQuestion: ";
-    PrintVector(Pos);
+    //PrintVector(Pos);
 
     PrioCnt+=TmpPrioCnt;
     // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)    
@@ -94,7 +94,7 @@ void Cube::AdjustQuestion(){
     if(feedcnt!=-1){
         if(feedcntOld<feedcnt){ // we hit something good
             cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=0;
-            cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<< " - Hit!"<<endl;
+            //cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<< " - Hit!"<<endl;
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"
             HitCnt++;
@@ -128,13 +128,11 @@ void Cube::FindPosInPrio(int facePos){
 }
 
 void Cube::FindSingleColor(int facePos){
-   
-    cout << "Qcnt am Anfang ist:  " << Qcnt << endl;
-    if(cube[X(facePos)][Y(facePos)][Z(facePos)]!=9)  return;
-    //cout<<"Farbe bereits bekannt."<<endl;
-        // return if we know color already
-    
-      cout << "Qcnt nochmal ist:  " << Qcnt << endl;
+    if(cube[X(facePos)][Y(facePos)][Z(facePos)]!=9) {
+        //cout<<"Farbe bereits bekannt."<<endl;
+        return; // return if we know color already
+    }
+
     FindPosInPrio(facePos);
     cout << "lets go" <<endl;
     FillQuestion();
@@ -163,7 +161,6 @@ void Cube::FindSingleColor(int facePos){
                 cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
                 //cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
                 //PrintVector(feedbackVector);
-                print();
 
                 return;
             } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
@@ -533,7 +530,7 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
 
     for(int i=0; i<moveSingle.size();i++)
     {
-        cout << endl << "MoveSingle = " << moveSingle[i] << endl;
+        //cout << endl << "MoveSingle = " << moveSingle[i] << endl;
         copy(moveSingle[i].begin(), moveSingle[i].end(), back_inserter(moveCommandsChar));
     }
 
@@ -930,8 +927,8 @@ void Cube::StartServer()
             int j=-1; //-1 so we can do j++ always at the start
             moveSingle.clear();         
 
-           /*cout << "moveCommandsChar= "; // printing the transmitted Chars
-            for(int i=0; i<moveCommandsChar.size();i++)
+           // cout << "moveCommandsChar= "; // printing the transmitted Chars
+            /*for(int i=0; i<moveCommandsChar.size();i++)
             {
                 cout << moveCommandsChar[i];
             }
@@ -949,8 +946,8 @@ void Cube::StartServer()
                 }
             }
 
-            /*cout << "moveSingle[i]: "; //printing the rebuild commands from the vector
-            for(int i=0; i<moveSingle.size();i++)
+            //cout << "moveSingle[i]: "; //printing the rebuild commands from the vector
+            /*for(int i=0; i<moveSingle.size();i++)
             {
                 cout << moveSingle[i] << endl;
             }*/
