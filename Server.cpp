@@ -5,22 +5,38 @@ using namespace std;
 
 int main()
 {
-	cout<< "main from server" << endl;
+	//cout<< "main from server" << endl;
 	Cube myCube;
-	cout<< "done mycube erstellen" << endl;
+	myCube.SetServer();
+	myCube.scramble();
+	//cout<< "done mycube erstellen" << endl;
+	myCube.print();
 
 	myCube.StartServer();		// Server starten
-	cout<< "done startserver" << endl;
-	myCube.HandleTCPClient();	// Client abfragen
-	cout<< "done handle tcp client" << endl;
-	//myCube.GiveFeedback();
-	
-	myCube.print();
-    myCube.scramble();
-    myCube.print();
-	myCube.GiveFeedback();
-	cout<< "done give GiveFeedback" << endl;
-	myCube.CloseSocket();
-	cout << "socket closed " << endl;
+	//cout<< "done startserver" << endl;
 
+
+
+	while(myCube.StopServer()==false){
+
+		myCube.HandleTCPClient();	// Client abfragen
+		//cout<< "done handle tcp client" << endl;
+		//myCube.GiveFeedback();
+		
+		//myCube.print();
+
+		
+	    
+	    //myCube.print();
+		
+		// Die Funktion GiveFeedback wird in der Funktion HandleTCPClient aufgerufen
+		//myCube.GiveFeedback();
+		//cout<< "done give GiveFeedback" << endl;
+	}
+
+	myCube.print();
+
+		myCube.CloseSocket();
+		//cout << "socket closed " << endl;
 }
+

@@ -22,8 +22,14 @@ class Cube
 {
 
 public:
-	string moves = "";	// saves a list of performed moves
-	
+
+
+	clock_t clkStart;
+	clock_t clkFinish;
+	clock_t clkRestart=0.5*CLOCKS_PER_SEC;		
+	clock_t clkStartAll;
+	bool restart = 0;
+	int restartCnt = 0;
 
 	int X(int);
 	int Y(int);
@@ -33,10 +39,12 @@ public:
 	void ReadFeedback();
 	void FillQuestion();
 	void AdjustQuestion();
+	void FindSingleColor(int);
+	void FindPosInPrio(int);
 	void TopCrossQuestion();
-	void TopCornerQuestion();
-	void MiddleQuestion();
-	void BottomQuestion();
+	void TopCornersQuestion();
+	void MiddleLayerQuestion();
+	void BottomLayerQuestion();
 
 	void ConnectToServer();
 
@@ -46,15 +54,15 @@ public:
 
 	void GenerateTransmissionString();
 
-	void SendQuestion();
+	void SendQuestion(bool bSendQuestion);
 
-	void ReceiveAnswer();
+	void ReceiveAnswer(bool bGetFeedback);
 
 	void CloseConnection();
 
 	void CloseSocket();
 	
-	int getN();
+	void getN();
 
 	void clearCube();
 
@@ -65,12 +73,22 @@ bool DetectChange(int number);
 
 void SendMoveCommand(bool sendVector);
 
+void transmitData(bool bSendQuestion, bool bSendMoveCommand);
+
+void SetClient();
+void GetAcknowledge();
+
 // Server
 	void StartServer();
 
 	void HandleTCPClient();
 
 	void GiveFeedback();
+
+	void ExecuteMoveCommands();
+	bool StopServer();
+	void SetServer();
+	void SendAcknowledge();
 
 
 // CubeSolver-Stuff
@@ -132,6 +150,8 @@ void SendMoveCommand(bool sendVector);
 void ChangeArray();
 
 private:
+	string moves = "";	// saves a list of performed moves
+	vector <string> moveSingle;
 	int n;
 	int question[6][3][3];
 	int sock;
@@ -143,7 +163,7 @@ private:
   int feedcntOld=0;
   int Qcnt=0; // Question Position Counter
   int HitCnt=0;
-  vector <int> FAKEfeedbackVector;
+  //vector <int> FAKEfeedbackVector;
 
 
   // Client
@@ -152,8 +172,9 @@ private:
   vector<int> Col; 
   vector<int> feedbackVector;
   //vector<char> moveCommandsChar;
-  vector<string> moveCommandsString;
-  
+  //vector<string> moveCommandsString;
+	bool bClientActive=false;
+  bool bServerReady=false;
 
   int testClient=34;
   
@@ -163,8 +184,10 @@ private:
   int serverArray[6][3][3];
   vector<int> positionVectorServer; 
   vector<int> colorVectorServer; 
-  int testServer=3;
+  //int testServer=3;
   int messageSize=0;
+  bool stopServer=false;
+  bool bServerActive=false;
   
 
   int servSock;                    /* Socket descriptor for server */
