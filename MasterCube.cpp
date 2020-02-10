@@ -1888,7 +1888,9 @@ void Cube::findNextTopCorner(int & s, int & p) //locates the next corner that is
 //updates pos and side in solveTopCorners() to hold the side and position of the yellow sticker
 {
     for (s = 1; s < 5; s++)
-    {
+    {   
+        FindSingleColor(s*100+20);
+        FindSingleColor(s*100+22);
         if (cube[s][2][0] == 0)
         {
             p = 1;
@@ -1900,6 +1902,9 @@ void Cube::findNextTopCorner(int & s, int & p) //locates the next corner that is
             return;
         }
     }
+    FindSingleColor(500);
+    FindSingleColor(502);
+    FindSingleColor(522);
     if (cube[5][0][0] == 0)
     {
         p = 2;
