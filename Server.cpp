@@ -23,7 +23,7 @@ int main()
 		//cout<< "done handle tcp client" << endl;
 		//myCube.GiveFeedback();
 		
-		//myCube.print();
+		myCube.print();
 
 		
 	    

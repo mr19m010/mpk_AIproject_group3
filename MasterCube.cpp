@@ -70,12 +70,14 @@ void Cube::FillQuestion(){
         }
 
    // cout << "Pos after FillQuestion: ";
-    //PrintVector(Pos);
+    PrintVector(Pos);
 
     PrioCnt+=TmpPrioCnt;
     // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)    
     
     transmitData(true,false); // Parameter 1 -> Question+Feedback; Parameter 2 -> MoveCommand
+    
+    cout << "Its me";
     ReadFeedback();
     feedcntOld=feedcnt;
     Col[Qcnt]=0; // Write Color = "Yellow"
@@ -92,7 +94,7 @@ void Cube::AdjustQuestion(){
     if(feedcnt!=-1){
         if(feedcntOld<feedcnt){ // we hit something good
             cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=0;
-            //cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<< " - Hit!"<<endl;
+            cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<< " - Hit!"<<endl;
             Qcnt++;
             Col[Qcnt]=0; // Write Color = "Yellow"
             HitCnt++;
@@ -116,7 +118,7 @@ void Cube::AdjustQuestion(){
     }
 }
 void Cube::FindPosInPrio(int facePos){
-    for(int i=0; i<sizeof(Prio)/sizeof(Prio[0]); ++i){
+    for(int i=0; i<(sizeof(Prio)/sizeof(Prio[0])); ++i){
         if(Prio[i]==facePos){
             PrioCnt=i;
             //cout << "PrioCnt: "<<PrioCnt<<endl;
@@ -126,15 +128,19 @@ void Cube::FindPosInPrio(int facePos){
 }
 
 void Cube::FindSingleColor(int facePos){
-    if(cube[X(facePos)][Y(facePos)][Z(facePos)]!=9) {
-        //cout<<"Farbe bereits bekannt."<<endl;
-        return; // return if we know color already
-    }
-
+   
+    cout << "Qcnt am Anfang ist:  " << Qcnt << endl;
+    if(cube[X(facePos)][Y(facePos)][Z(facePos)]!=9)  return;
+    //cout<<"Farbe bereits bekannt."<<endl;
+        // return if we know color already
+    
+      cout << "Qcnt nochmal ist:  " << Qcnt << endl;
     FindPosInPrio(facePos);
+    cout << "lets go" <<endl;
     FillQuestion();
     //cout << "im in FindSingleColor and have filled my Pos, which is: ";
-    //PrintVector(Pos);
+    PrintVector(Pos);
+    cout << "HÄÄÄÄÄÄÄÄÄÄÄ?";
 
     while(1){
         transmitData(true,false);
@@ -149,13 +155,15 @@ void Cube::FindSingleColor(int facePos){
                 //cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
                 //PrintVector(feedbackVector);
 
+                print();
+
                 return;
             }else if(feedcntOld>feedcnt){
                // cout<<"feedback kleiner - Col[Qcnt] = "<<Col[Qcnt]<< " should be 0, but we wrote 5 because we know its white"<<endl;
                 cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]=5; // Stuff is white - we save that for later
                 //cout << "Feedback groesser, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<<endl;
                 //PrintVector(feedbackVector);
-
+                print();
 
                 return;
             } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
@@ -164,17 +172,18 @@ void Cube::FindSingleColor(int facePos){
                 if(Col[Qcnt]<5){
                     Col[Qcnt]++; // Write next Color"
                     //cout << "DIE JETZIGE FARBE IST: " << Col[Qcnt] << endl;
+                    //print();
                 }else {
                     cout << "Error - FindSingleColor: We looped through all colors and found nothing."<<endl;
                 }    
             }
             feedcntOld=feedcnt;
-            /*if(Qcnt>n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
+            if(Qcnt>n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
                 FillQuestion();
-            }*/
+            }
         }else { // this is in case there is an error
             //do we need to do anything, if we didnt get a new feedbackvector? Send Question again?
-            transmitData(true,false);
+            //transmitData(true,false);
         }
     }
 }
@@ -524,12 +533,12 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
 
     for(int i=0; i<moveSingle.size();i++)
     {
-        //cout << endl << "MoveSingle = " << moveSingle[i] << endl;
+        cout << endl << "MoveSingle = " << moveSingle[i] << endl;
         copy(moveSingle[i].begin(), moveSingle[i].end(), back_inserter(moveCommandsChar));
     }
 
     //printVector(moveSingle);
-    /*for(int i=0; i<moveCommandsChar.size();i++)exe
+    /*for(int i=0; i<moveCommandsChar.size();i++)
     {
         cout << moveCommandsChar[i] << endl;
     }*/
@@ -919,10 +928,10 @@ void Cube::StartServer()
 
             int i=0;
             int j=-1; //-1 so we can do j++ always at the start
-            moveSingle.clear();        
+            moveSingle.clear();         
 
-           // cout << "moveCommandsChar= "; // printing the transmitted Chars
-            /*for(int i=0; i<moveCommandsChar.size();i++)
+           /*cout << "moveCommandsChar= "; // printing the transmitted Chars
+            for(int i=0; i<moveCommandsChar.size();i++)
             {
                 cout << moveCommandsChar[i];
             }
@@ -940,14 +949,15 @@ void Cube::StartServer()
                 }
             }
 
-            //cout << "moveSingle[i]: "; //printing the rebuild commands from the vector
-            /*for(int i=0; i<moveSingle.size();i++)
+            /*cout << "moveSingle[i]: "; //printing the rebuild commands from the vector
+            for(int i=0; i<moveSingle.size();i++)
             {
                 cout << moveSingle[i] << endl;
             }*/
 
             ExecuteMoveCommands();
             //SendAcknowledge();
+           
             
         }
 
@@ -1972,13 +1982,20 @@ int Cube::findBottomMatch(int color)
         {
             if (i % 2 == 0)
             {
+                //HIER FEHLT VIELLEICHT NOCH WAS -> FindSingleColor()
+                temp=500+(abs(2-i)*10)+1;
+                FindSingleColor(temp);
+
                 if (cube[5][abs(2 - i)][1] != 5)
                 {
                     return i;
                 }
             }
             else
-            {
+            {   //HIER AUCH
+                temp=500+(abs(2-i)*10)+(i-1);
+                FindSingleColor(temp);
+
                 if (cube[5][abs(2 - i)][i - 1] != 5)
                 {
                     return i;
@@ -2391,7 +2408,8 @@ int Cube::numCorrectCorners()
 }
 
 void Cube::getCorner(int num, int corners[])
-{
+{   
+    cout << "HELP!";
     if (num == 0)
     {
         FindSingleColor(122);
@@ -2472,6 +2490,14 @@ int Cube::numEdgesInCorrectPos()
     //Note positions are determined by what side they match with, 1 - 4
     //Return 5 if all are in position
 
+    FindSingleColor(510);
+    FindSingleColor(121);
+    FindSingleColor(501);
+    FindSingleColor(221);
+    FindSingleColor(512);
+    FindSingleColor(321);
+    FindSingleColor(521);
+    FindSingleColor(421);
     int edges[4][2] = { { cube[5][1][0], cube[1][2][1] }, { cube[5][0][1], cube[2][2][1] }, { cube[5][1][2], cube[3][2][1] }, { cube[5][2][1], cube[4][2][1] } };
 
     int correctPos = -1;
@@ -2729,8 +2755,12 @@ int Cube::cornerOrientation()
     int numCorrect = 0;
     int wrongPosition = 0;
 
+    /*FindSingleColor(500);
+    FindSingleColor(502);
+    FindSingleColor(522);
+    FindSingleColor(520);*/
     int corners[4] = { cube[5][0][0], cube[5][0][2], cube[5][2][2], cube[5][2][0] };
-
+   
     for (int i = 0; i < 4; i++)
     {
         if (corners[i] == 5)
@@ -2971,6 +3001,10 @@ void Cube::twoCornerRotate(int face, bool goForward)
 
 void Cube::correctBottomEdges()
 {
+    /*FindSingleColor(510);
+    FindSingleColor(501);
+    FindSingleColor(512);
+    FindSingleColor(521);*/
     int edges[4] = { cube[5][1][0], cube[5][0][1], cube[5][1][2], cube[5][2][1] };
 
     bool isTogether = false;

@@ -55,9 +55,9 @@ int main()
 	cout << " ##################### solveTopCorner #############"<<endl;
 	cCube.solveTopCorners();
 	cCube.print();
-	//cout << " ##################### MiddleLayerQuestion #############"<<endl;
-	//cCube.MiddleLayerQuestion();
-	//cCube.print();
+	/*cout << " ##################### MiddleLayerQuestion #############"<<endl;
+	cCube.MiddleLayerQuestion();
+	cCube.print();*/
 	cout << " ##################### solveMiddleLayer #############"<<endl;
 	cCube.solveMiddleLayer();
 	cCube.print();

@@ -164,7 +164,7 @@ private:
   vector<int> Pos; 
   vector<int> Col; 
   vector<int> feedbackVector;
-  vector<char> moveCommandsChar;
+  //vector<char> moveCommandsChar;
   //vector<string> moveCommandsString;
 	bool bClientActive=false;
   bool bServerReady=false;
