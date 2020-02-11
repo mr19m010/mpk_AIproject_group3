@@ -1,0 +1,48 @@
+#makefile.am -> .am wird für aufruf $make weggelassen!
+#$make -n for testing (shows actions without performing)
+
+#bin = program name "Zieldatei"-> target
+#bin = prog1
+
+#objs = source file -> depending obj.
+#objs = client.o server.o masterCube.o
+
+#compiler commands
+#cc = g++
+
+#compiler flags
+#cflags = -o
+
+#linker flags
+#ldflags = -s
+
+#cpp preprocessor flags
+#cppflags=-Wall
+
+
+#First Target -> Only this will be executed! The other rules need to
+#on the first rule/target.
+#$(bin): $(objs)
+#	$(cc) $(ldflags) -o $(bin) $(objs)
+prog1: client.o server.o masterCube.o main.o
+	g++ -o prog1 client.o server.o masterCube.o main.o
+
+main.o: main.cpp masterCube.h
+	g++ -o main.cpp -c masterCube.cpp
+
+client.o: client.cpp masterCube.h
+	g++ -o client.o -c masterCube.cpp
+
+server.o: server.cpp masterCube.h
+	g++ -o server.o -c masterCube.cpp
+
+masterCube.o: masterCube.cpp masterCube.h
+	g++ -o masterCube.o -c masterCube.cpp
+
+clean:
+	rm -f prog1 client.o server.o masterCube.o main.o
+
+#old sh file
+#g++ -g -o server server.cpp masterCube.cpp
+#g++ -g -o client client.cpp masterCube.cpp
+#new: #g++ -g -o main main.cpp masterCube.cpp
