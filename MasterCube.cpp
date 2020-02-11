@@ -283,9 +283,10 @@ void Cube::PrintVector(vector <int> &v){
     cout << endl;
 }
 
-void Cube::ConnectToServer()
+bool Cube::ConnectToServer()
 {
 	struct sockaddr_in echoServAddr; /* Echo server address */
+    int connectionAttemptCounter=1;
 
 	//cout << "Connecting to server"  << endl;
 
@@ -303,8 +304,28 @@ void Cube::ConnectToServer()
     echoServAddr.sin_port        = htons(10000); /* Server port */
 
     /* Establish the connection to the echo server */
-    if (connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
-        cout << "Error - Verbindung mit Server konnte nicht hergestellt werden." << endl;
+    //if (connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
+    //    cout << "Error - Verbindung mit Server konnte nicht hergestellt werden." << endl;
+    do{
+
+        
+
+        if(connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0){
+            cout << "Verbindungsversuch Nummer " << connectionAttemptCounter << "/3 wird gestartet.  ";
+            WaitTime(3);
+            connectionAttemptCounter++;
+             
+            cout << endl;
+        }
+        else
+        {
+            cout << endl;
+            return true;
+        }
+        
+    }while(connectionAttemptCounter<=3);
+    return false;
+
 
 }
 
@@ -565,6 +586,19 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
     
 }
 
+void Cube::WaitTime(int waitTime){
+    clock_t startTime=clock();
+    int counter=0;
+    cout << "Wait for " << waitTime << " seconds " << flush;
+    while(counter<waitTime){
+        startTime=clock();
+        while((int)((double)(clock()-startTime)/CLOCKS_PER_SEC) < 1){}
+        cout << ". " << flush;
+        counter++;
+    }
+    //cout << "Let's continue." << endl;
+}
+
 void Cube::GiveFeedback()
 {
     /*
@@ -780,10 +814,28 @@ void Cube::GiveFeedback()
 
     //cout << "AnswerArray = " << answerArray.size() << endl;
 
+    // CM: Ich prüfe an dieser Stelle ob der Würfel bereits gelöst ist
+    // sollte der Würfel gelöst sein wird kein Feedback auf die Frage gegeben,
+    // anstatt dessen werden nur 9ner gesendet. => ACHTUNG NOCH NICHT PROGRAMMIERT
+
     if (send(clntSock, &answerArray[0], answerArray.size()*sizeof(int), 0) < 0)
         cout << "ERROR - Feedback konnte nicht gesendet werden." << endl;
 
 
+}
+
+bool Cube::CheckCubeState(){
+    for(int side=5; side>=0; side--){
+        for(int row=2; row>=0; row--){
+            for(int col=2; col>=0; col--){
+                if(cube[side][row][col]!=solved_cube[side][row][col]){
+                    return false;
+                }
+            }
+        }
+    }
+    stopServer=true;
+    return true;
 }
 
 void Cube::GetAcknowledge()

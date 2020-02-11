@@ -44,7 +44,11 @@ int main()
 	//cout << "Client Cube wurde erstellt" << endl;
 	//cCube.ResetQuestion();
 	//cout << "Test Vektor erstellt" << endl;
-	cCube.ConnectToServer(); // Hier wird die Verbindung zum Server hergestellt
+	if (cCube.ConnectToServer()==false) // Hier wird die Verbindung zum Server hergestellt
+	{
+		cout << "Connection to server failed" << endl;
+		return -1;
+	}
 	cCube.getN();
 	while(1){
 		if(cCube.restart==1){
