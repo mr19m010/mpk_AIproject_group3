@@ -4,5 +4,7 @@ client.o
 main
 main.o
 
+masterCube.o
+
 server
 server.o

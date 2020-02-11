@@ -2,47 +2,39 @@
 #$make -n for testing (shows actions without performing)
 
 #bin = program name "Zieldatei"-> target
-#bin = prog1
+bin = prog2
+
+#srcs = all necessary files -> relative path to .cpp file
+srcs = ../src/main.cpp\
+			../src/client.cpp\
+			../src/masterCube.cpp\
+			../src/server.cpp\
 
 #objs = source file -> depending obj.
-#objs = client.o server.o masterCube.o
+#alt:objs = client.o server.o masterCube.o main.o
+objs = $(srcs:.cpp=.o)
 
 #compiler commands
-#cc = g++
+cc = g++
 
 #compiler flags
-#cflags = -o
+#-g = adds debugging information to the executable file
+cflags = -o
 
 #linker flags
-#ldflags = -s
+ldflags = -s
 
 #cpp preprocessor flags
-#cppflags=-Wall
+#-wall = turns on most, but not all, compiler warnings
+cppflags=-Wall
 
 
-#First Target -> Only this will be executed! The other rules need to
-#on the first rule/target.
-#$(bin): $(objs)
-#	$(cc) $(ldflags) -o $(bin) $(objs)
-prog1: client.o server.o masterCube.o main.o
-	g++ -o prog1 client.o server.o masterCube.o main.o
 
-main.o: main.cpp masterCube.h
-	g++ -o main.cpp -c masterCube.cpp
+############################
+#### First Target: #########
 
-client.o: client.cpp masterCube.h
-	g++ -o client.o -c masterCube.cpp
 
-server.o: server.cpp masterCube.h
-	g++ -o server.o -c masterCube.cpp
 
-masterCube.o: masterCube.cpp masterCube.h
-	g++ -o masterCube.o -c masterCube.cpp
-
+#### Clean Target: #########
 clean:
-	rm -f prog1 client.o server.o masterCube.o main.o
-
-#old sh file
-#g++ -g -o server server.cpp masterCube.cpp
-#g++ -g -o client client.cpp masterCube.cpp
-#new: #g++ -g -o main main.cpp masterCube.cpp
+	rm -f $(bin) $(objs)
