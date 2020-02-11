@@ -3,7 +3,7 @@
 
 using namespace std;
 
-int main()
+int mainClient()
 {
 	Cube cCube; // Client-Cube
 	cCube.clkStartAll = clock();

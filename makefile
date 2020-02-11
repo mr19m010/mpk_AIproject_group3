@@ -9,10 +9,10 @@ VPATH = src
 bin = prog2
 
 #srcs = all necessary files -> relative path to .cpp file
-srcs = ../src/main.cpp\
-			../src/client.cpp\
-			../src/masterCube.cpp\
-			../src/server.cpp\
+srcs = src/main.cpp\
+			src/client.cpp\
+			src/masterCube.cpp\
+			src/server.cpp\
 
 #objs = source file -> depending obj.
 #alt:objs = client.o server.o masterCube.o main.o
