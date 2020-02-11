@@ -1,4 +1,4 @@
-#include "MasterCube.h"
+#include "masterCube.h"
 #include <iostream>
 
 using namespace std;
@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
                     cCube.clkStart = clock();
                     cout << " ##################### RESTART #############"<<endl;
                     cCube.restartCnt++;
-                }	
+                }
                 cCube.clearCube();
                 cCube.print();
                 //cout << " ##################### TopCrossQuestion #############"<<endl;
@@ -72,8 +72,7 @@ int main(int argc, char* argv[])
             cout << "RestartCnt: " << cCube.restartCnt << endl;
             cout <<"TimeAll: " << (double)(cCube.clkFinish-cCube.clkStartAll)/CLOCKS_PER_SEC << endl;
             exit(0);
-            
-		}
-	}	
-}
 
+		}
+	}
+}

@@ -1,4 +1,4 @@
-#include "MasterCube.h"
+#include "masterCube.h"
 #include <iostream>
 
 using namespace std;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
 		myCube.HandleTCPClient();	// Client abfragen
 		//cout<< "done handle tcp client" << endl;
 		//myCube.GiveFeedback();
-		
+
 		//myCube.print();
 
 		/*if(myCube.CheckCubeState()==true)
@@ -44,18 +44,17 @@ int main(int argc, char* argv[])
 		{
 			cout << endl << "Cube NOT solved!" << endl;
 		}*/
-	    
+
 	    //myCube.print();
-		
+
 		// Die Funktion GiveFeedback wird in der Funktion HandleTCPClient aufgerufen
 		//myCube.GiveFeedback();
 		//cout<< "done give GiveFeedback" << endl;
 	}
-	
+
 
 	myCube.print();
 
 		myCube.CloseSocket();
 		//cout << "socket closed " << endl;
 }
-

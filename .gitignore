@@ -1,5 +1,8 @@
 client
-
-server
+client.o
 
 main
+main.o
+
+server
+server.o

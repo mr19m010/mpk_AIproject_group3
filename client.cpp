@@ -1,19 +1,14 @@
-#include "MasterCube.h"
+#include "masterCube.h"
 #include <iostream>
 
 using namespace std;
 
 int main()
 {
-	
-	
-
-
 	Cube cCube; // Client-Cube
 	cCube.clkStartAll = clock();
 	cCube.clkStart = clock();
 	cCube.SetClient();
-
 
 	/*
 	cCube.print();
@@ -23,7 +18,7 @@ int main()
     cCube.scramble();
 	cCube.print();
 
-	
+
 
 	cout << "Emptymoves: " << cCube.moves << endl;
 
@@ -34,13 +29,13 @@ int main()
 
 	cCube.print();
 
-	
+
 	cCube.getN();
 	cCube.TopCrossQuestion();
 	*/
 
 	//cCube.GenerateTransmissionString();
-	
+
 	//cout << "Client Cube wurde erstellt" << endl;
 	//cCube.ResetQuestion();
 	//cout << "Test Vektor erstellt" << endl;
@@ -57,7 +52,7 @@ int main()
 			cCube.clkStart = clock();
 			cout << " ##################### RESTART #############"<<endl;
 			cCube.restartCnt++;
-		}	
+		}
 		cCube.clearCube();
 		cCube.print();
 		//cout << " ##################### TopCrossQuestion #############"<<endl;
@@ -89,11 +84,10 @@ int main()
 	}
 
   	//cout << "Verbindung mit Server hergestellt" << endl;
-	
+
 	cCube.CloseConnection();
 	cCube.clkFinish = clock();
 	cout << "RestartCnt: " << cCube.restartCnt << endl;
 	cout <<"TimeAll: " << (double)(cCube.clkFinish-cCube.clkStartAll)/CLOCKS_PER_SEC << endl;
     exit(0);
-
 }

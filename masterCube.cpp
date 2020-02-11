@@ -1,5 +1,5 @@
 
-#include "MasterCube.h"
+#include "masterCube.h"
 #include <iostream>
 
 using namespace std;
@@ -24,7 +24,7 @@ void Cube::getN()
     }
 }
 
-void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == nothing OK 
+void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == nothing OK
     //cout << "IM IN ReadFeedback"<< endl;
     feedcnt=0;
     for(int i = 0;i<n;i++){
@@ -47,25 +47,25 @@ void Cube::ReadFeedback(){ // 1 == color ok; 0 == color && position OK; 2 == not
 void Cube::FillQuestion(){
     //cout << "IM IN FillQuestion"<< endl;
     int TmpPrioCnt=0;
-    int k=0;   
+    int k=0;
     Qcnt=0;
     Pos.clear();
     Col.clear();
-    for(int i=PrioCnt;i<n+PrioCnt;i++){        
-             
+    for(int i=PrioCnt;i<n+PrioCnt;i++){
+
 
             if(i>=54){ // this is for filling the Question, when there is no more stuff in the Priolist -> we fill from start again
                 Pos.push_back(Prio[k++]);           // Fill Question with Prio List from start
-                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")    
+                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")
             }else {
                 Pos.push_back(Prio[i]);             // Fill Question with Prio List
-                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")    
-                TmpPrioCnt++; 
+                Col.push_back(5);                   // Write Color = 5 ("nicht yellow")
+                TmpPrioCnt++;
             }
 
 
-             
-            //cout << "Pos: " <<Pos[i] << " Col: " <<Col[i]<<endl;    
+
+            //cout << "Pos: " <<Pos[i] << " Col: " <<Col[i]<<endl;
             //cout << "Prio: " << Prio[i] << endl;
         }
 
@@ -73,10 +73,10 @@ void Cube::FillQuestion(){
     //PrintVector(Pos);
 
     PrioCnt+=TmpPrioCnt;
-    // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)    
-    
+    // We need this to generate feedcntOld and to start with a meaningful Question in AdjustQuestion (where a Pos gets asked "0"?)
+
     transmitData(true,false); // Parameter 1 -> Question+Feedback; Parameter 2 -> MoveCommand
-    
+
     //cout << "Its me";
     ReadFeedback();
     feedcntOld=feedcnt;
@@ -86,7 +86,7 @@ void Cube::FillQuestion(){
     //PrintVector(Pos);
     //PrintVector(Col);
 
-    } 
+    }
 
 void Cube::AdjustQuestion(){
     //cout << "IM IN AdjustQuestion"<< endl;
@@ -106,7 +106,7 @@ void Cube::AdjustQuestion(){
         } else if(feedcntOld==feedcnt){ // no hit, not yellow or white
             //cout << "Feedback gleich, Qcnt: " << Qcnt << " Cube"<<X(Pos[Qcnt])<<Y(Pos[Qcnt])<<Z(Pos[Qcnt])<<"="<<cube[X(Pos[Qcnt])][Y(Pos[Qcnt])][Z(Pos[Qcnt])]<< endl;
             Qcnt++;
-            Col[Qcnt]=0; // Write Color = "Yellow"            
+            Col[Qcnt]=0; // Write Color = "Yellow"
         }
         feedcntOld=feedcnt;
         if(Qcnt>=n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
@@ -123,8 +123,8 @@ void Cube::FindPosInPrio(int facePos){
             PrioCnt=i;
             //cout << "PrioCnt: "<<PrioCnt<<endl;
             break;
-        } 
-    }   
+        }
+    }
 }
 
 void Cube::FindSingleColor(int facePos){
@@ -134,11 +134,11 @@ void Cube::FindSingleColor(int facePos){
     }
 
     FindPosInPrio(facePos);
-    
+
     FillQuestion();
     //cout << "im in FindSingleColor and have filled my Pos, which is: ";
     //PrintVector(Pos);
-   
+
     while(1){
         transmitData(true,false);
         ReadFeedback();
@@ -171,7 +171,7 @@ void Cube::FindSingleColor(int facePos){
                     //print();
                 }else {
                     cout << "Error - FindSingleColor: We looped through all colors and found nothing."<<endl;
-                }    
+                }
             }
             feedcntOld=feedcnt;
             if(Qcnt>n){         // if the Question runs out of new Positions to ask, we fill it again with new stuff from the Priolist
@@ -198,7 +198,7 @@ void Cube::TopCrossQuestion(){
 }
 
 void Cube::TopCornersQuestion(){
-    
+
 
 
 
@@ -278,8 +278,8 @@ int Cube::Z(int Pos){
 void Cube::PrintVector(vector <int> &v){
     cout << "PrintVector(): ";
     for(int i=0; i<v.size(); ++i){
-        cout << v[i] << " ";   
-    }   
+        cout << v[i] << " ";
+    }
     cout << endl;
 }
 
@@ -308,13 +308,13 @@ bool Cube::ConnectToServer()
     //    cout << "Error - Verbindung mit Server konnte nicht hergestellt werden." << endl;
     do{
 
-        
+
 
         if(connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0){
             cout << "Verbindungsversuch Nummer " << connectionAttemptCounter << "/3 wird gestartet.  ";
             WaitTime(3);
             connectionAttemptCounter++;
-             
+
             cout << endl;
         }
         else
@@ -322,7 +322,7 @@ bool Cube::ConnectToServer()
             cout << endl;
             return true;
         }
-        
+
     }while(connectionAttemptCounter<=3);
     return false;
 
@@ -380,22 +380,22 @@ void Cube::PrintArray()
                 cout << clientArray[x][y][z] << " ";
                 //cout << z << " ";
                 z++;
-                
+
             }
             else if (cols>=3 && cols<=5)
-            {   
+            {
                 x=((rows)/3)*5/2;
                 cout << clientArray[x][y][z] << " ";
                 //cout << z << " ";
                 z++;
             }
-            
+
         }
         cout << endl;
         y++;
         if (y>2) y=0;
     }
-    
+
 }
 
 void Cube::ChangeArray()
@@ -407,7 +407,7 @@ void Cube::ChangeArray()
             for(int z=2; z>=0; z--)
             {
             receivedArray[x][y][z]*=2;
-            }   
+            }
         }
     }
 }
@@ -467,7 +467,7 @@ void Cube::GenerateTransmissionString() // Diese Funktion dient zum Testen des F
     Pos[28]=312;
     Pos[29]=320;
     Pos[30]=321;
-    
+
     Col.resize(n);
 
 
@@ -495,8 +495,8 @@ void Cube::transmitData(bool bSendQuestion, bool bSendMoveCommand)
     {
         cout << "ERROR -> this should not happen" << endl;
     }
-    
-    
+
+
 }
 
 void Cube::SendQuestion(bool bSendQuestion)
@@ -507,7 +507,7 @@ void Cube::SendQuestion(bool bSendQuestion)
     // damit der Server weiß wieviele Elemente noch folgen
     int transmissionSize=0;
 
-    
+
     if (bSendQuestion==true)
     {
         transmissionSize=Pos.size();
@@ -529,7 +529,7 @@ void Cube::SendQuestion(bool bSendQuestion)
         if (send(sock, &transmissionSize, sizeof(int), 0) < 0)
             cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
     }
-    
+
 }
 
 void Cube::SendMoveCommand(bool bSendMoveCommand)
@@ -559,8 +559,8 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
     {
         cout << moveCommandsChar[i] << endl;
     }*/
-    
-    
+
+
     if (bSendMoveCommand==true)
     {
         transmissionSize=moveCommandsChar.size();
@@ -577,13 +577,13 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
     else
     {
         transmissionSize=0;
-        
+
         if (send(sock, &transmissionSize, sizeof(int), 0) < 0)
             cout << "error - Paketlaenge konnte nicht gesendet werden." << endl;
     }
-    
 
-    
+
+
 }
 
 void Cube::WaitTime(int waitTime){
@@ -616,20 +616,20 @@ void Cube::GiveFeedback()
     //cout << "Paketlänge der Anwort  = " << messageSize << endl;
 
     answerArray.resize(messageSize);
-    randArray.resize(messageSize); 
+    randArray.resize(messageSize);
 
-    srand (time(NULL)); 
+    srand (time(NULL));
 
     int idX[3]={0,0,0};
     int idY[3]={0,0,0};
     int idZ[3]={0,0,0};
-    
-    // Schritt 1   
+
+    // Schritt 1
     for (int i=0; i<positionVectorServer.size(); i++)
     {
         answerArray[i]=0;
         //cout << "-----------------------------"<< endl;
-        
+
         // Hier wird die Positionsinformation auf x y z aufgeteilt
         int x = positionVectorServer[i]/100;
         int y = (positionVectorServer[i]-(x*100))/10;
@@ -638,12 +638,12 @@ void Cube::GiveFeedback()
         // Schritt 2
         if (colorVectorServer[i] == cube[x][y][z])
         {
-            //cout << "OK -> Die Farben stimmen überein." << endl 
+            //cout << "OK -> Die Farben stimmen überein." << endl
             //<< "Jetzt muss nur noch die Position auf ihre Richtigkeit überprüft werden." << endl;
 
             // Schritt 3
             // Prüfen ob Ecke
-            if ((y!=1) & (z!=1)) 
+            if ((y!=1) & (z!=1))
             {
                 // suche ID in ecken array
                 // Hier werden die zugehörigen Nachbarseiten der Ecke gesucht
@@ -652,9 +652,9 @@ void Cube::GiveFeedback()
                 // Schleife 2/3 -> Nachbarseiten der Ecke überprüfen
                 for (int a=7;a>=0;a--){         // a -> Es gibt 8 Ecken
                     for (int b=2;b>=0;b--){     // b -> Eine Ecke besteht aus drei Elementen (Nachbarseiten)
-                        
+
                         // Hier wird überprüft welche Ecke gefragt wurde
-                        if ( (ecken[a][b][0]==x) & (ecken[a][b][1]==y) & (ecken[a][b][2]==z)) 
+                        if ( (ecken[a][b][0]==x) & (ecken[a][b][1]==y) & (ecken[a][b][2]==z))
                         {
                             //cout << "Ecken ID -> " << a << "/" << b << endl;
 
@@ -662,19 +662,19 @@ void Cube::GiveFeedback()
                             idX[0]=ecken[a][0][0];
                             idX[1]=ecken[a][1][0];
                             idX[2]=ecken[a][2][0];
-                            
+
                             idY[0]=ecken[a][0][1];
                             idY[1]=ecken[a][1][1];
                             idY[2]=ecken[a][2][1];
-                            
+
                             idZ[0]=ecken[a][0][2];
                             idZ[1]=ecken[a][1][2];
                             idZ[2]=ecken[a][2][2];
-                            
+
                             //cout << "Nachbar elemente -> "  << idX[0] << idY[0] << idZ[0] << " ; "
                             ///<< idX[1] << idY[1] << idZ[1] <<  " ; "
                             //<< idX[2] << idY[2] << idZ[2]  << endl;
-                            
+
                             // An dieser Stelle werden alle Farben der Ecke auf ihre Richtigkeit überprüft
                             // Schritt 4
                             bool eckeRichtig=true;
@@ -692,7 +692,7 @@ void Cube::GiveFeedback()
                                     //cout << "ECKE RICHTIG"<< endl;
                                     answerArray[i]=1;
                                     randArray[i]=rand();
-                                } 
+                                }
                                 else {
                                     //cout << "ECKE FALSCH"<< endl;
                                     randArray[i]=rand();
@@ -709,7 +709,7 @@ void Cube::GiveFeedback()
                 // suche ID in kanten array
                 for (int a=11;a>=0;a--){
                     for (int b=1;b>=0;b--){
-                        if ( (kanten[a][b][0]==x) & (kanten[a][b][1]==y) & (kanten[a][b][2]==z) ) 
+                        if ( (kanten[a][b][0]==x) & (kanten[a][b][1]==y) & (kanten[a][b][2]==z) )
                         {
                             idX[0]=kanten[a][0][0];
                             idX[1]=kanten[a][1][0];
@@ -729,7 +729,7 @@ void Cube::GiveFeedback()
                             bool kanteRichtig=true;
                             for (int j=1; j>=0; j--)
                             {
-                                if ((cube[idX[j]][idY[j]][idZ[j]] == cube[idX[j]][1][1])) 
+                                if ((cube[idX[j]][idY[j]][idZ[j]] == cube[idX[j]][1][1]))
                                 {
                                     ;
                                 }
@@ -740,7 +740,7 @@ void Cube::GiveFeedback()
                                     //cout << "KANTE RICHTIG"<< endl;
                                     answerArray[i]=1;
                                     randArray[i]=rand();
-                                } 
+                                }
                                 else {
                                     //cout << "KANTE FALSCH"<< endl;
                                     randArray[i]=rand();
@@ -779,7 +779,7 @@ void Cube::GiveFeedback()
 
     int testVar;
     //cin >> testVar;
-    
+
     do{
         switched=false;
         for (int j=(messageSize-1); j>0; j--)
@@ -929,7 +929,7 @@ void Cube::StartServer()
 
     stopServer=true;
 
-    
+
 
     // Empfangen der Länge des Fragepakets
         if ((recvMsgSize = recv(clntSock, &packageSizeQuestion, sizeof(int), 0)) < 0)
@@ -951,12 +951,12 @@ void Cube::StartServer()
 
             if ((recvMsgSize = recv(clntSock, &colorVectorServer[0], colorVectorServer.size()*sizeof(int), 0)) < 0)
                 cout << "ERROR -> Farbvektor konnte nicht empfangen werden" << endl;
-            
+
             //cout << "recvMsgSize" << recvMsgSize << endl;
             //cout << "clntSock" << clntSock << endl;
             //cout << "&colorVectorServer[0]" << &colorVectorServer[0] << endl;
 
-            //cout << "Vektorgröße pos -> " << positionVectorServer.size() << endl; 
+            //cout << "Vektorgröße pos -> " << positionVectorServer.size() << endl;
             //cout << "Vektorgröße color -> " << colorVectorServer.size() << endl;
         }
 
@@ -976,7 +976,7 @@ void Cube::StartServer()
 
             int i=0;
             int j=-1; //-1 so we can do j++ always at the start
-            moveSingle.clear();         
+            moveSingle.clear();
 
            // cout << "moveCommandsChar= "; // printing the transmitted Chars
             /*for(int i=0; i<moveCommandsChar.size();i++)
@@ -985,7 +985,7 @@ void Cube::StartServer()
             }
             cout << endl;*/
 
-            while(i<moveCommandsChar.size()){ 
+            while(i<moveCommandsChar.size()){
                 if(moveCommandsChar[i]=='i' && i!=0){
                     moveSingle[j] += moveCommandsChar[i];
                     i++;
@@ -1005,8 +1005,8 @@ void Cube::StartServer()
 
             ExecuteMoveCommands();
             //SendAcknowledge();
-           
-            
+
+
         }
 
         if (packageSizeQuestion>0)
@@ -1014,7 +1014,7 @@ void Cube::StartServer()
             GiveFeedback();
         }
 
-        
+
 
 
     //close(clntSock);    /* Close client socket */
@@ -1026,7 +1026,7 @@ void Cube::StartServer()
         return stopServer;
     }
 
-  
+
     void Cube::ExecuteMoveCommands()
     {
         //cout << endl << "Execute MoveCommands..." << endl;
@@ -1059,7 +1059,7 @@ void Cube::StartServer()
             else cout << "ERROR -> MoveCommand konnte nicht ausgeführt werden" << endl;
 
            // cout << endl << "MoveCommand = " << moveSingle[i] << endl;
-            
+
         }
     }
 
@@ -1121,7 +1121,7 @@ void Cube::StartServer()
         moveSingle.clear();
         moveSingle.assign(1,"r");
         transmitData(false,true);
-       
+
     }
 
     void Cube::ri()
@@ -1161,11 +1161,11 @@ void Cube::StartServer()
         cube[3][1][2] = old[3][2][1];
         cube[3][2][1] = old[3][1][0];
         cube[3][1][0] = old[3][0][1];
-        
+
         moveSingle.clear();
         moveSingle.assign(1,"ri");
         transmitData(false,true);
-        
+
     }
 
     void Cube::l()
@@ -1205,11 +1205,11 @@ void Cube::StartServer()
         cube[1][2][1] = old[1][1][2];
         cube[1][1][0] = old[1][2][1];
         cube[1][0][1] = old[1][1][0];
-        
+
         moveSingle.clear();
         moveSingle.assign(1,"l");
         transmitData(false,true);
-        
+
     }
 
     void Cube::li()
@@ -1249,11 +1249,11 @@ void Cube::StartServer()
         cube[1][1][2] = old[1][2][1];
         cube[1][2][1] = old[1][1][0];
         cube[1][1][0] = old[1][0][1];
-        
+
         moveSingle.clear();
         moveSingle.assign(1,"li");
         transmitData(false,true);
-        
+
     }
 
     void Cube::u()
@@ -1294,11 +1294,11 @@ void Cube::StartServer()
         cube[0][1][2] = old[0][0][1];
         cube[0][2][1] = old[0][1][2];
         cube[0][1][0] = old[0][2][1];
-        
+
         moveSingle.clear();
         moveSingle.assign(1,"u");
         transmitData(false,true);
-        
+
     }
 
     void Cube::ui()
@@ -1381,7 +1381,7 @@ void Cube::StartServer()
         cube[5][1][2] = old[5][0][1];
         cube[5][2][1] = old[5][1][2];
         cube[5][1][0] = old[5][2][1];
-        
+
         moveSingle.clear();
         moveSingle.assign(1,"d");
         transmitData(false,true);
@@ -1424,7 +1424,7 @@ void Cube::StartServer()
         cube[5][0][1] = old[5][1][2];
         cube[5][1][2] = old[5][2][1];
         cube[5][2][1] = old[5][1][0];
-        
+
         moveSingle.clear();
         moveSingle.assign(1,"di");
         transmitData(false,true);
@@ -1467,7 +1467,7 @@ void Cube::StartServer()
         cube[2][2][1] = old[2][1][2];
         cube[2][1][0] = old[2][2][1];
         cube[2][0][1] = old[2][1][0];
-        
+
         moveSingle.clear();
         moveSingle.assign(1,"f");
         transmitData(false,true);
@@ -1510,7 +1510,7 @@ void Cube::StartServer()
         cube[2][1][2] = old[2][2][1];
         cube[2][2][1] = old[2][1][0];
         cube[2][1][0] = old[2][0][1];
-        
+
         moveSingle.clear();
         moveSingle.assign(1,"fi");
         transmitData(false,true);
@@ -1553,7 +1553,7 @@ void Cube::StartServer()
         cube[4][2][1] = old[4][1][2];
         cube[4][1][0] = old[4][2][1];
         cube[4][0][1] = old[4][1][0];
-        
+
         moveSingle.clear();
         moveSingle.assign(1,"b");
         transmitData(false,true);
@@ -1596,7 +1596,7 @@ void Cube::StartServer()
         cube[4][1][2] = old[4][2][1];
         cube[4][2][1] = old[4][1][0];
         cube[4][1][0] = old[4][0][1];
-        
+
         moveSingle.clear();
         moveSingle.assign(1,"bi");
         transmitData(false,true);
@@ -1732,7 +1732,7 @@ void Cube::StartServer()
             // WE NEED CODE HERE TO FIND OUT THE COLOR OF 121
             FindSingleColor(121);
 
-            int color = cube[1][2][1];            
+            int color = cube[1][2][1];
             for (int a = 1; a < color; a++) //set-up so that the edge goes into the right spot
             {
                 u();
@@ -1940,7 +1940,7 @@ void Cube::findNextTopCorner(int & s, int & p) //locates the next corner that is
 //updates pos and side in solveTopCorners() to hold the side and position of the yellow sticker
 {
     for (s = 1; s < 5; s++)
-    {   
+    {
         FindSingleColor(s*100+20);
         FindSingleColor(s*100+22);
         if (cube[s][2][0] == 0)
@@ -1976,7 +1976,7 @@ void Cube::findNextTopCorner(int & s, int & p) //locates the next corner that is
 }
 
 void Cube::solveMiddleLayer()
-{   
+{
     clkFinish=clock();
     cout << "clkRestart: "<<clkRestart<< " clkFinish-clkStart: " << clkFinish-clkStart << endl;
     if(clkRestart>(clkFinish-clkStart) && restart==0){
@@ -2040,7 +2040,7 @@ void Cube::solveMiddleLayer()
 }
 
 int Cube::findBottomMatch(int color)
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         for (int i = 1; i <= 4; i++)
@@ -2080,7 +2080,7 @@ int Cube::findBottomMatch(int color)
 }
 
 void Cube::placeMiddleEdge(int color, int edgeSide)
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         if (edgeSide - color == 0)
@@ -2126,11 +2126,11 @@ void Cube::placeMiddleEdge(int color, int edgeSide)
 }
 
 void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothing
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         if (color == 1)
-        {   
+        {
             FindSingleColor(510);
             if (cube[5][1][0] == 4 || direction == 1)
             {
@@ -2156,7 +2156,7 @@ void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothin
             }
         }
         else if (color == 2)
-        {   
+        {
             FindSingleColor(501);
             if (cube[5][0][1] == 1 || direction == 1)
             {
@@ -2182,7 +2182,7 @@ void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothin
             }
         }
         else if (color == 3)
-        {   
+        {
             FindSingleColor(512);
             if (cube[5][1][2] == 2 || direction == 1)
             {
@@ -2208,7 +2208,7 @@ void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothin
             }
         }
         else if (color == 4)
-        {   
+        {
             FindSingleColor(521);
             if (cube[5][2][1] == 3 || direction == 1)
             {
@@ -2239,9 +2239,9 @@ void Cube::middleAlgorithm(int color, int direction) //1 - L 2 - R -1 for nothin
 }
 
 void Cube::solveBottomLayer()
-{   
+{
     /*for(int i=0;i<6;i++){
-            
+
         FindSingleColor(i*100);
         FindSingleColor(i*100+1);
         FindSingleColor(i*100+2);
@@ -2254,7 +2254,7 @@ void Cube::solveBottomLayer()
     }*/
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
-    
+
         positionBottomCorners();
         //print();
         positionBottomEdges();
@@ -2269,11 +2269,11 @@ void Cube::solveBottomLayer()
         restart=1;
     }
 
-    
+
 }
 
 void Cube::positionBottomCorners()
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
     //cout << "IN positionBottomCorners" << endl;
@@ -2398,7 +2398,7 @@ void Cube::positionBottomCorners()
 }
 
 void Cube::swapCorners(int face)
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN swapCorners" << endl;
@@ -2457,7 +2457,7 @@ void Cube::swapCorners(int face)
 }
 
 int Cube::numCorrectCorners()
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN numCorrectCorners" << endl;
@@ -2475,7 +2475,7 @@ int Cube::numCorrectCorners()
         int position[4] = { -1, -1, -1, -1 }; //-1 means there is no match, 1 means match
 
         for (int i = 0; i < 4; i++)
-        {   
+        {
 
             getCorner(i, cornerColors);
 
@@ -2535,7 +2535,7 @@ int Cube::numCorrectCorners()
 }
 
 void Cube::getCorner(int num, int corners[])
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
     //cout << "HELP!";
@@ -2561,7 +2561,7 @@ void Cube::getCorner(int num, int corners[])
             corners[2] = cube[5][0][2];
         }
         else if (num == 2)
-        {   
+        {
             FindSingleColor(322);
             FindSingleColor(420);
             FindSingleColor(522);
@@ -2587,7 +2587,7 @@ void Cube::getCorner(int num, int corners[])
 }
 
 void Cube::positionBottomEdges()
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN positionBottomEdges" << endl;
@@ -2624,7 +2624,7 @@ void Cube::positionBottomEdges()
 }
 
 int Cube::numEdgesInCorrectPos()
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN numEdgesInCorrectPos" << endl;
@@ -2750,7 +2750,7 @@ int Cube::numEdgesInCorrectPos()
 }
 
 void Cube::rotateEdges(int face, bool rotClockwise)
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN rotateEdges" << endl;
@@ -2893,7 +2893,7 @@ void Cube::rotateEdges(int face, bool rotClockwise)
 }
 
 void Cube::correctBottomCorners()
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN correctBottomCorners" << endl;
@@ -2913,7 +2913,7 @@ void Cube::correctBottomCorners()
 }
 
 int Cube::cornerOrientation()
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN cornerOrientation" << endl;
@@ -2925,7 +2925,7 @@ int Cube::cornerOrientation()
         FindSingleColor(522);
         FindSingleColor(520);
         int corners[4] = { cube[5][0][0], cube[5][0][2], cube[5][2][2], cube[5][2][0] };
-       
+
         for (int i = 0; i < 4; i++)
         {
             if (corners[i] == 5)
@@ -2950,7 +2950,7 @@ int Cube::cornerOrientation()
 }
 
 int Cube::findBestFace(int cornerNum)
-{   
+{
     clkFinish=clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN findBestFace" << endl;
@@ -3028,7 +3028,7 @@ int Cube::findBestFace(int cornerNum)
 }
 
 void Cube::twoCornerRotate(int face, bool goForward)
-{   
+{
     clkFinish = clock();
     if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN twoCornerRotate" << endl;
@@ -3186,7 +3186,7 @@ void Cube::twoCornerRotate(int face, bool goForward)
 }
 
 void Cube::correctBottomEdges()
-    {   
+    {
         clkFinish=clock();
         if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN correctBottomEdges" << endl;
@@ -3256,7 +3256,7 @@ void Cube::correctBottomEdges()
 }
 
 void Cube::twoEdgeRotate(int face, bool isNextTo)
-    {   
+    {
         clkFinish=clock();
         if(clkRestart>(clkFinish-clkStart) && restart==0){
         //cout << "IN twoEdgeRotate" << endl;
@@ -3612,5 +3612,3 @@ void Cube::scramble()
         }
     }
 }
-
-
