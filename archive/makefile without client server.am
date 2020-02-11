@@ -6,7 +6,7 @@ VPATH = src
 ### Variables: ###########
 
 #bin = program name "Zieldatei"-> target
-bin = prog2
+bin = prog3
 
 #srcs = all necessary files -> relative path to .cpp file
 srcs = src/main.cpp\

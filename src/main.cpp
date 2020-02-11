@@ -72,7 +72,6 @@ int main(int argc, char* argv[])
             cout << "RestartCnt: " << cCube.restartCnt << endl;
             cout <<"TimeAll: " << (double)(cCube.clkFinish-cCube.clkStartAll)/CLOCKS_PER_SEC << endl;
             exit(0);
-
 		}
 	}
 }

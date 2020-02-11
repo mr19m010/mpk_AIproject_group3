@@ -4,6 +4,7 @@
 
 using namespace std;
 
+
 void Cube::SetServer()
 {
     bServerActive=true;
@@ -197,11 +198,8 @@ void Cube::TopCrossQuestion(){
 
 }
 
-void Cube::TopCornersQuestion(){
-
-
-
-
+void Cube::TopCornersQuestion()
+{
     PrioCnt=24; // So our FillQuestion knows to start in the Priolist at the Corners
     FillQuestion();
     while(HitCnt<4){
@@ -210,7 +208,6 @@ void Cube::TopCornersQuestion(){
     }
    // cout << "Found 4 Yellow corners"<<endl;
     HitCnt=0; // Reset HitCnt for next Question-Set
-
 };
 
 

@@ -1,18 +1,17 @@
 #makefile.am -> .am wird für aufruf $make weggelassen!
 #$make -n for testing (shows actions without performing)
 
-VPATH = src
+#extends search path to src/
+VPATH = /src
 
 ### Variables: ###########
 
 #bin = program name "Zieldatei"-> target
-bin = prog2
+bin = masterCubeSolver
 
 #srcs = all necessary files -> relative path to .cpp file
 srcs = src/main.cpp\
-			src/masterCube.cpp\
-			#src/client.cpp\
-			#src/server.cpp\
+			 src/masterCube.cpp\
 
 #objs = source file -> depending obj.
 #alt:objs = client.o server.o masterCube.o main.o
@@ -23,32 +22,25 @@ cc = g++
 
 #compiler flags
 #-g = adds debugging information to the executable file
-cflags = -o
+cflags = -o2 -g
 
 #linker flags
 ldflags = -s
 
 #cpp preprocessor flags
 #-wall = turns on most, but not all, compiler warnings
-cppflags=-Wall
+cppflags = -Wall
 
 ############################
 #### First Target: #########
 $(bin): $(objs)
 	$(cc) $(ldflags) -o $(bin) $(objs)
 
-#client.o: client.cpp masterCube.h
-#	g++ -o client.o -c masterCube.cpp
-
-#server.o: server.cpp masterCube.h
-#	g++ -o server.o -c masterCube.cpp
+main.o: main.cpp masterCube.h
+	$(cc) $(cppflags) -o main.cpp -c masterCube.cpp
 
 masterCube.o: masterCube.cpp masterCube.h
-	g++ -o masterCube.o -c masterCube.cpp
-
-main.o: main.cpp masterCube.h
-		g++ -o main.cpp -c masterCube.cpp
-
+	$(cc) $(cppflags) -o masterCube.o -c masterCube.cpp
 
 #### Clean Target: #########
 clean:
