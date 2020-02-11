@@ -1,8 +1,6 @@
 #makefile.am -> .am wird für aufruf $make weggelassen!
 #$make -n for testing (shows actions without performing)
 
-VPATH = src
-
 ### Variables: ###########
 
 #bin = program name "Zieldatei"-> target
