@@ -4,19 +4,19 @@ Students Project
 
 
 ## Installation:
-
 ```
 1. Clone Folder
 2. Open Folder in Terminal
-
-3. $./server
-4. $ctrl + shift + t
-5. $./client
+3. $ make
+```
+## Run Program:
+```
+1. $ ./masterCubeSolver server
+2. $ ctrl + shift + t
+3. $ ./masterCubeSolver client
 ```
 
-
 ## Layout
-
 ![layoutCube](miscellaneous/layoutCube.png)
 
 Array[6][3][3] -->
@@ -25,12 +25,10 @@ Array[6][3][3] -->
   3. Column range[0-2];
 
 ## How does it work?
-
 1. Enter a number from range [2-53]
 2. Be surprised
 
 ### Bedeutung der Antworten:
-
 - 0: Falsche Farbe(Würfelseite)
 - 1: Korrekte Farbe
 - 2: Korrekte Farbe & Position
