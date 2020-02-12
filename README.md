@@ -17,7 +17,7 @@ AI Students Project: Rubiks Cube with Mastermind Integration
 
 ## Layout
 
-![layMMoutCube](miscellaneous/layoutCube.png)
+![layoutCube](miscellaneous/layoutCube.png)
 
 Array[6][3][3] -->
   1. Cube side range[0-5];
