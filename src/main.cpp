@@ -59,6 +59,14 @@ int SetupClient(){
         cout << " ##################### solveBottomLayer #############"<<endl;
         cCube.solveBottomLayer();
         cCube.print();
+        
+        if(cCube.IsSolved()==true){
+            cout << "Cube is solved" << endl;
+        }
+        else{
+            cout << "Something went wrong. Cube is not solved." << endl;
+        }
+
         cCube.clkFinish = clock();
         if(cCube.restart==0){
             cout <<"Time: " << (double)(cCube.clkFinish-cCube.clkStart)/CLOCKS_PER_SEC << endl;

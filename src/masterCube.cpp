@@ -307,9 +307,6 @@ bool Cube::ConnectToServer()
     //if (connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
     //    cout << "Error - Verbindung mit Server konnte nicht hergestellt werden." << endl;
     do{
-
-        
-
         if(connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0){
             cout << "Versuch " << connectionAttemptCounter << "/3  ";
             WaitTime(3);
@@ -329,150 +326,22 @@ bool Cube::ConnectToServer()
 
 }
 
-int Cube::LoopArray(int * array)
-{
-	for(int x=5; x>=0; x--)
+bool Cube::IsSolved(){
+    return cubeSolved;
+}
+
+bool Cube::ReceiveCubeState(){
+    int recvMsgSize=0;
+    bool cubeIsSolved=false;
+
+    if ((recvMsgSize = recv(sock, &cubeIsSolved, sizeof(bool), 0)) < 0)
     {
-        for(int y=2; y>=0; y--)
-        {
-            for(int z=2; z>=0; z--)
-            {
-                *(array+(x*6)+(y*3)+z)=0;
-                cout << *(array+(x*6)+(y*3)+z) << " ";
-            }
-            cout << endl;
-        }
-        cout << "-----" << endl;
+        cout << "ERROR -> CubeState konnte nicht empfangen werden." << endl;
+        return false;
     }
-}
-
-bool Cube::DetectChange(int number)
-{
-    bool changed=false;
-
-    if (number!=auxNumber){
-        auxNumber=number;
-        changed=true;
+    else{
+        return cubeIsSolved;
     }
-    else changed=false;
-
-    return changed;
-}
-
-void Cube::PrintArray()
-{
-    int z=0;
-    int y=0;
-    int x=0;
-    for (int rows = 0; rows <= 8; rows++)
-    {
-        for (int cols = 0; cols <=11; cols++)
-        {
-            if (((rows<3 || rows>5) && (cols<3 || cols>5)))
-            {
-                z=0;
-                cout << "# ";
-            }
-            else if (rows>=3 && rows<=5)
-            {
-                x=((cols+3)/3);
-                if (Cube::DetectChange(x)==true) z=0;
-                cout << clientArray[x][y][z] << " ";
-                //cout << z << " ";
-                z++;
-                
-            }
-            else if (cols>=3 && cols<=5)
-            {   
-                x=((rows)/3)*5/2;
-                cout << clientArray[x][y][z] << " ";
-                //cout << z << " ";
-                z++;
-            }
-            
-        }
-        cout << endl;
-        y++;
-        if (y>2) y=0;
-    }
-    
-}
-
-void Cube::ChangeArray()
-{
-    for(int x=5; x>=0; x--)
-    {
-      for(int y=2; y>=0; y--)
-      {
-            for(int z=2; z>=0; z--)
-            {
-            receivedArray[x][y][z]*=2;
-            }   
-        }
-    }
-}
-
-void Cube::ResetQuestion() // Diese Funktion ist ALT und kann gelöscht werden
-{
-    int cntNumber=9;
-	//cout << number << endl;
-    for(int x=5; x>=0; x--)
-    {
-      for(int y=2; y>=0; y--)
-      {
-            for(int z=2; z>=0; z--)
-            {
-				//(question+(x*6)+(y*3)+z)=0;
-            question[x][y][z]=cntNumber--;
-            if (cntNumber<1) cntNumber=9;
-				//cout << question[x][y][z] << " ";
-            }
-			//cout << endl;
-        }
-		//cout << "-----" << endl;
-    }
-}
-
-void Cube::GenerateTransmissionString() // Diese Funktion dient zum Testen des Feedbacks
-{
-    Pos.resize(n);
-    Pos[0]=11;
-    Pos[1]=110;
-    Pos[2]=222;
-    Pos[3]=300;
-    Pos[4]=401;
-    Pos[5]=511;
-    Pos[6]=20;
-    Pos[7]=21;
-    Pos[8]=11;
-    Pos[9]=0;
-    Pos[10]=12;
-    Pos[11]=21;
-    Pos[12]=112;
-    Pos[13]=521;
-    Pos[14]=510;
-    Pos[15]=520;
-    Pos[16]=400;
-    Pos[17]=401;
-    Pos[18]=402;
-    Pos[19]=410;
-    Pos[20]=412;
-    Pos[21]=420;
-    Pos[22]=421;
-    Pos[23]=422;
-    Pos[24]=300;
-    Pos[25]=301;
-    Pos[26]=302;
-    Pos[27]=310;
-    Pos[28]=312;
-    Pos[29]=320;
-    Pos[30]=321;
-    
-    Col.resize(n);
-
-
-    //cout << "Vector size = " << Pos.size()*sizeof(int) << endl;
-    //cout << "Vector capazity = " << Pos.capacity()*sizeof(int) << endl;
 }
 
 void Cube::transmitData(bool bSendQuestion, bool bSendMoveCommand)
@@ -486,6 +355,7 @@ void Cube::transmitData(bool bSendQuestion, bool bSendMoveCommand)
         SendQuestion(bSendQuestion);
         SendMoveCommand(bSendMoveCommand);
         ReceiveAnswer(bSendQuestion);
+        cubeSolved=ReceiveCubeState();        
     }
     else if (bServerActive==true)
     {
@@ -495,7 +365,6 @@ void Cube::transmitData(bool bSendQuestion, bool bSendMoveCommand)
     {
         cout << "ERROR -> this should not happen" << endl;
     }
-    
     
 }
 
@@ -537,30 +406,12 @@ void Cube::SendMoveCommand(bool bSendMoveCommand)
     int transmissionSize =0;
     vector<char> moveCommandsChar;
 
-    //moveSingle.resize(10);
-    /*moveCommandsString[0]="r";
-    moveCommandsString[1]="ri";
-    moveCommandsString[2]="l";
-    moveCommandsString[3]="li";
-    moveCommandsString[4]="d";
-    moveCommandsString[5]="di";
-    moveCommandsString[6]="ui";
-    moveCommandsString[7]="u";*/
-
-
     for(int i=0; i<moveSingle.size();i++)
     {
         //cout << endl << "MoveSingle = " << moveSingle[i] << endl;
         copy(moveSingle[i].begin(), moveSingle[i].end(), back_inserter(moveCommandsChar));
     }
 
-    //printVector(moveSingle);
-    /*for(int i=0; i<moveCommandsChar.size();i++)
-    {
-        cout << moveCommandsChar[i] << endl;
-    }*/
-    
-    
     if (bSendMoveCommand==true)
     {
         transmissionSize=moveCommandsChar.size();
@@ -820,8 +671,6 @@ void Cube::GiveFeedback()
 
     if (send(clntSock, &answerArray[0], answerArray.size()*sizeof(int), 0) < 0)
         cout << "ERROR - Feedback konnte nicht gesendet werden." << endl;
-
-
 }
 
 bool Cube::CheckCubeState(){
@@ -835,6 +684,7 @@ bool Cube::CheckCubeState(){
         }
     }
     stopServer=true;
+    cout << "Cube solved" << endl;
     return true;
 }
 
@@ -1013,6 +863,10 @@ void Cube::StartServer()
         {
             GiveFeedback();
         }
+        bool cubeIsSolved=CheckCubeState();
+
+        if (send(clntSock, &cubeIsSolved, sizeof(bool), 0) < 0)
+            cout << "ERROR - cubeIsSolved konnte nicht gesendet werden." << endl;
 
         
 

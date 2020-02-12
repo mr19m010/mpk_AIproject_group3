@@ -48,12 +48,6 @@ public:
 
 	bool ConnectToServer();
 
-	int LoopArray(int * array);
-
-	void ResetQuestion();
-
-	void GenerateTransmissionString();
-
 	void SendQuestion(bool bSendQuestion);
 
 	void ReceiveAnswer(bool bGetFeedback);
@@ -66,10 +60,8 @@ public:
 
 	void clearCube();
 
-void PrintArray();
-void PrintVector(vector <int> &v);
 
-bool DetectChange(int number);
+void PrintVector(vector <int> &v);
 
 void SendMoveCommand(bool sendVector);
 
@@ -78,6 +70,8 @@ void transmitData(bool bSendQuestion, bool bSendMoveCommand);
 void SetClient();
 void GetAcknowledge();
 void WaitTime(int waitTime);
+bool ReceiveCubeState();
+bool IsSolved();
 
 // Server
 	void StartServer();
@@ -149,8 +143,6 @@ void WaitTime(int waitTime);
 	void correctBottomEdges();
 	void twoEdgeRotate(int face, bool isNextTo);
 
-void ChangeArray();
-
 private:
 	string moves = "";	// saves a list of performed moves
 	vector <string> moveSingle;
@@ -177,6 +169,7 @@ private:
   //vector<string> moveCommandsString;
 	bool bClientActive=false;
   bool bServerReady=false;
+  bool cubeSolved=false;
 
   int testClient=34;
   
