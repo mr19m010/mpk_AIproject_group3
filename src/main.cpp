@@ -1,4 +1,4 @@
-#include "MasterCube.h"
+#include "masterCube.h"
 #include <iostream>
 
 using namespace std;
