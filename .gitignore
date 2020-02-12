@@ -3,3 +3,7 @@ client
 server
 
 main
+
+masterCubeSolver
+
+src/main.o
