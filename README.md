@@ -1,24 +1,23 @@
 # MasterCube
-AI Students Project Rubiks Cube with Mastermind Integration
-
-
+AI Students Project: Rubiks Cube with Mastermind Integration
 
 ## Installation:
-
 ```
 1. Clone Folder
 2. Open Folder in Terminal
-
-3. $./server
-4. $ctrl + shift + t
-5. $./client
-6. Follow Instructions
+3. $ make
 ```
 
+## Run Program:
+```
+1. $ ./masterCubeSolver server
+2. $ ctrl + shift + t
+3. $ ./masterCubeSolver client
+```
 
 ## Layout
 
-![layMMoutCube](miscellaneous/layoutCube.png)
+![layoutCube](miscellaneous/layoutCube.png)
 
 Array[6][3][3] -->
   1. Cube side range[0-5];

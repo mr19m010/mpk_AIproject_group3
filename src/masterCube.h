@@ -46,7 +46,7 @@ public:
 	void MiddleLayerQuestion();
 	void BottomLayerQuestion();
 
-	void ConnectToServer();
+	bool ConnectToServer();
 
 	int LoopArray(int * array);
 
@@ -77,6 +77,7 @@ void transmitData(bool bSendQuestion, bool bSendMoveCommand);
 
 void SetClient();
 void GetAcknowledge();
+void WaitTime(int waitTime);
 
 // Server
 	void StartServer();
@@ -89,6 +90,7 @@ void GetAcknowledge();
 	bool StopServer();
 	void SetServer();
 	void SendAcknowledge();
+	bool CheckCubeState();
 
 
 // CubeSolver-Stuff

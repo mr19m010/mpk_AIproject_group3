@@ -1,3 +1,4 @@
-client
+main
+main.o
 
-server
+masterCubeSolver
