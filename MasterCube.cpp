@@ -311,7 +311,7 @@ bool Cube::ConnectToServer()
         
 
         if(connect(sock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0){
-            cout << "Verbindungsversuch Nummer " << connectionAttemptCounter << "/3 wird gestartet.  ";
+            cout << "Versuch " << connectionAttemptCounter << "/3  ";
             WaitTime(3);
             connectionAttemptCounter++;
              
