@@ -2,3 +2,7 @@ main
 main.o
 
 masterCubeSolver
+
+src/MasterCube
+
+src/masterCube.o
