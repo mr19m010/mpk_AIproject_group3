@@ -1,0 +1,3 @@
+# Makefile.am
+bin_PROGRAMS = MasterCube
+MasterCube_SOURCES = main.cpp masterCube.cpp masterCube.h

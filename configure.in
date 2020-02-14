@@ -1,0 +1,22 @@
+dnl configure.in
+AC_PREREQ(2.59)
+AC_INIT(Mastercube, 1.0, noreply@mail.com)
+AM_INIT_AUTOMAKE
+AC_CONFIG_SRCDIR([src/main.cpp])
+AC_CONFIG_HEADER([config.h])
+
+# Checks for programs.
+AC_PROG_CC
+AC_PROG_CXX
+
+# Checks for libraries.
+
+# Checks for header files.
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+
+AC_CONFIG_FILES([makefile
+	src/makefile])
+AC_OUTPUT
