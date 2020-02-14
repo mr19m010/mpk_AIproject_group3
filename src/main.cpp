@@ -106,6 +106,6 @@ int main(int argc, char* argv[])
             SetupServer();
         }
     }
-    
+    return 0;
 }
 
