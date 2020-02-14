@@ -6,3 +6,7 @@ masterCubeSolver
 src/MasterCube
 
 src/masterCube.o
+
+src/client
+
+src/server
