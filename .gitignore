@@ -8,3 +8,7 @@ src/MasterCube
 src/masterCube.o
 
 .vscode/
+
+client_exe/
+
+server_exe/
