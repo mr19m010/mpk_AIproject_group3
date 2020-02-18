@@ -1,11 +1,11 @@
 main
-main.o
 
 masterCubeSolver
 
-src/MasterCube
-
+src/client.o
+src/main.o
 src/masterCube.o
+src/server.o
 
 .vscode/
 
