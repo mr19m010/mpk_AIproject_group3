@@ -6,3 +6,5 @@ masterCubeSolver
 src/MasterCube
 
 src/masterCube.o
+
+.vscode/
