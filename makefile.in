@@ -22,14 +22,14 @@ OBJS = $(SRCS:.cpp=.o)
 HEADER =$(SRCS:.h)
 
 #compiler commands
-CC = g++
+CC = @CXX@
 
 #compiler flags
 #-g = adds debugging information to the executable file
-CFLAGS = -g -O2 -DHAVE_CONFIG_H
+CFLAGS = @CFLAGS@ @DEFS@
 
 #linker flags
-LDFLAGS = -g -O2 
+LDFLAGS = @CFLAGS@ @LIBS@
 
 #cpp preprocessor flags
 #-wall = turns on most, but not all, compiler warnings
