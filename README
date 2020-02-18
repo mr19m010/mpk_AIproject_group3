@@ -1,3 +1,5 @@
+
+
 # MasterCube
 AI Students Project: Rubiks Cube with Mastermind Integration
 
@@ -9,6 +11,7 @@ AI Students Project: Rubiks Cube with Mastermind Integration
 ```
 
 ## Run Program:
+--> kann auch ohne Argument (server client) gestartet werden
 ```
 1. $ ./masterCubeSolver server
 2. $ ctrl + shift + t
