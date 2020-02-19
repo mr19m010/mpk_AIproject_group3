@@ -684,7 +684,7 @@ bool Cube::CheckCubeState(){
         }
     }
     stopServer=true;
-    cout << "Cube solved" << endl;
+    //cout << "Cube solved" << endl;
     return true;
 }
 
