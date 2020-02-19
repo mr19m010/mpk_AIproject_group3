@@ -22,15 +22,6 @@ int main(int argc, char* argv[])
     else
     {
         cout << "No parameter. Choose 'server' or 'client' as parameter." << endl;
-        cout << "Let's try to start the client..." << endl;
-        if(SetupClient()==-1){
-            cout << endl;
-            cout << "There is no server to connect to. Let's start it now..." << endl;
-            cout << "Please open a second terminal and run the following command:" << endl;
-            cout << ".\\main client or only .\\main if you are lazy" << endl;
-            cout << endl;
-            SetupServer();
-        }
     }
     return 0;
 }
