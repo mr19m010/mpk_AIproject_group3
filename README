@@ -18,6 +18,10 @@ AI Students Project: Rubiks Cube with Mastermind Integration
 3. $ ./masterCubeSolver client
 ```
 
+## Run gprof
+
+## Run Valgrind
+
 ## Layout
 
 ![layoutCube](miscellaneous/layoutCube.png)
