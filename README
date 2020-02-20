@@ -35,14 +35,15 @@ Zum Erstellen einer Textdatei im Ordner server_exe:
 
 Zum Erstellen einer Textdatei im Ordner client_exe:
 1. $ gprof main gmon.out > client.txt
+```
 
 ## Run Valgrind
-
+```
 1. $ valgrind ./masterCubeSolver server
 2. $ ctrl + shift + t
 3. $ ./masterCubeSolver client
-
 Nach Abschluss des Programms wird im Fenster des Servers das Ergebnis angezeigt.
+```
 
 ## Layout
 
