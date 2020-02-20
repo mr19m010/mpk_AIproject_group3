@@ -29,7 +29,7 @@ CC = g++
 CFLAGS = -g -O2 -DHAVE_CONFIG_H
 
 #linker flags
-LDFLAGS = -g -O2 
+LDFLAGS = -g -O2 -pg
 
 #cpp preprocessor flags
 #-wall = turns on most, but not all, compiler warnings
