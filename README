@@ -19,8 +19,30 @@ AI Students Project: Rubiks Cube with Mastermind Integration
 ```
 
 ## Run gprof
+```
+1. $ sh compile.sh (Es werden zwei Ordner erstellt, beide beinhalten main)
+2. $ cd server_exe/
+3. $ ./main server
+4. $ ctrl + shift + t.
+5. $ cd ..
+6. $ cd client_exe/
+7. $ ./main client
+8. Es wurden nun zwei gmon.out erstellt, jeweils für Server (Im Ordner server_exe)
+   und für Client (Im Ordner client_exe)
+
+Zum Erstellen einer Textdatei im Ordner server_exe:
+1. $ gprof main gmon.out > server.txt
+
+Zum Erstellen einer Textdatei im Ordner client_exe:
+1. $ gprof main gmon.out > client.txt
 
 ## Run Valgrind
+
+1. $ valgrind ./masterCubeSolver server
+2. $ ctrl + shift + t
+3. $ ./masterCubeSolver client
+
+Nach Abschluss des Programms wird im Fenster des Servers das Ergebnis angezeigt.
 
 ## Layout
 
