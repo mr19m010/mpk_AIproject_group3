@@ -9,40 +9,46 @@ AI Students Project: Rubiks Cube with Mastermind Integration
 2. Open Folder in Terminal
 3. $ make
 ```
+Alternatively there is the possibility to run the make process with a different file.
+Instead of using ```$ make``` , it is possible to run ```$ sh FirstCompile.sh ```.
+
 
 ## Run Program:
---> kann auch ohne Argument (server client) gestartet werden
+
 ```
 1. $ ./masterCubeSolver server
-2. $ ctrl + shift + t
+2.  ctrl + shift + t (opens new terminal tab)
 3. $ ./masterCubeSolver client
 ```
-
-## Run gprof
+## Run gprof:
 ```
-1. $ sh compile.sh (Es werden zwei Ordner erstellt, beide beinhalten main)
+1. $ sh compile.sh (Compiling the Code and generating two folders for server and client)
 2. $ cd server_exe/
 3. $ ./main server
-4. $ ctrl + shift + t.
+4.  ctrl + shift + t (opens new terminal tab)
 5. $ cd ..
 6. $ cd client_exe/
 7. $ ./main client
-8. Es wurden nun zwei gmon.out erstellt, jeweils für Server (Im Ordner server_exe)
-   und für Client (Im Ordner client_exe)
-
-Zum Erstellen einer Textdatei im Ordner server_exe:
-1. $ gprof main gmon.out > server.txt
-
-Zum Erstellen einer Textdatei im Ordner client_exe:
-1. $ gprof main gmon.out > client.txt
+8. Two gmon.out will be generated, one for the server (Folder: server_exe)
+   and one for the client (Folder: client_exe)
 ```
 
-## Run Valgrind
+#### Saving a .txt for server (gprof):
+```
+1. Enter the folder server_exe
+2. $ gprof main gmon.out > server.txt
+```
+#### Saving a .txt for client (gprof):
+```
+1. Enter the folder client_exe
+2. $ gprof main gmon.out > client.txt
+```
+
+## Run Valgrind:
 ```
 1. $ valgrind ./masterCubeSolver server
-2. $ ctrl + shift + t
+2.  ctrl + shift + t (opens new terminal tab)
 3. $ ./masterCubeSolver client
-Nach Abschluss des Programms wird im Fenster des Servers das Ergebnis angezeigt.
 ```
 
 ## Layout
@@ -70,9 +76,9 @@ cube-sides on a cube that will have 6 different colors (red, green, blue, white,
 2. [x] The "client" will be able to connect to the server and ask the server questions in the form of a "cube"-question
 (giving colors at positions (max c colors (c<<6) and max n positions (n<<9*6)))
 3. [x] The "client" will also be able to give commands to the server on how to turn the cube or cube sides in a standardized fashion (see here).
-4. [ ] The "server" will answer the "cube"-question in a "MasterMind" fashion. See Meaning of received Numbers.
+4. [x] The "server" will answer the "cube"-question in a "MasterMind" fashion. See Meaning of received Numbers.
  The positions of the 0,1,2 in the array won't give any hint about the positions of the colors nor the sides.
-5. [ ] The "server" will additionally answer the "client" if the Rubik's cube is solved or not solved - by returning 0 (not solved) or 1 (solved) and then exiting.
+5. [x] The "server" will additionally answer the "client" if the Rubik's cube is solved or not solved - by returning 0 (not solved) or 1 (solved) and then exiting.
 
 The "client" has to solve the Rubik's cube in an efficient way.
 Trivial solutions aren't part of this project (e.g. first guess the colors (pure MasterMind) and then solve the cube (pure DFS, A* or RBFS-Algorithm)). The solving can and has to already start before all the colors-positions are proven.
@@ -81,9 +87,9 @@ Due to the structure of this problem there are heuristic functions implemented (
 
 ### Meaning of received Numbers
 
-- 0: Wrong Side
-- 1: Correct color
-- 2: Correct color & Position
+- 0: Correct color
+- 1: Correct color & Position
+- 2: False guess
 
 ## Credits
 Credits to [ekuecks](https://github.com/ekuecks/rubiks-cube) for rubiks cube solver.
